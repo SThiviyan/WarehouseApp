@@ -21,6 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         
         let tabbar = UITabBarController()
+        tabbar.tabBar.backgroundColor = .tertiarySystemBackground
+        tabbar.tabBar.layer.cornerRadius = 10
         
         let firstVC = UINavigationController(rootViewController: ScanViewController())
         let secondVC = UINavigationController(rootViewController: TableViewController())
