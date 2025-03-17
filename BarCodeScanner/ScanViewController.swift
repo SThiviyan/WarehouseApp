@@ -30,34 +30,58 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     
     //MARK: UI Elements
-    let ScanLabel: UILabel =
+    let FlashButton: UIButton =
     {
-        let l = UILabel()
-        l.text = "Scan"
-        l.backgroundColor = .white
-        l.font = UIFont.boldSystemFont(ofSize: 14)
-        l.translatesAutoresizingMaskIntoConstraints = false
+        let Button = UIButton()
         
-        return l
+        
+        Button.clipsToBounds = true
+        Button.contentMode = .center
+       
+        Button.translatesAutoresizingMaskIntoConstraints = false
+        Button.layer.cornerRadius = 30
+        Button.layer.cornerCurve = .continuous
+        Button.backgroundColor = .tertiarySystemFill
+        
+        let image = UIImageView(image: UIImage(systemName: "flashlight.off.fill"))
+        Button.addSubview(image)
+        
+        image.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            image.centerXAnchor.constraint(equalTo: Button.centerXAnchor),
+            image.centerYAnchor.constraint(equalTo: Button.centerYAnchor),
+            image.heightAnchor.constraint(equalTo: Button.heightAnchor, multiplier: 0.6),
+            image.widthAnchor.constraint(equalTo: Button.widthAnchor, multiplier: 0.4)
+        ])
+        
+        return Button
     }()
     
     
+    var flashOn = false
     
     
+    
+    
+    //MARK: LIFECYClE OF VIEWCONTROLLER
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
         setup_start_captureSession()
-
+        addButton()
+        
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+            
+       
     }
 
+ 
     
     
     //MARK: Setup of the AVCaptureSession, to enable live feed
@@ -135,8 +159,6 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         {
             captureSession.addOutput(cameraOutput)
         }
-        
-        
     }
     
     func camerapreviewlayer()
@@ -146,6 +168,8 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         view.layer.insertSublayer(previewLayer, below: navigationController?.navigationBar.layer)
         
         previewLayer.frame = view.frame
+        
+        view.bringSubviewToFront(FlashButton)
     }
 
     
@@ -205,7 +229,9 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     {
         let alert = UIAlertController(title: "Barcode detected", message: payload, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            
             self.captureSession.startRunning()
+            
         }))
         present(alert, animated: true, completion: {
             return
@@ -217,14 +243,56 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
 
 extension ScanViewController
 {
-    
-    func addTopLabel()
+    func addButton()
     {
-        view.addSubview(ScanLabel)
+        view.addSubview(FlashButton)
+        FlashButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            ScanLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            ScanLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+            //FlashButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            //FlashButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            FlashButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            FlashButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            FlashButton.widthAnchor.constraint(equalToConstant: 60),
+            FlashButton.heightAnchor.constraint(equalToConstant: 60)
         ])
+    }
+    
+    
+    @objc func buttonPressed()
+    {
+        flashOn.toggle()
+        
+        if(flashOn)
+        {
+            do{
+                if(backCamera.hasTorch)
+                {
+                    try backCamera.lockForConfiguration()
+                    backCamera.torchMode = .on
+                    backCamera.unlockForConfiguration()
+                }
+            }
+            catch
+            {
+                print("Device flash Error")
+            }
+        }
+        else
+        {
+            do
+            {
+                if(backCamera.hasTorch)
+                {
+                    try backCamera.lockForConfiguration()
+                    backCamera.torchMode = .off
+                    backCamera.unlockForConfiguration()
+                }
+            }
+            catch
+            {
+                print("Device torch flash Error")
+            }
+        }
     }
 }
