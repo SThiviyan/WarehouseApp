@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import SwiftUI
 
 class TableViewController: UIViewController
 {
@@ -94,17 +95,13 @@ class TableViewController: UIViewController
     
     @objc func plusButton_pressed()
     {
-        print("tapped")
+        print("add product")
+                
+        let addViewSwiftUI = AddView()
+        let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
         
-        let vc = UIViewController()
-        
-        
-        vc.title = "Produkt hinzufügen"
-        vc.view.backgroundColor = .systemBackground
-        
-        navigationController?.present(vc, animated: true)
+        present(hostingcontroller, animated: true)
 
-        
     }
     
     func setconstraints()
@@ -356,6 +353,7 @@ class tablecell: UITableViewCell
         let u = UIImageView()
         u.image = UIImage(systemName: "chevron.right")
         u.tintColor = .black
+        
         u.translatesAutoresizingMaskIntoConstraints = false
         
         return u
@@ -440,4 +438,12 @@ class LookUpVC: UIViewController
     
     
     
+}
+
+
+
+struct AddView: View {
+    var body: some View {
+        Text("Test")
+    }
 }

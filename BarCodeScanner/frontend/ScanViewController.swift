@@ -39,7 +39,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         Button.contentMode = .center
        
         Button.translatesAutoresizingMaskIntoConstraints = false
-        Button.layer.cornerRadius = 30
+        Button.layer.cornerRadius = 35
         Button.layer.cornerCurve = .continuous
         Button.backgroundColor = .tertiarySystemFill
         
@@ -246,22 +246,25 @@ extension ScanViewController
     func addButton()
     {
         view.addSubview(FlashButton)
-        FlashButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        FlashButton.addTarget(self, action: #selector(buttonPressed), for: [ .touchDown, .touchDragEnter])
+        FlashButton.addTarget(self, action: #selector(buttonReleased), for: [.touchDragExit, .touchCancel, .touchUpInside, .touchUpOutside])
         
         NSLayoutConstraint.activate([
             //FlashButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //FlashButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             FlashButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             FlashButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            FlashButton.widthAnchor.constraint(equalToConstant: 60),
-            FlashButton.heightAnchor.constraint(equalToConstant: 60)
+            FlashButton.widthAnchor.constraint(equalToConstant: 70),
+            FlashButton.heightAnchor.constraint(equalToConstant: 70)
         ])
     }
     
     
-    @objc func buttonPressed()
+    @objc func buttonPressed(sender: UIButton)
     {
         flashOn.toggle()
+        
+        animate(sender, transform: .identity)
         
         if(flashOn)
         {
@@ -272,6 +275,8 @@ extension ScanViewController
                     backCamera.torchMode = .on
                     backCamera.unlockForConfiguration()
                 }
+                
+                
             }
             catch
             {
@@ -295,4 +300,22 @@ extension ScanViewController
             }
         }
     }
+    
+    @objc func buttonReleased(sender: UIButton)
+    {
+        animate(sender, transform: .identity)
+    }
+    
+    
+    //TODO: ANIMATION FOR FLASH BUTTON
+    private func animate(_ button: UIButton, transform: CGAffineTransform)
+    {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 3, animations: {
+            button.transform = transform
+        }, completion: nil)
+    }
+    
 }
+
+
+
