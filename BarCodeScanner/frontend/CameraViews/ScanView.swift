@@ -7,23 +7,53 @@
 
 import SwiftUI
 
+struct ScanView: UIViewControllerRepresentable {
 
-struct ScanView: UIViewControllerRepresentable
-{
-    typealias UIViewControllerType = ScanViewController
+    let vc = ScanViewController()
+
     
-    
-    func makeUIViewController(context: Context) -> ScanViewController {
-        let vc = ScanViewController()
+    final class Coordinator {
+        var parent: ScanView
         
-        vc.openedViaAddView = true
+        init(parent: ScanView) {
+            self.parent = parent
+        }
         
-        return vc
+        @objc func barButtonPressed() {
+            parent.barButtonPressed()
+        }
     }
     
-    func updateUIViewController(_ uiViewController: ScanViewController, context: Context) {
-        
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(parent: self)
     }
     
+    func makeUIViewController(context: Context) -> UINavigationController {
+        vc.modalPresentationStyle = .overFullScreen
+        
+        // Add the navigation bar button with the coordinator's action
+        vc.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .cancel,
+            target: context.coordinator,
+            action: #selector(Coordinator.barButtonPressed)
+        )
+        
+        
+        //make the navigationController translucent but like the PhotoPicker
+        
+        
+        let navController = UINavigationController(rootViewController: vc)
+        
+        
+        
+        
+        return navController
+    }
     
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+    }
+    
+    func barButtonPressed() {
+        vc.dismiss(animated: true)
+    }
 }

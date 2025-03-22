@@ -22,7 +22,6 @@ class TableViewController: UIViewController
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
     
     
-    
     let searchbar: UISearchBar = {
         let s = UISearchBar()
         
@@ -99,7 +98,11 @@ class TableViewController: UIViewController
                 
         let addViewSwiftUI = AddView()
         let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
+        hostingcontroller.navigationItem.title = "Produkt hinzufügen"
         
+        
+        
+        //presentationController.prefersGrabberVisible = true
         present(hostingcontroller, animated: true)
 
     }
@@ -148,28 +151,34 @@ extension TableViewController: UISearchBarDelegate
 extension TableViewController: UITableViewDelegate, UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searcharray.count
+        return products.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
         
-        cell.configure(productname: searcharray[indexPath.row], price: pricearray[indexPath.row])
+        cell.configure(productname: products[indexPath.row].productname, producername: products[indexPath.row].producer ?? "", productsize: String(products[indexPath.row].size ?? 0.0).appending(products[indexPath.row].unit ?? "") ,price: String(products[indexPath.row].price ?? 0.0))
         
+        
+
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-    
-        let vc = LookUpVC()
+        
+        //let vc = LookUpVC()
+                
+        let vc = UIHostingController(rootView: LookUpView())
+
         
         navigationController?.pushViewController(vc, animated: true)
         
-        vc.title = array[indexPath.row]
+        //vc.title = products[indexPath.row].productname ?? ""
          
+        
     }
     
     
@@ -209,241 +218,12 @@ extension TableViewController: UICollectionViewDelegate, UICollectionViewDataSou
         //TODO: backend implementation of filters
         
     }
-    
-    /*
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: 150, height: 80)
-        
-    }*/
-    
 }
 
 
 
 
-class filterCell: UICollectionViewCell
-{
-    //TODO: Color Change
-    
-    static let identifier = "filterCell"
-    var tapped = false
-    
-    private lazy var textView: UILabel =
-    {
-        let text = UILabel()
-        text.translatesAutoresizingMaskIntoConstraints  = false
-        text.font = .boldSystemFont(ofSize: 13)
-        text.textColor = .white
-        return text
-    }()
-    
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        
-        contentView.layer.cornerRadius = 8
-        contentView.backgroundColor = .systemBlue
-        
-        contentView.sizeToFit()
-        setupView()
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func selected()
-    {
-        tapped.toggle()
-        
-        if(tapped == true)
-        {
-            contentView.backgroundColor = .systemGreen
-        }
-        else
-        {
-            contentView.backgroundColor = .systemBlue
-        }
-    }
-    
-    func configure(productcategory: String)
-    {
-        textView.text = productcategory
-    }
-    
-    func setupView()
-    {
-        contentView.addSubview(textView)
-        
-        NSLayoutConstraint.activate([
-            textView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            textView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            textView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
-        ])
-        
-    }
-    
-    
-
-    
-}
 
 
 
-class tablecell: UITableViewCell
-{
-    
-    static let identifier = "cell"
-    
-    let productimage: UIImageView =
-    {
-        let i = UIImageView()
-        i.sizeToFit()
-        i.scalesLargeContentImage = true
-        i.translatesAutoresizingMaskIntoConstraints = false
-        i.image = UIImage(named: "Image")
-    
-        
-        return i
-        
-    }()
-    
-    let productname: UILabel =
-    {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.boldSystemFont(ofSize: 18)
-        
-        return l
-    }()
-    
-    let producername: UILabel =
-    {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 14)
-        
-        return l
-    }()
-   
-    let price: UILabel =
-    {
-        let l = UILabel()
-        l.font = UIFont.systemFont(ofSize: 16)
-        l.translatesAutoresizingMaskIntoConstraints = false
-        
-        return l
-    }()
-    
-    let sizeLabel: UILabel =
-    {
-        let l = UILabel()
-        l.text = "500g"
-        l.font = UIFont.systemFont(ofSize: 14)
-        l.translatesAutoresizingMaskIntoConstraints = false
-    
-        return l
-    }()
-    
-    let chevronimage: UIImageView =
-    {
-        let u = UIImageView()
-        u.image = UIImage(systemName: "chevron.right")
-        u.tintColor = .black
-        
-        u.translatesAutoresizingMaskIntoConstraints = false
-        
-        return u
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        contentView.addSubview(productimage)
-        contentView.addSubview(productname)
-        contentView.addSubview(price)
-        contentView.addSubview(chevronimage)
-        contentView.addSubview(producername)
-        contentView.addSubview(sizeLabel)
-        
-        setuplayout()
-        
-        contentView.layer.cornerRadius = 5
-        contentView.backgroundColor = .quaternarySystemFill
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(productname: String, price: String)
-    {
-        //TODO: UIIMAGE implementation
-        self.productname.text = productname
-        self.price.text = price
-        self.producername.text = "Producer"
-    }
-    
-    func setuplayout()
-    {
-        NSLayoutConstraint.activate(
-            [
-                productimage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
-                productimage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-                productimage.heightAnchor.constraint(equalToConstant: 50),
-                productimage.widthAnchor.constraint(equalToConstant: 50),
-                productname.topAnchor.constraint(equalTo: productimage.topAnchor),
-                productname.leftAnchor.constraint(equalTo: productimage.rightAnchor, constant: 10),
-                producername.topAnchor.constraint(equalTo: productname.bottomAnchor, constant: 1),
-                producername.leftAnchor.constraint(equalTo: productname.leftAnchor),
-                chevronimage.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10),
-                chevronimage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-                price.rightAnchor.constraint(equalTo: chevronimage.leftAnchor, constant: -10),
-                price.centerYAnchor.constraint(equalTo: chevronimage.topAnchor),
-                sizeLabel.rightAnchor.constraint(equalTo: price.rightAnchor),
-                sizeLabel.centerYAnchor.constraint(equalTo: chevronimage.bottomAnchor)
 
-        ])
-    }
-    
-    func getProductName() -> String
-    {
-        return productname.text ?? ""
-    }
-    
-}
-
-
-
-class LookUpVC: UIViewController
-{
-    
-    
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .systemBackground
-    }
-    
-    func configure(product: Product)
-    {
-        
-        
-    }
-    
-    
-    
-}
-
-
-
-struct AddView: View {
-    var body: some View {
-        Text("Test")
-    }
-}

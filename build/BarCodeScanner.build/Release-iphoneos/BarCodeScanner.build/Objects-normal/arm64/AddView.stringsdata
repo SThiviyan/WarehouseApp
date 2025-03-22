@@ -1,0 +1,200 @@
+{
+  "source": "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/AddView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Produkt hinzufügen",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 207
+        }
+      },
+      {
+        "comment": "",
+        "key": "Für die Erkennung mithilfe der Kamera",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "Foto hinzufügen",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "Foto hinzufügen",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 76
+        }
+      },
+      {
+        "comment": "",
+        "key": "Kamera",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 81
+        }
+      },
+      {
+        "comment": "",
+        "key": "Foto hinzufügen",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Produktbezeichnung",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "Hersteller/Marke",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "Kategorie",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 114
+        }
+      },
+      {
+        "comment": "",
+        "key": "Beschreibung",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 135
+        }
+      },
+      {
+        "comment": "",
+        "key": "Menge",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 126
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mililiter",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 127
+        }
+      },
+      {
+        "comment": "",
+        "key": "Liter",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 128
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gramm",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "Kilogrammm",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 130
+        }
+      },
+      {
+        "comment": "",
+        "key": "Preis",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 143
+        }
+      },
+      {
+        "comment": "",
+        "key": "€",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 144
+        }
+      },
+      {
+        "comment": "",
+        "key": "$",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 145
+        }
+      },
+      {
+        "comment": "",
+        "key": "£",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "Barcode Scannen",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "speichern",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "Zurück",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 212
+        }
+      }
+    ]
+  },
+  "version": 1
+}

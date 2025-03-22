@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDelegate {
 
     var window: UIWindow?
 
@@ -34,7 +34,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         secondVC.navigationBar.prefersLargeTitles = true
         
         tabbar.viewControllers = [firstVC, secondVC]
-        
         window?.rootViewController = tabbar
     }
 

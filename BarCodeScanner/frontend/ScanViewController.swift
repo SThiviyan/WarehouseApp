@@ -22,12 +22,12 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     var cameraOutput = AVCaptureVideoDataOutput()
     
     var previewLayer: AVCaptureVideoPreviewLayer!
-    
+        
     
     private let visionQueue = DispatchQueue(label: "visionQueue")
     private var framecounter = 0 //Throttle processing
     
-    
+   
     
     //MARK: UI Elements
     let FlashButton: UIButton =
@@ -63,26 +63,33 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     
     
-    
     //MARK: LIFECYClE OF VIEWCONTROLLER
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        
+        //MARK: Only for development, to see in simulator
+        let text = UILabel()
+        text.text = "Scan BarCode"
+        view.addSubview(text)
+        
         setup_start_captureSession()
         addButton()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        if let previewLayer = previewLayer
+        {
+            previewLayer.frame = view.bounds
+        }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-            
-       
-    }
-
- 
-    
+   
+  
     
     //MARK: Setup of the AVCaptureSession, to enable live feed
     func setup_start_captureSession()
@@ -107,15 +114,19 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             self.setupInputs()
             self.setupOutputs()
             
-            DispatchQueue.main.async
-            {
-                self.camerapreviewlayer()
-            }
-            
-            
             self.captureSession.commitConfiguration()
-            self.captureSession.startRunning()
+
             
+            
+            self.captureSession.startRunning()
+
+            
+        }
+        
+        
+        DispatchQueue.main.async
+        {
+            self.camerapreviewlayer()
         }
     }
     
@@ -165,9 +176,12 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.videoGravity = .resizeAspectFill
-        view.layer.insertSublayer(previewLayer, below: navigationController?.navigationBar.layer)
+        previewLayer.frame = self.view.layer.bounds
+
+        view.layer.insertSublayer(previewLayer, at: 0)
+       
         
-        previewLayer.frame = view.frame
+
         
         view.bringSubviewToFront(FlashButton)
     }
@@ -202,6 +216,8 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                             DispatchQueue.main.async
                             {
                                 self.captureSession.stopRunning()
+                                
+                                
                                 self.showBarcodeAlert(payload: payload)
                             }
                         }
@@ -237,6 +253,16 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             return
         })
     }
+    
+    func BarcodeDetected(payload: String)
+    {
+        
+        if let product = Database.getProduct(withBarcode: payload)
+        {
+            
+        }
+    }
+    
 }
 
 
@@ -314,6 +340,8 @@ extension ScanViewController
             button.transform = transform
         }, completion: nil)
     }
+    
+    
     
 }
 

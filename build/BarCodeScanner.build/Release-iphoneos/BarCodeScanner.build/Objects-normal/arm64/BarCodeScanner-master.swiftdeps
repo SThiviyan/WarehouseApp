@@ -1,0 +1,19 @@
+version: "Apple Swift version 6.0.3 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)"
+options: "1eca7534205bed6fb58239fc08877d5d744ff54bfbc8a1900e4ec258e116ad29"
+build_start_time: [1742599360, 493874000]
+build_end_time: [1742599367, 885187000]
+inputs:
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/AppDelegate.swift": [1741803900, 940698340]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/SceneDelegate.swift": [1742423832, 680093527]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/backend/Database.swift": [1741711227, 774695744]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/backend/Product.swift": [1742434532, 172492121]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/AddView.swift": [1742598680, 868397600]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/CameraViews/ImagePicker.swift": [1742560798, 997711326]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/CameraViews/ScanView.swift": [1742599014, 538735713]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/Components/filtercell.swift": [1742419774, 795383081]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/Components/tablecell.swift": [1742560628, 870466530]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/LookUpViewController.swift": [1742497294, 875898769]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/ScanViewController.swift": [1742599022, 684511601]
+  "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/BarCodeScanner/frontend/TableViewController.swift": [1742436672, 6006846]
+  ? "/Users/thiviyansaravanamuthu/Documents/Projekte/programming/BarCodeScanner/build/BarCodeScanner.build/Release-iphoneos/BarCodeScanner.build/DerivedSources/GeneratedAssetSymbols.swift"
+  : [1742599360, 419632584]
