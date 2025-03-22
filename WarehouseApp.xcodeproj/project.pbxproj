@@ -6,12 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		C5515ECE2D7F3CC000050645 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5515ECC2D7F3CC000050645 /* AVKit.framework */; };
-		C5515ECF2D7F3CC000050645 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5515ECD2D7F3CC000050645 /* AVFoundation.framework */; };
-		C5515ED12D7F3CC500050645 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5515ED02D7F3CC500050645 /* Vision.framework */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		C5515ECC2D7F3CC000050645 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		C5515ECD2D7F3CC000050645 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -19,9 +13,22 @@
 		C5A5B4D42D7F31380005D023 /* WarehouseApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WarehouseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C521A26A2D8EF7280023A55C /* Exceptions for "WarehouseApp" folder in "WarehouseApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C5A5B4D32D7F31380005D023 /* WarehouseApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C5A5B4D62D7F31380005D023 /* WarehouseApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C521A26A2D8EF7280023A55C /* Exceptions for "WarehouseApp" folder in "WarehouseApp" target */,
+			);
 			path = WarehouseApp;
 			sourceTree = "<group>";
 		};
@@ -32,9 +39,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5515ECF2D7F3CC000050645 /* AVFoundation.framework in Frameworks */,
-				C5515ED12D7F3CC500050645 /* Vision.framework in Frameworks */,
-				C5515ECE2D7F3CC000050645 /* AVKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,7 +161,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BarCodeScanner/Info.plist;
+				INFOPLIST_FILE = WarehouseApp/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to scan Barcodes from products";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -170,7 +174,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SThiviyan.BarCodeScanner;
+				PRODUCT_BUNDLE_IDENTIFIER = SThiviyan.WarehouseApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -187,7 +191,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BarCodeScanner/Info.plist;
+				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to scan Barcodes from products";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -195,12 +199,13 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_PREPROCESS = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SThiviyan.BarCodeScanner;
+				PRODUCT_BUNDLE_IDENTIFIER = SThiviyan.WarehouseApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -260,6 +265,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
+				INFOPLIST_OUTPUT_FORMAT = binary;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -317,6 +325,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
+				INFOPLIST_OUTPUT_FORMAT = binary;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
