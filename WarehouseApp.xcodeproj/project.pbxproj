@@ -162,6 +162,7 @@
 				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WarehouseApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to scan Barcodes from products";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -192,6 +193,7 @@
 				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
+				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to scan Barcodes from products";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

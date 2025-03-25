@@ -12,7 +12,7 @@ import Foundation
 //MARK: THIS DEFINITELY NEEDS TO BE DONE
 //either coredata (not crossplatform) or sqlite or firebase
 
-struct Database {
+struct Database{
     
     func authenticate() -> Bool {
         return true
