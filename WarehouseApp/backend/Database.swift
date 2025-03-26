@@ -15,6 +15,10 @@ import Foundation
 struct Database{
     
     func authenticate() -> Bool {
+        
+        var request = URLRequest(url: URL(string: "http://localhost:8080/api")!)
+        request.httpMethod = "GET"
+        
         return true
     }
     

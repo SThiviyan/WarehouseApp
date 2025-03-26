@@ -158,7 +158,7 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         
         let cell = tableView.dequeueReusableCell(withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
         
-        cell.configure(productname: products[indexPath.row].productname, producername: products[indexPath.row].producer ?? "", productsize: String(products[indexPath.row].size ?? 0.0).appending(products[indexPath.row].unit ?? "") ,price: String(products[indexPath.row].price ?? 0.0))
+        cell.configure(productname: products[indexPath.row].getProductname(), producername: products[indexPath.row].getProducer() ?? "", productsize: String(products[indexPath.row].getSize() ?? 0.0).appending(products[indexPath.row].getUnit() ?? "") ,price: String(products[indexPath.row].getPrice() ?? 0.0))
         
         
 
