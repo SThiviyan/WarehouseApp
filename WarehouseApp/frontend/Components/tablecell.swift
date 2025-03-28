@@ -66,7 +66,7 @@ class tablecell: UITableViewCell
     {
         let u = UIImageView()
         u.image = UIImage(systemName: "chevron.right")
-        u.tintColor = .black
+        u.tintColor = .placeholderText
         
         u.translatesAutoresizingMaskIntoConstraints = false
         
