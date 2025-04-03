@@ -6,7 +6,8 @@
 //
 import UIKit
 
-class Product: Decodable {
+
+struct Product: Codable {
     private var barcode: String?
     private var productname: String
     private var producer: String?
