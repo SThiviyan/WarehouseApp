@@ -6,11 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		125A372D56B78D3A7EF59BE9 /* Pods_WarehouseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB943A3D2E85B190FAFA4639 /* Pods_WarehouseApp.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		C5515ECC2D7F3CC000050645 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		C5515ECD2D7F3CC000050645 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C5515ED02D7F3CC500050645 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		C5A5B4D42D7F31380005D023 /* WarehouseApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WarehouseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD853E075FD9F53B7A5852F9 /* Pods-WarehouseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarehouseApp.debug.xcconfig"; path = "Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp.debug.xcconfig"; sourceTree = "<group>"; };
+		EB943A3D2E85B190FAFA4639 /* Pods_WarehouseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarehouseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBAD896FB22F6D97C2A7BB11 /* Pods-WarehouseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarehouseApp.release.xcconfig"; path = "Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -39,18 +46,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				125A372D56B78D3A7EF59BE9 /* Pods_WarehouseApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		62E87BE5B42A784B6FF6EC9B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DD853E075FD9F53B7A5852F9 /* Pods-WarehouseApp.debug.xcconfig */,
+				FBAD896FB22F6D97C2A7BB11 /* Pods-WarehouseApp.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		C5515ECB2D7F3CBF00050645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				C5515ED02D7F3CC500050645 /* Vision.framework */,
 				C5515ECD2D7F3CC000050645 /* AVFoundation.framework */,
 				C5515ECC2D7F3CC000050645 /* AVKit.framework */,
+				EB943A3D2E85B190FAFA4639 /* Pods_WarehouseApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -61,6 +80,7 @@
 				C5A5B4D62D7F31380005D023 /* WarehouseApp */,
 				C5515ECB2D7F3CBF00050645 /* Frameworks */,
 				C5A5B4D52D7F31380005D023 /* Products */,
+				62E87BE5B42A784B6FF6EC9B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -79,9 +99,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5A5B4E72D7F313D0005D023 /* Build configuration list for PBXNativeTarget "WarehouseApp" */;
 			buildPhases = (
+				A0C232030003C6227D557822 /* [CP] Check Pods Manifest.lock */,
 				C5A5B4D02D7F31380005D023 /* Sources */,
 				C5A5B4D12D7F31380005D023 /* Frameworks */,
 				C5A5B4D22D7F31380005D023 /* Resources */,
+				876F4667FE5525251D4558D3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -91,8 +113,6 @@
 				C5A5B4D62D7F31380005D023 /* WarehouseApp */,
 			);
 			name = WarehouseApp;
-			packageProductDependencies = (
-			);
 			productName = BarCodeScanner;
 			productReference = C5A5B4D42D7F31380005D023 /* WarehouseApp.app */;
 			productType = "com.apple.product-type.application";
@@ -105,7 +125,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					C5A5B4D32D7F31380005D023 = {
 						CreatedOnToolsVersion = 16.2;
@@ -141,6 +161,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		876F4667FE5525251D4558D3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A0C232030003C6227D557822 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WarehouseApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C5A5B4D02D7F31380005D023 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -154,12 +216,13 @@
 /* Begin XCBuildConfiguration section */
 		C5A5B4E82D7F313D0005D023 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD853E075FD9F53B7A5852F9 /* Pods-WarehouseApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WarehouseApp/WarehouseApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WarehouseApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;
@@ -185,12 +248,13 @@
 		};
 		C5A5B4E92D7F313D0005D023 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FBAD896FB22F6D97C2A7BB11 /* Pods-WarehouseApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WarehouseApp/WarehouseApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NGD2YKJV75;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
 				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;
@@ -250,6 +314,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = NGD2YKJV75;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -274,7 +339,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -316,6 +381,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = NGD2YKJV75;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
