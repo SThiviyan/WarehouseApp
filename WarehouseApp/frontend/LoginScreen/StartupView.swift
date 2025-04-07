@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct StartupView: View {
+    
+   @State var showlogin: Bool = false
+    
     var body: some View {
         NavigationStack{
             VStack{
@@ -15,7 +18,7 @@ struct StartupView: View {
                 Spacer()
                 HStack{
                 
-                    Text("Willkommen bei Warehouse")
+                    Text("Willkommen bei Warehouse!")
                         .padding()
                         .font(.largeTitle)
                     Spacer()
@@ -85,7 +88,7 @@ struct StartupView: View {
 
                 
                 Button("Einloggen", action: {
-                    
+                    showlogin = true
                 })
                 .frame(width: 300, height: 60)
                 .background(Color.blue)
@@ -95,7 +98,11 @@ struct StartupView: View {
             }
         
         }
+        .sheet(isPresented: $showlogin) {
+                LoginView()
+        }
     }
+    
 }
 
 #Preview {
