@@ -25,7 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
         self.window = window
         window.windowScene = windowscene
         
-        print("scene delegate")
 
         
         let tabbar = getTabbar()
@@ -40,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
             print(defaults.bool(forKey: "FirstTime"))
             window.rootViewController = tabbar
             
-            print("StartupView")
+            print("Normal App Launch")
 
         }
       
@@ -49,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
             //let navcontroller = UINavigationController(rootViewController: UIHostingController(rootView: StartupView()))
             
             window.rootViewController = UIHostingController(rootView: StartupView())
-            print("StartupView")
+            print("FirstTime App Launch")
 
         }
         
