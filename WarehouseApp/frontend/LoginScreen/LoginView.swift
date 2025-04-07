@@ -74,7 +74,7 @@ struct LoginView: View {
                         window.rootViewController = tabbar
                         window.makeKeyAndVisible()
                         
-                        UIView.transition(with: window, duration: 0.4, options: [.transitionFlipFromRight], animations: {}, completion: {_ in print("tabbar")})
+                        UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {}, completion: {_ in print("Main App activated")})
                     }
                 }
                

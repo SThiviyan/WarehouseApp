@@ -87,14 +87,20 @@ struct StartupView: View {
                 
 
                 
-                Button("Einloggen", action: {
+                Button(action: {
                     showlogin = true
+                }, label: {
+                    
+                    Text("Einloggen")
+                        .frame(width: 300, height: 60)
+                        .background(Color.blue)
+                        .clipShape(.buttonBorder)
+                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.automatic)
+                        .tint(.white)
+                        .bold()
                 })
-                .frame(width: 300, height: 60)
-                .background(Color.blue)
-                .clipShape(Capsule())
-                .buttonStyle(.borderedProminent)
-                .bold()
+                
             }
         
         }

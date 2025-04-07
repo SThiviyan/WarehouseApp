@@ -20,6 +20,9 @@ struct SettingsView: View {
     
     @State var metric: Bool = true
     
+    
+    @State var showconfirmationLogoutSheet: Bool = false
+    
     var body: some View {
         VStack
         {
@@ -40,9 +43,9 @@ struct SettingsView: View {
                                     .lineLimit(1)
                                     .font(.title2)
                                     .bold()
-                                    
+                                
                                 Text("tap to change password")
-                                    
+                                
                             }
                             .padding()
                             
@@ -52,26 +55,26 @@ struct SettingsView: View {
                 }
                 Section("Kategorien")
                 {
-                   
+                    
                     HStack{
                         
                         Toggle(isOn: $multipleCategoriesSelected) {
-                           //Text( "Allow multiple categories per product")
+                            //Text( "Allow multiple categories per product")
                             Text("mehrere Kategorien pro Produkt")
                         }
-                      
+                        
                     }
                     DisclosureGroup("Kategorien") {
                         List(filterarray, id: \.self){ filter in
                             
                             //FETCH List of categories and FOREACH them here
-                        
-                                Text(filter)
-                                    .swipeActions(content: {
-                                        Button("Delete") {
-                                            print("Delete")
-                                        }
-                                    })
+                            
+                            Text(filter)
+                                .swipeActions(content: {
+                                    Button("Delete") {
+                                        print("Delete")
+                                    }
+                                })
                             
                         }
                     }
@@ -80,14 +83,14 @@ struct SettingsView: View {
                     {
                         HStack{
                             Image(systemName: "plus")
-
+                            
                             Text("Kategorie hinzufügen")
                         }
                     }
                     .confirmationDialog("Kategorie hinzufügen?", isPresented: $addcategorysheet, actions: {
                         Text("Kategorie")
                     })
-                   
+                    
                 }
                 Section("Währung"){
                     Picker(selection: $defaultcurrency, label: Text("Standardwährung")) {
@@ -98,7 +101,7 @@ struct SettingsView: View {
                     .pickerStyle(.menu)
                     
                     Toggle(isOn: $multiplecurrencyuse) {
-                       //Text( "Allow multiple categories per product")
+                        //Text( "Allow multiple categories per product")
                         Text("mehrere Währungen nutzen")
                     }
                 }
@@ -106,14 +109,17 @@ struct SettingsView: View {
                 Section("Einheiten")
                 {
                     Toggle(isOn: $metric) {
-                       //Text( "Allow multiple categories per product")
+                        //Text( "Allow multiple categories per product")
                         Text("Metrisches System")
                     }
                 }
                 
                 
                 Section{
-                    Button(action: {}, label: {
+                    Button(action: {
+                        showconfirmationLogoutSheet = true
+                        
+                    }, label: {
                         HStack{
                             Spacer()
                             Text("Ausloggen")
@@ -125,13 +131,42 @@ struct SettingsView: View {
                 }
             }
             
-            
         }
         .navigationTitle("Settings")
-        
+        .alert("Are you sure that you want to logout?", isPresented: $showconfirmationLogoutSheet, actions: {
+            Button("cancel", role: .cancel){}
+            Button("Logout", role: .destructive){
+                logout()
+                deleteAppData()
+            }
+        })
     }
 }
 
-#Preview {
-    SettingsView()
+
+func logout() {
+    let defaults = UserDefaults.standard
+    
+    defaults.set(false, forKey: "LoggedIn")
+    defaults.set(true, forKey: "FirstLaunch")
+    
+    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first {
+        
+        
+        
+        window.rootViewController = UIHostingController(rootView: StartupView())
+        window.makeKeyAndVisible()
+        
+        UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {}, completion: {_ in print("Main App activated")})
+    }
 }
+
+
+//TODO: 
+func deleteAppData()
+{
+    
+    
+}
+
+

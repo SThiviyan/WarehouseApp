@@ -94,7 +94,8 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     //MARK: Setup of the AVCaptureSession, to enable live feed
     func setup_start_captureSession()
     {
-        DispatchQueue.global(qos: .userInitiated).async {
+    
+         DispatchQueue.global(qos: .userInitiated).async {
             
             
             self.captureSession = AVCaptureSession()
@@ -123,10 +124,12 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             
         }
         
-        
         DispatchQueue.main.async
         {
-            self.camerapreviewlayer()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
+            {
+                self.camerapreviewlayer()
+            }
         }
     }
     
@@ -146,9 +149,35 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
         if(realdevice == true)
         {
+            
+            //TODO: Authorization Request has to be done again!
+            
+            
             guard let Input = try? AVCaptureDeviceInput(device: backCamera) else
             {
-                fatalError("could not create input device")
+                if(AVCaptureDevice.authorizationStatus(for: .video) != AVAuthorizationStatus.authorized){
+                    
+                    AVCaptureDevice.requestAccess(for: .video, completionHandler: {(granted: Bool) in
+                        if granted {
+                            DispatchQueue.main.async
+                            {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
+                                {
+                                    self.camerapreviewlayer()
+                                }
+                            }
+                        }
+                        else{
+                            
+                            print("no camera")
+                        }
+                        
+                    })
+                    
+                }
+                //fatalError("could not create input device")
+                
+                return
             }
             backInput = Input
             
@@ -175,13 +204,16 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     func camerapreviewlayer()
     {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+
+        print("previewView is nil? \(previewLayer == nil)")
+        print("view is nil? \(view == nil)")
+        print("captureSession is nil? \(captureSession == nil)")
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = self.view.layer.bounds
 
         view.layer.insertSublayer(previewLayer, at: 0)
        
         
-
         
         view.bringSubviewToFront(FlashButton)
     }
