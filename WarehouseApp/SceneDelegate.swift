@@ -17,33 +17,44 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        
         guard let windowscene = (scene as? UIWindowScene) else { return }
-        window?.windowScene = windowscene
-        window?.makeKeyAndVisible()
-        
-        let tabbar = UITabBarController()
-        tabbar.tabBar.backgroundColor = .tertiarySystemBackground
-        tabbar.tabBar.layer.cornerRadius = 10
-        
-        let firstVC = UINavigationController(rootViewController: ScanViewController())
-        let secondVC = UINavigationController(rootViewController: TableViewController())
         
         
-        let vc = UIHostingController(rootView: SettingsView())
+        let window = UIWindow(windowScene: windowscene)
+        self.window = window
+        window.windowScene = windowscene
         
-        let thirdVC = UINavigationController(rootViewController: vc)
+        print("scene delegate")
+
         
-        firstVC.tabBarItem = UITabBarItem(title: "Scan", image: UIImage(systemName: "camera"), selectedImage: UIImage(systemName: "camera"))
-        secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
-        thirdVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
+        let tabbar = getTabbar()
         
-        firstVC.navigationBar.prefersLargeTitles = true
-        secondVC.navigationBar.prefersLargeTitles = true
-        thirdVC.navigationBar.prefersLargeTitles = true
         
-        tabbar.viewControllers = [secondVC, firstVC, thirdVC]
-        tabbar.selectedIndex = 1
-        window?.rootViewController = tabbar
+        let defaults = UserDefaults.standard
+        
+        
+        
+        if(!defaults.bool(forKey: "FirstLaunch") && defaults.bool(forKey: "LoggedIn"))
+        {
+            print(defaults.bool(forKey: "FirstTime"))
+            window.rootViewController = tabbar
+            
+            print("StartupView")
+
+        }
+      
+        else{
+            
+            //let navcontroller = UINavigationController(rootViewController: UIHostingController(rootView: StartupView()))
+            
+            window.rootViewController = UIHostingController(rootView: StartupView())
+            print("StartupView")
+
+        }
+        
+        window.makeKeyAndVisible()
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
