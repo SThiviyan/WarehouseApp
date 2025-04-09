@@ -15,24 +15,95 @@ import Foundation
 struct Database{
 
 
-    let authenticationUrl: URL = URL(string: "http://localhost:8080/api/authenticate")!
-    let userInfoUrl: URL = URL(string: "http://localhost:8080/api/userinfo")!
-    let unitsUrl: URL = URL(string: "http://localhost:8080/api/units")!
-    let categoriesUrl: URL = URL(string: "http://localhost:8080/api/categories")!
-    let productsUrl: URL = URL(string: "http://localhost:8080/api/products")!
+    let userInfoUrl: URL = URL(string: "http://localhost:3000/api/userinfo")!
+    let unitsUrl: URL = URL(string: "http://localhost:3000/api/units")!
+    let categoriesUrl: URL = URL(string: "http://localhost:3000/api/categories")!
+    let productsUrl: URL = URL(string: "http://localhost:3000/api/products")!
 
     
     
-    static func authenticate() -> Bool {
+    
+    static func signup(email: String, password: String) async -> String? {
         
-        var request = URLRequest(url: URL(string: "http://localhost:8080/api")!)
-        request.httpMethod = "GET"
+       
         
-        return true
+        guard let url = URL(string: "https://localhost:3000/signup") else { return nil }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let payload: [String: Any] = [
+            "username": email,
+            "password": password
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+        
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config, delegate: UnsafeSessionDelegate(), delegateQueue: nil)
+        
+        do{
+            let (data, _) = try await session.data(for: request)
+            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            let token = json?["token"] as? String
+            return token ?? nil
+        }
+        catch{
+            print("Login failed with error: \(error.localizedDescription)")
+            return nil
+        }
+}
+    
+    
+    static func login(email: String, password: String) async -> String? {
+        
+        guard let url = URL(string: "https://localhost:3000/login") else { return nil }
+
+           var request = URLRequest(url: url)
+           request.httpMethod = "POST"
+           request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+           let payload = ["username": email, "password": password]
+           request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+           let config = URLSessionConfiguration.default
+           let session = URLSession(configuration: config, delegate: UnsafeSessionDelegate(), delegateQueue: nil)
+
+           do {
+               let (data, _) = try await session.data(for: request)
+               let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+               let token = json!["token"] as? String
+               return token ?? nil
+           } catch {
+               print("Login failed with error: \(error.localizedDescription)")
+               return nil
+           }
     }
     
     //Generally shouldn't be used, Only for TableView, but load lazy
     static func getAllProducts() -> [Product] {
+        
+        //guard let url = URL(string: "https://localhost:3000/api/products")
+        
+        return []
+    }
+    
+    static func getAllCategories() -> [Category]? {
+        
+        guard let url = URL(string: "https://localhost:3000/api/categories") else {return nil}
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        //request.setValue("Bearer \(App.JSo)", forHTTPHeaderField: "Authorization")
+        
+        
+        
+        return []
+    }
+    
+    static func getAllUnits() -> [unit] {
         return []
     }
     
@@ -95,4 +166,18 @@ struct Database{
        return []
     }
     
+}
+
+
+
+//MARK: ONLY FOR DEVELOPMENT
+class UnsafeSessionDelegate: NSObject, URLSessionDelegate {
+    // This allows self-signed certs by ignoring SSL errors
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        let trust = challenge.protectionSpace.serverTrust!
+        let credential = URLCredential(trust: trust)
+        completionHandler(.useCredential, credential)
+    }
 }

@@ -59,7 +59,6 @@
 				DD853E075FD9F53B7A5852F9 /* Pods-WarehouseApp.debug.xcconfig */,
 				FBAD896FB22F6D97C2A7BB11 /* Pods-WarehouseApp.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -170,9 +169,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-WarehouseApp/Pods-WarehouseApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -223,6 +226,7 @@
 				CODE_SIGN_ENTITLEMENTS = WarehouseApp/WarehouseApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WarehouseApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;
@@ -255,6 +259,7 @@
 				CODE_SIGN_ENTITLEMENTS = WarehouseApp/WarehouseApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WarehouseApp/Info.plist\n";
 				INFOPLIST_KEY_CFBundleDisplayName = Warehouse;

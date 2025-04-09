@@ -138,7 +138,7 @@ struct AddView: View {
                     Section{
                         HStack{
                             TextField("Preis", text: $productprice)
-                                .keyboardType(.decimalPad)
+                                .keyboardType(.numbersAndPunctuation)
                                 //.textContentType(.n)
                             Picker("", selection: $currency) {
                                 Text("€").tag("eur")

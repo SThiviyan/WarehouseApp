@@ -12,6 +12,9 @@ struct SettingsView: View {
     
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
 
+    
+    @State var downloadProductstoDevice: Bool = false
+    
     @State var multipleCategoriesSelected: Bool = false
     @State var addcategorysheet: Bool = false
     
@@ -22,6 +25,7 @@ struct SettingsView: View {
     
     
     @State var showconfirmationLogoutSheet: Bool = false
+    @State var showconfirmationDownloadSheet: Bool = false
     
     var body: some View {
         VStack
@@ -53,6 +57,19 @@ struct SettingsView: View {
                         .padding()
                     }
                 }
+                
+                Section("Produkte")
+                {
+                    HStack{
+                        Toggle(isOn: $downloadProductstoDevice){
+                            Text("Produkte offline verfügbar machen")
+                        }
+                        .onChange(of: downloadProductstoDevice, {
+                            ActionSheet(title: Text("Produkte offline verfügbar machen"), message: Text("Wenn du offline verfügbar machst, kannst du deine App ohne Internetverbindung nutzen."), buttons: [.default(Text("OK"))])
+                        })
+                      
+                    }
+                }
                 Section("Kategorien")
                 {
                     
@@ -62,6 +79,11 @@ struct SettingsView: View {
                             //Text( "Allow multiple categories per product")
                             Text("mehrere Kategorien pro Produkt")
                         }
+                        .onChange(of: multipleCategoriesSelected, perform: {newValue in 
+                           //TODO: backend
+                        })
+                        
+                        
                         
                     }
                     DisclosureGroup("Kategorien") {
@@ -140,6 +162,13 @@ struct SettingsView: View {
                 deleteAppData()
             }
         })
+        .alert("Wenn du alle Produkte offline verfügbar machst, kann das Speicherplatz in anspruch nehmen. Trotzdem fortfahren?", isPresented: $showconfirmationDownloadSheet, actions:{
+            Button("cancel", role: .cancel){}
+            Button("download", role: .cancel){
+                App.downloadAllProducts()
+                
+            }
+        })
     }
 }
 
@@ -162,7 +191,7 @@ func logout() {
 }
 
 
-//TODO: 
+//TODO:
 func deleteAppData()
 {
     
