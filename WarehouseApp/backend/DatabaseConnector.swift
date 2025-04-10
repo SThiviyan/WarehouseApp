@@ -12,7 +12,7 @@ import Foundation
 //MARK: THIS DEFINITELY NEEDS TO BE DONE
 //either coredata (not crossplatform) or sqlite or firebase
 
-struct Database{
+struct DatabaseConncetor {
 
 
     let userInfoUrl: URL = URL(string: "http://localhost:3000/api/userinfo")!
@@ -22,12 +22,12 @@ struct Database{
 
     
     
+    let baseURL = "https:localhost:3000"
     
-    static func signup(email: String, password: String) async -> String? {
+    
+    func signup(email: String, password: String) async -> String? {
         
-       
-        
-        guard let url = URL(string: "https://localhost:3000/signup") else { return nil }
+        guard let url = URL(string: baseURL + "/signup") else { return nil }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -56,9 +56,9 @@ struct Database{
 }
     
     
-    static func login(email: String, password: String) async -> String? {
+    func login(email: String, password: String) async -> String? {
         
-        guard let url = URL(string: "https://localhost:3000/login") else { return nil }
+        guard let url = URL(string: baseURL + "/login") else { return nil }
 
            var request = URLRequest(url: url)
            request.httpMethod = "POST"
@@ -89,9 +89,9 @@ struct Database{
         return []
     }
     
-    static func getAllCategories() -> [Category]? {
+    func getAllCategories() -> [Category]? {
         
-        guard let url = URL(string: "https://localhost:3000/api/categories") else {return nil}
+        guard let url = URL(string: baseURL + "/api/categories") else {return nil}
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
