@@ -6,37 +6,72 @@
 //
 
 
-class App
+import Foundation
+
+
+final class App: ObservableObject
 {
-    var user: user
+    //var user: user = nil as! user
 
     
-    var userunits: [unit] = []
-    var userCurrencies: [currencies] = []
-    var usercategories: [categories] = []
+    static let shared = App()
     
-    var userproducts: [Product] = []
+    let Database: DatabaseConnector!
+    let Storage: FileManager!
+    
+    var Data: AppData!
+        
     
     
     var JSONWebToken: String? = ""
     
-    init(units: [unit], user: user) {
+    init() {
         
+        self.Database = DatabaseConnector()
+        self.Storage = FileManager()
         
-        self.userunits = units
-        self.user = user
+      
+        Data = AppData()
+        
+        if(self.Storage.DataOnFileSystem())
+        {
+            
+        }
     }
     
-    
-   static func saveLoginData(email: String, password: String, token: String?){
+    func login(email: String, password: String) async -> Bool {
+                
+        
+        if let loginRequest = await Database.login(email: email, password: password){
+            App.shared.Data.UserData = loginRequest.user
+            App.shared.Data.UserData?.lastJWT = loginRequest.token
+            return true
+        }
+        else{
+            return false
+        }
         
     }
     
+    func signup(email: String, password: String) async -> Bool{
+        if let signUpRequest = await Database.signup(email: email, password: password){
+            App.shared.Data.UserData = signUpRequest.user
+            App.shared.Data.UserData?.lastJWT = signUpRequest.token
+            return true
+        }
+        else{
+            return false
+        }
+        
+    }
     
-    
-    func refreshUserData()
+    func saveUserData(email: String, password: String, login_method: String, currency: String, metric: Bool)
     {
+        
     }
+    
+    
+  
     
     static func downloadAllProducts()
     {

@@ -12,7 +12,7 @@ import Foundation
 //MARK: THIS DEFINITELY NEEDS TO BE DONE
 //either coredata (not crossplatform) or sqlite or firebase
 
-struct DatabaseConncetor {
+class DatabaseConnector {
 
 
     let userInfoUrl: URL = URL(string: "http://localhost:3000/api/userinfo")!
@@ -25,7 +25,12 @@ struct DatabaseConncetor {
     let baseURL = "https:localhost:3000"
     
     
-    func signup(email: String, password: String) async -> String? {
+    init() {
+        
+    }
+    
+    
+    func signup(email: String, password: String) async -> LoginRequest? {
         
         guard let url = URL(string: baseURL + "/signup") else { return nil }
         
@@ -45,9 +50,10 @@ struct DatabaseConncetor {
         
         do{
             let (data, _) = try await session.data(for: request)
-            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            let token = json?["token"] as? String
-            return token ?? nil
+            let decoder = JSONDecoder()
+            let loginRequest = try decoder.decode(LoginRequest.self, from: data)
+                    
+            return loginRequest
         }
         catch{
             print("Login failed with error: \(error.localizedDescription)")
@@ -56,7 +62,7 @@ struct DatabaseConncetor {
 }
     
     
-    func login(email: String, password: String) async -> String? {
+    func login(email: String, password: String) async -> LoginRequest? {
         
         guard let url = URL(string: baseURL + "/login") else { return nil }
 
@@ -72,9 +78,10 @@ struct DatabaseConncetor {
 
            do {
                let (data, _) = try await session.data(for: request)
-               let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-               let token = json!["token"] as? String
-               return token ?? nil
+               let decoder = JSONDecoder()
+               let loginRequest = try decoder.decode(LoginRequest.self, from: data)
+               
+               return loginRequest
            } catch {
                print("Login failed with error: \(error.localizedDescription)")
                return nil
@@ -103,7 +110,7 @@ struct DatabaseConncetor {
         return []
     }
     
-    static func getAllUnits() -> [unit] {
+    static func getAllUnits() -> [Unit] {
         return []
     }
     
@@ -143,14 +150,14 @@ struct DatabaseConncetor {
         
    }
     
-   static func fetchUnits() async -> [unit]{
+   static func fetchUnits() async -> [Unit]{
         
         if let url = URL(string: "http://localhost:8080/api/units") {
             do{
                 let(data, _) = try await URLSession.shared.data(from: url)
                 
                 let decoder = JSONDecoder()
-                let units = try decoder.decode([unit].self, from: data)
+                let units = try decoder.decode([Unit].self, from: data)
                 
                 print("Units data: \(units)")
                 

@@ -9,6 +9,6 @@
 
 struct LoginRequest: Codable
 {
-    var token: String
-    var user: User
+    let token: String
+    let user: User
 }
