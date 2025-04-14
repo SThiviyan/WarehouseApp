@@ -1,24 +1,19 @@
 //
-//  currencies.swift
+//  categories.swift
 //  WarehouseApp
 //
 //  Created by Thiviyan Saravanamuthu on 03.04.25.
 //
 
-
-
-
-struct Currencies: Codable
+struct Category: Codable
 {
     let id: Int
+    let user_id: Int
     let name: String
-    let symbol: String
     
-    init(id: Int, name: String, symbol: String) {
+    init(id: Int, user_id: Int, name: String) {
         self.id = id
+        self.user_id = user_id
         self.name = name
-        self.symbol = symbol
     }
 }
-
-

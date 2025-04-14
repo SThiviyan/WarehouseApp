@@ -12,6 +12,8 @@ class tablecell: UITableViewCell
     
     static let identifier = "cell"
     
+    var product: Product
+    
     let productimage: UIImageView =
     {
         let i = UIImageView()
@@ -55,7 +57,6 @@ class tablecell: UITableViewCell
     let sizeLabel: UILabel =
     {
         let l = UILabel()
-        l.text = "500g"
         l.font = UIFont.systemFont(ofSize: 14)
         l.translatesAutoresizingMaskIntoConstraints = false
     
@@ -74,6 +75,9 @@ class tablecell: UITableViewCell
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        
+        self.product = Product()
+        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(productimage)
@@ -93,13 +97,15 @@ class tablecell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(productname: String, producername: String, productsize: String, price: String)
+    func configure(product: Product)
     {
+        self.product = product
+        
         //TODO: UIIMAGE implementation
-        self.productname.text = productname
-        self.price.text = price
-        self.producername.text = producername
-        self.sizeLabel.text = productsize
+        self.productname.text = self.product.productname
+        self.price.text = String(format: "%.2f",self.product.price ?? "")
+        self.producername.text = self.product.producer
+        self.sizeLabel.text = String(format: "%.2f", self.product.size ?? "")
     }
     
     func setuplayout()
@@ -127,6 +133,11 @@ class tablecell: UITableViewCell
     func getProductName() -> String
     {
         return productname.text ?? ""
+    }
+    
+    func getProduct() -> Product?
+    {
+        return product
     }
     
 }

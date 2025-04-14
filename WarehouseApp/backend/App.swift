@@ -7,81 +7,45 @@
 
 
 import Foundation
+import UIKit
+import SwiftUI
 
+
+
+
+//VIEWMODEL
 
 final class App: ObservableObject
 {
-    //var user: user = nil as! user
-
     
     static let shared = App()
     
     let Database: DatabaseConnector!
     let Storage: FileManager!
     
-    var Data: AppData!
-        
+    @Published var Data: AppData!
     
-    
-    var JSONWebToken: String? = ""
     
     init() {
-        
         self.Database = DatabaseConnector()
         self.Storage = FileManager()
         
-      
         Data = AppData()
-        
+        //App.shared.Data.products = getDummyProducts()
         if(self.Storage.DataOnFileSystem())
         {
             
         }
     }
     
-    func login(email: String, password: String) async -> Bool {
-                
-        
-        if let loginRequest = await Database.login(email: email, password: password){
-            App.shared.Data.UserData = loginRequest.user
-            App.shared.Data.UserData?.lastJWT = loginRequest.token
-            return true
-        }
-        else{
-            return false
-        }
-        
-    }
     
-    func signup(email: String, password: String) async -> Bool{
-        if let signUpRequest = await Database.signup(email: email, password: password){
-            App.shared.Data.UserData = signUpRequest.user
-            App.shared.Data.UserData?.lastJWT = signUpRequest.token
-            return true
-        }
-        else{
-            return false
-        }
-        
-    }
+   
     
-    func saveUserData(email: String, password: String, login_method: String, currency: String, metric: Bool)
+    func getUser() async -> User?
     {
-        
-    }
-    
-    
-  
-    
-    static func downloadAllProducts()
-    {
-        print("downloading All User Products")
-    }
-    
-    
-    func getJSONWebToken() -> String?
-    {
-        return JSONWebToken
+        let jwt = Data.UserData?.lastJWT ?? ""
+        let user = await Database.getUser(jwt)
+        return Data.UserData
     }
     
     
@@ -91,4 +55,76 @@ final class App: ObservableObject
 
 
 
+//
+//  LOGIN METHODS
+//
+extension App {
+    
+    func login(email: String, password: String, syncWithServer: Bool) async -> Bool {
+        if let loginRequest = await Database.login(email: email, password: password){
+            App.shared.Data.UserData = loginRequest.user
+            App.shared.Data.UserData?.lastJWT = loginRequest.token
+            
+            if(syncWithServer)
+            {
+                
+            }
+            
+            let defaults = UserDefaults.standard
+            defaults.set(false, forKey: "LoggedIn")
+            defaults.set(false, forKey: "FirstLaunch")
+            
+            return true
+        }
+        return false
+    }
+    
+    func logout()
+    {
+        //Logout methods, that deletes all data on file (syncs with server first)
+    }
+    
+    func signup(email: String, password: String) async -> Bool{
+        if let signUpRequest = await Database.signup(email: email, password: password){
+            App.shared.Data.UserData = signUpRequest.user
+            App.shared.Data.UserData?.lastJWT = signUpRequest.token
+            
+            let defaults = UserDefaults.standard
+            defaults.set(true, forKey: "LoggedIn")
+            defaults.set(false, forKey: "FirstLaunch")
+            
+            return true
+        }
+        
+        return false
+    }
+}
 
+
+
+
+
+//
+// FILESYSTEM METHODS
+//
+
+extension App {
+    func syncDataWithServer() async -> Bool
+    {
+        return true
+    }
+    
+    
+    
+    func saveDataToFile()
+    {
+        //Saves AppData to a Database or storage
+    }
+
+    
+    
+    func downloadAllProducts()
+    {
+        
+    }
+}

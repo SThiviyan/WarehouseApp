@@ -8,13 +8,14 @@
 
 struct AppData
 {
-    var categories: [Categories]? = nil
-    var products: [Product]? = nil
-    var units: [Unit]? = nil
-    var UserData: User? = nil
+    var categories: [Category]?
+    var products: [Product]?
+    var units: [Unit]?
+    var UserData: User?
+    var currencies: [Currency]? 
     
     
-    init(categories: [Categories], products: [Product], units: [Unit], UserData: User) {
+    init(categories: [Category], products: [Product], units: [Unit], UserData: User) {
         self.categories = categories
         self.products = products
         self.units = units

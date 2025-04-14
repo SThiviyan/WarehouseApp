@@ -6,6 +6,7 @@
 //
 
 
+// for JSON parsing from Server
 
 struct LoginRequest: Codable
 {

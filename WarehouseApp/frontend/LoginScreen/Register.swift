@@ -58,7 +58,9 @@ struct Register: View {
             Button(action: {
                 
                 Task{
-                    let success = await handleSignUp(email: emailField, password: passwordField)
+                    
+                                        
+                    let success = await App.shared.signup(email: emailField, password: passwordField)
                     
                     if(!success)
                     {
@@ -127,19 +129,6 @@ struct Register: View {
 
 
 
-func handleSignUp(email: String, password: String) async -> Bool
-{
-    
-    if let jwt = await Database.signup(email: email, password: password){
-        print("JWT:", jwt)
-        App.saveLoginData(email: email, password: password, token: jwt)
-        
-        return true
-    }
-    else{
-        return false
-    }
-}
 
 #Preview {
     Register()

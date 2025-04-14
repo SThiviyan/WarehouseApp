@@ -10,8 +10,8 @@ import AuthenticationServices
 import GoogleSignInSwift
 
 struct LoginView: View {
-    @State var emailField: String = ""
-    @State var passwordField: String = ""
+    @State var emailField: String = "thiviyan.saravanamuthu@gmail.com"
+    @State var passwordField: String = "0000"
     
     @Environment(\.colorScheme) var colorScheme
 
@@ -58,7 +58,9 @@ struct LoginView: View {
             
             Button(action: {
                 Task{
-                    let success = await handleLogin(email: emailField, password: passwordField)
+                    
+                    
+                    let success = await App.shared.login(email: emailField, password: passwordField, syncWithServer: true)
                     
                     if(!success)
                     {
@@ -67,9 +69,6 @@ struct LoginView: View {
                     }
                     else
                     {
-                        let defaults = UserDefaults.standard
-                        defaults.set(true, forKey: "LoggedIn")
-                        defaults.set(false, forKey: "FirstLaunch")
                         
                         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first {
                             
@@ -157,21 +156,6 @@ func handleGSignIn()
     
 }
 
-
-func handleLogin(email: String, password: String) async  -> Bool
-{
-
-    if let jwt = await Database.login(email: email, password: password){
-        print("JWT:", jwt)
-        App.saveLoginData(email: email, password: password, token: jwt)
-        
-        return true
-    }
-    else{
-        return false
-    }
-
-}
 
 #Preview {
     LoginView(emailField: "", passwordField: "")

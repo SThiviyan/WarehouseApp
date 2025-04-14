@@ -8,172 +8,260 @@
 import Foundation
 
 
-//save, delete, getall, withUUIDgetOne, withBarcodegetOne,
-//MARK: THIS DEFINITELY NEEDS TO BE DONE
-//either coredata (not crossplatform) or sqlite or firebase
-
 class DatabaseConnector {
-
-
-    let userInfoUrl: URL = URL(string: "http://localhost:3000/api/userinfo")!
-    let unitsUrl: URL = URL(string: "http://localhost:3000/api/units")!
-    let categoriesUrl: URL = URL(string: "http://localhost:3000/api/categories")!
-    let productsUrl: URL = URL(string: "http://localhost:3000/api/products")!
-
     
     
-    let baseURL = "https:localhost:3000"
+    
+    //BASEURL
+    let baseURL = "https:localhost:3000/api"
     
     
-    init() {
-        
-    }
     
+    //
+    // LOGIN AND SIGNUP
+    //
     
     func signup(email: String, password: String) async -> LoginRequest? {
-        
-        guard let url = URL(string: baseURL + "/signup") else { return nil }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+        let url = baseURL + "/signup"
         let payload: [String: Any] = [
             "username": email,
             "password": password
         ]
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
-        
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config, delegate: UnsafeSessionDelegate(), delegateQueue: nil)
-        
+        let decoder = JSONDecoder()
+       
         do{
-            let (data, _) = try await session.data(for: request)
-            let decoder = JSONDecoder()
-            let loginRequest = try decoder.decode(LoginRequest.self, from: data)
-                    
-            return loginRequest
+            let loginreq =  try await decoder.decode(LoginRequest.self, from: ServerRequest(url, "POST", nil, payload: payload) ?? Data())
+            return loginreq
         }
         catch{
             print("Login failed with error: \(error.localizedDescription)")
             return nil
         }
-}
-    
-    
-    func login(email: String, password: String) async -> LoginRequest? {
-        
-        guard let url = URL(string: baseURL + "/login") else { return nil }
-
-           var request = URLRequest(url: url)
-           request.httpMethod = "POST"
-           request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-           let payload = ["username": email, "password": password]
-           request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
-
-           let config = URLSessionConfiguration.default
-           let session = URLSession(configuration: config, delegate: UnsafeSessionDelegate(), delegateQueue: nil)
-
-           do {
-               let (data, _) = try await session.data(for: request)
-               let decoder = JSONDecoder()
-               let loginRequest = try decoder.decode(LoginRequest.self, from: data)
-               
-               return loginRequest
-           } catch {
-               print("Login failed with error: \(error.localizedDescription)")
-               return nil
-           }
     }
     
-    //Generally shouldn't be used, Only for TableView, but load lazy
-    static func getAllProducts() -> [Product] {
+    func login(email: String, password: String) async -> LoginRequest?
+    {
+        let url = baseURL + "/login"
+        let payload = ["username": email, "password": password]
+        let decoder = JSONDecoder()
+        
+        do{
+            //MARK: Look into this is the default value Data() appropriate
+            let loginreq =  try await decoder.decode(LoginRequest.self, from: ServerRequest(url, "POST", nil, payload: payload) ?? Data())
+            return loginreq
+        }
+        catch{
+            print("Login failed with error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    
+    
+    
+    
+    
+    //
+    // USER
+    //
+    
+    func getUser(_ jwt: String) async -> User? {
+        if(jwt.isEmpty){return nil}
+    
+        let url = baseURL + "/userdata"
+        let jwt = jwt
+        let decoder = JSONDecoder()
+    
+        do{
+            let user = try await decoder.decode([User].self, from: ServerRequest(url, "GET", jwt, payload: nil) ?? Data())
+            if(user.isEmpty){
+                return nil
+            }
+            return user[0]
+        }
+        catch{
+            print("Error: \(error)")
+            return nil
+        }
+    }
+    
+    
+    func setUser(_ user: User, _ jwt: String) async -> Bool {
+        if(jwt.isEmpty){return false}
+        
+        let url = baseURL + "/userdata"
+        let jwt = jwt
+        let payload = user
+        
+        guard (await ServerRequest(url, "POST", jwt, payload: payload)) != nil else {return false}
+        return true
+    }
+  
+        
+    
+    
+    
+    
+    //
+    // CATEGORIES
+    //
+    
+    func getCategories(_ jwt: String) async -> [Category]? {
+        if(jwt.isEmpty){return nil}
+    
+        let url = baseURL + "/categories"
+        let jwt = jwt
+        let decoder = JSONDecoder()
+    
+        do{
+            let category = try await decoder.decode([Category].self, from: ServerRequest(url, "GET", jwt, payload: nil) ?? Data())
+            return category
+        }
+        catch{
+            print("Error: \(error)")
+            return nil
+        }
+    }
+    
+    func AddCategories(_ jwt: String) async -> Bool{
+        return false
+    }
+    
+    
+    
+    //
+    //  UNITS
+    //
+    
+    func getUnits(_ jwt: String) async -> [Unit]?{
+        if(jwt.isEmpty){return nil}
+    
+        let url = baseURL + "/units"
+        let jwt = jwt
+        let decoder = JSONDecoder()
+    
+        do{
+            let units = try await decoder.decode([Unit].self, from: ServerRequest(url, "GET", jwt, payload: nil) ?? Data())
+            return units
+        }
+        catch{
+            print("Error: \(error)")
+            return nil
+        }
+     }
+    
+    func getCurrencies(_ jwt: String) async -> [Currency]?{
+         if(jwt.isEmpty){return nil}
+     
+         let url = baseURL + "/currencies"
+         let jwt = jwt
+         let decoder = JSONDecoder()
+     
+         do{
+             let currencies = try await decoder.decode([Currency].self, from: ServerRequest(url, "GET", jwt, payload: nil) ?? Data())
+             return currencies
+         }
+         catch{
+             print("Error: \(error)")
+             return nil
+         }
+    }
+    
+    
+    
+    
+    //
+    //  PRODUCTS
+    //
+    
+    func setProduct(_ product: Product, _ jwt: String) async -> Bool {
+        return false
+    }
+    
+    func getProduct()
+    {
+        
+    }
+    
+    func addProduct(_ product: Product, _ imageData: Data, _ jwt: String) async -> Bool {
+        return false
+    }
+    
+    
+    func deleteProduct(_ productId: Int, _ jwt: String) async -> Bool {
+        return false
+    }
+    
+    
+    //MARK: "Streaming" all Products (decides if all products should be downloaded, or some should be downloaded)
+    func streamProducts() -> [Product] {
         
         //guard let url = URL(string: "https://localhost:3000/api/products")
         
         return []
     }
     
-    func getAllCategories() -> [Category]? {
-        
-        guard let url = URL(string: baseURL + "/api/categories") else {return nil}
+    
+    
+    
+    
+    //
+    //
+    //  REQUESTS
+    //
+    //
+    
+    func requestImage(_ urlString: String) async -> Data? {
+        guard let url = URL(string: urlString) else { return nil }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return data
+        } catch {
+            print("Error downloading image: \(error)")
+            return nil
+        }
+    }
+    
+    
+    func ServerRequest(_ urlString: String, _ method: String, _ jwt: String?, payload: Any?) async -> Data? {
+        guard let url = URL(string: urlString) else { return nil }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        //request.setValue("Bearer \(App.JSo)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = method
         
-        
-        
-        return []
-    }
-    
-    static func getAllUnits() -> [Unit] {
-        return []
-    }
-    
-    static func getAmountOfProducts() -> Int {
-        return 0
-    }
-    
-    static func saveProduct(_ product: Product) {
-            
-    }
-    
-    static func deleteProduct(withId id: UUID) {
-        
-    }
-    
-    static func getProduct(withId id: UUID) -> Product? {
-        return nil
-    }
-    
-    static func getProduct(withBarcode barcode: String) -> Product? {
-        return nil
-    }
-    
-    
-    
-    
-
-    
-    
-    
-    static func fetchCategories() async {
-       
-    }
-    
-    
-   static func fetchUserInfo() async {
-        
-   }
-    
-   static func fetchUnits() async -> [Unit]{
-        
-        if let url = URL(string: "http://localhost:8080/api/units") {
-            do{
-                let(data, _) = try await URLSession.shared.data(from: url)
-                
-                let decoder = JSONDecoder()
-                let units = try decoder.decode([Unit].self, from: data)
-                
-                print("Units data: \(units)")
-                
-                return units
-            }
-            
-            catch
-            {
-                print("GET UNITS ERROR", error)
-            }
+        if(jwt != nil)
+        {
+            request.setValue("Bearer \(jwt ?? "")", forHTTPHeaderField: "Authorization")
         }
-       
-       return []
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+     
+        if(payload != nil)
+        {
+            request.httpBody = try? JSONSerialization.data(withJSONObject: payload ?? [:])
+        }
+        
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config, delegate: UnsafeSessionDelegate(), delegateQueue: nil)
+        
+        do {
+            let (data, _) = try await session.data(for: request)
+            return data
+        } catch {
+            print("Error getting Data: \(error)")
+            return nil
+        }
     }
+    
+    
+   
     
 }
+
+
+
+
+
 
 
 
