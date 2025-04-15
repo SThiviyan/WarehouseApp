@@ -239,10 +239,15 @@ struct AddView: View {
                 .toolbar
                 {
                     ToolbarItem(placement: .topBarLeading, content: {
-                        Button("Zurück")
-                        {
+                        Button(action: {
                             dismiss()
-                        }
+                        }, label: {
+                            HStack
+                            {
+                                Image(systemName: "chevron.left")
+                                Text("Zurück")
+                            }
+                        })
                     })
                 }
                 .sheet(isPresented: $showPhotoPicker, content: {

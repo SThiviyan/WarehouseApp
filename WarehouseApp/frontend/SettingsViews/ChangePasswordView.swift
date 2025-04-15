@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChangePasswordView: View {
     
-    @Environment (\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss
     
     @ObservedObject var app = App.shared
     
@@ -96,6 +96,21 @@ struct ChangePasswordView: View {
                 })
             }
             .navigationTitle("Passwort ändern")
+            .toolbar
+            {
+                ToolbarItem(placement: .topBarLeading, content: {
+                    Button(action: {
+                        dismiss()
+                    }, label: {
+                        HStack
+                        {
+                            Image(systemName: "chevron.left")
+                            Text("Zurück")
+                        }
+                    })
+                
+                })
+            }
         }
     }
 }
