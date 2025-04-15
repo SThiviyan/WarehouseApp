@@ -13,13 +13,11 @@ import SwiftUI
 class TableViewController: UIViewController
 {
     
-    let array = ["Pfanner Eistee","Coca Cola Zero ","Fanta","Kinder Cards","Chipsfrisch Ungarisch","Aptamil Milch","Mehl Ja!","Nescafe taps","pringles chips","Bild Zeitung"]
-    let searcharray = ["Pfanner Eistee","Coca Cola Zero ","Fanta","Kinder Cards","Chipsfrisch Ungarisch","Aptamil Milch","Mehl Ja!","Nescafe taps","Pringles Chips","Bild Zeitung"]
-    let pricearray = ["2€", "4,99€", "5,99€", "1€", "12,99€", "0,99€", "4€", "6€", "8€", "12€", "1,99€"]
-    let producerarray = ["1,5L", "1L", "1L", "250g", "250g",]
-    let sizearray = [""]
     
-    let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
+    //MARK: INFUSE WITH APP DATA FROM APP CLASS
+    @ObservedObject var data = App.shared
+    
+    @State var filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
     
     
     let searchbar: UISearchBar = {
@@ -96,7 +94,7 @@ class TableViewController: UIViewController
     {
         print("add product")
                 
-        let addViewSwiftUI = AddView()
+        let addViewSwiftUI = AddView(product: nil)
         let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
         hostingcontroller.navigationItem.title = "Produkt hinzufügen"
         
@@ -151,14 +149,14 @@ extension TableViewController: UISearchBarDelegate
 extension TableViewController: UITableViewDelegate, UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        return data.Data.products?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
+        let cell = tableView.dequeueReusableCell( withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
         
-        cell.configure(productname: products[indexPath.row].getProductname(), producername: products[indexPath.row].getProducer() ?? "", productsize: String(products[indexPath.row].getSize() ?? 0.0).appending(products[indexPath.row].getUnit() ?? "") ,price: String(products[indexPath.row].getPrice() ?? 0.0))
+        cell.configure(product: data.Data.products?[indexPath.row] ?? Product())
         
         
 
@@ -170,8 +168,10 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         
         
         //let vc = LookUpVC()
+        
+        let cell = tableView.cellForRow(at: indexPath) as! tablecell
                 
-        let vc = UIHostingController(rootView: LookUpView())
+        let vc = UIHostingController(rootView: LookUpView(product: cell.product))
 
         
         navigationController?.pushViewController(vc, animated: true)

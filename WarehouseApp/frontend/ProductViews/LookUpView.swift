@@ -9,6 +9,9 @@ import SwiftUI
 
 struct LookUpView: View {
     
+    @State var product: Product
+    //MARK: Infuse this view with a Product from App class
+    
     @State var ProducerName: String = "Producer"
     @State var ProductName: String = "Product"
     @State var Description: String = "Description"
@@ -22,6 +25,7 @@ struct LookUpView: View {
     //For Toggle
     @State var ScanningIsOn: Bool = true
     
+   
     
     var body: some View {
         
@@ -46,18 +50,26 @@ struct LookUpView: View {
                     
                     Section("Details")
                     {
-                        Text(ProducerName)
+                        Text(product.productname ?? "")
                             .font(.title2)
                             .bold()
                             .padding(.top)
-                        Text(Description)
+                        Text(product.producer ?? "")
+                        Text(product.description ?? "")
+                        
+                    }
+                    
+                    
+                    Section("Category")
+                    {
+                        Text(product.category ?? "")
                     }
                     
                     Section("Preis")
                     {
                         HStack{
                             Spacer()
-                            Text("3.99€ für 500 Stück")
+                            Text(getPriceSizeString(price: product.price, currency: product.currency, size: product.size, unit: product.unit))
                                 .font(.largeTitle)
                                 .padding()
                                 .bold()
@@ -68,7 +80,7 @@ struct LookUpView: View {
                     
                     Section("Scanning")
                     {
-                        if(ProductHasBarcode)
+                        if(product.barcode != nil && product.barcode != "")
                         {
                             Toggle(isOn: $ScanningIsOn) {
                                 Text("Barcode Scanning")
@@ -113,7 +125,7 @@ struct LookUpView: View {
             })
             .sheet(isPresented: $ShowAddView, content: {
                 //AddView muss das Objekt, bzw. die ObjektID bekommen, damit alles zur Bearbeitung ausgefüllt werden kann
-                AddView()
+                AddView(product: product)
             })
         }
         
@@ -121,7 +133,20 @@ struct LookUpView: View {
         
 }
 
-#Preview {
-    LookUpView()
-    
+
+
+
+func getPriceSizeString(price: Double?, currency: String?, size: Double?, unit: String?) -> String {
+   if(price != nil && currency != nil && size != nil && unit != nil)
+    {
+       let price = String(format: "%.2f", price ?? 0.0) + (currency ?? "")
+       let size = String(size ?? 0) + (unit ?? "")
+       
+       
+       return "\(price) für \(size)"
+   }
+    else
+    {
+        return "-"
+    }
 }

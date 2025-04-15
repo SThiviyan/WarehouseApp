@@ -289,10 +289,9 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     func BarcodeDetected(payload: String)
     {
         
-        if let product = Database.getProduct(withBarcode: payload)
-        {
-            
-        }
+        //let d = DatabaseConncetor()
+        
+     
     }
     
 }

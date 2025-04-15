@@ -10,17 +10,20 @@ import SwiftUI
 import UIKit
 import PhotosUI
 
-enum Currency: String, CaseIterable {
-    case usd = "$"
-    case gbp = "£"
-    case eur = "€"
-}
+
 
 
 struct AddView: View {
     
-   
+   //MARK: INFUSE DATA FROM APP CLASS (HERE IT NEEDS TO BE OPTIONAL, BECAUSE YOU CAN ADD NEW PRODUCTS WITHOUT ANY DETAILS AND YOU CAN EDIT ALREADY CREATED PRODUCTS
+    
+    
     @Environment(\.dismiss) var dismiss
+    
+    
+    @ObservedObject var app = App.shared
+    
+    @State var Product: Product?
     
     
     //MARK: Variables related to the photo Picker
@@ -33,13 +36,13 @@ struct AddView: View {
     
     //MARK: Variables related to UI Elements (Labels etc.)
     @State var showAddView: Bool = true
-    @State var productname: String = ""
-    @State var producername: String = ""
-    @State var productprice: String = ""
-    @State var currency: String = "eur"
-    @State var productDescription: String = ""
-    @State var productUnit: String = "g"
-    @State var productsize: String = ""
+    @State var productname: String
+    @State var producername: String
+    @State var productprice: String
+    @State var currency: String
+    @State var productDescription: String
+    @State var productUnit: String
+    @State var productsize: String
     @State var categorystring: String = "Lebensmittel"
     
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
@@ -48,6 +51,26 @@ struct AddView: View {
     //MARK: Variable concering ScanView and to check if product was scanned before
     @State var productscanned: Bool = false
     @State var showScanView: Bool = false
+    
+    
+    init(product: Product?) {
+        
+        
+        if(product != nil)
+        {
+            self.Product = product
+        }
+        
+        _Product = State(initialValue: product)
+        _productname = State(initialValue: product?.productname ?? "")
+        _producername = State(initialValue: product?.producer ?? "")
+        _productprice = State(initialValue: String(product?.price ?? 0))
+        _currency = State(initialValue: product?.currency ?? "eur")
+        _productDescription = State(initialValue: product?.description ?? "")
+        _productUnit = State(initialValue: product?.unit ?? "kg")
+        _productsize = State(initialValue: String(product?.size ?? 0))
+        _categorystring = State(initialValue: product?.category ?? "Lebensmittel")
+    }
     
     var body: some View {
         NavigationView{
@@ -141,9 +164,9 @@ struct AddView: View {
                                 .keyboardType(.numbersAndPunctuation)
                                 //.textContentType(.n)
                             Picker("", selection: $currency) {
-                                Text("€").tag("eur")
-                                Text("$").tag("usd")
-                                Text("£").tag("gbp")
+                                Text("€").tag("EUR")
+                                Text("$").tag("USD")
+                                Text("£").tag("GBP")
                             }.labelsHidden()
                                 .pickerStyle(.menu)
                                 
@@ -188,11 +211,18 @@ struct AddView: View {
                         HStack{
                             Spacer()
                             Button(action: {
+                                
+                                if(Product != nil)
+                                {
+                                    
+                                }
+                                
                                 dismiss()
                             }, label: {
                                 Text("speichern")
                                     .fontWeight(.bold)
                                     .frame(width: UIScreen.main.bounds.width * 0.85, height: 40)
+                                
                             })
                             .bold()
                             .buttonStyle(.borderedProminent)
@@ -224,18 +254,13 @@ struct AddView: View {
                 }, content: {
                     ScanView()
                 })
+                
                
               
             
         }
         
     }
-}
-
-
-
-#Preview {
-    AddView()
 }
 
 

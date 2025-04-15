@@ -8,9 +8,14 @@ import UIKit
 
 
 struct Product: Codable {
+    
+    var id: Int?
+    
     var barcode: String?
     var productname: String?
     var producer: String?
+    
+    var description: String?
     
     var price: Double?
     var currency: String?
@@ -34,6 +39,8 @@ struct Product: Codable {
          producer: String,
          barcode: String? = nil) {
         
+        
+        self.id = 0
         self.productname = productname
         self.price = price
         self.currency = currency

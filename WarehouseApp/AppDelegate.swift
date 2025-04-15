@@ -14,8 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) async -> Bool {
         // Override point for customization after application launch.
+        
+        
         
         let defaults = UserDefaults.standard
         
@@ -26,6 +28,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if defaults.object(forKey: "FirstLaunch") == nil {
             defaults.set(true, forKey: "FirstLaunch")
         }
+        
+        //LoadApp structure from File or Database
+        
+        //MARK: if logged in LOAD data from server
+        if defaults.bool(forKey: "LoggedIn") {
+            //here!
+            //Login again to ensure JWT is correct
+            
+            if(App.shared.Data.UserData == nil)
+            {
+                defaults.set(false, forKey: "LoggedIn")
+                defaults.set(false, forKey: "FirstLaunch")
+            }
+            else
+            {
+                let email = App.shared.Data.UserData?.email ?? ""
+                let password = App.shared.Data.UserData?.password ?? ""
+                
+                Task{
+                    if await App.shared.login(email: email, password: password, syncWithServer: true) {
+                        defaults.set(true, forKey: "LoggedIn")
+                    }
+                    else
+                    {
+                        defaults.set(false, forKey: "LoggedIn")
+                    }
+                }
+                
+                
+            }
+            
+            //App.shared.login(email: App.shared., password: T##String)
+            
+        }
+        
+        
         
 
         return true
@@ -43,6 +81,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        //MARK: SAVE Appdata to File
+        
+        App.shared.saveDataToFile()
     }
 
 

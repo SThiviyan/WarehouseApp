@@ -9,12 +9,8 @@ import Foundation
 
 
 class DatabaseConnector {
-    
-    
-    
     //BASEURL
     let baseURL = "https:localhost:3000/api"
-    
     
     
     //
@@ -126,6 +122,8 @@ class DatabaseConnector {
     func AddCategories(_ jwt: String) async -> Bool{
         return false
     }
+    
+    
     
     
     
@@ -252,11 +250,15 @@ class DatabaseConnector {
             return nil
         }
     }
-    
-    
-   
-    
+
 }
+
+
+
+
+
+
+
 
 
 

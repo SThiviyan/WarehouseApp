@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    @ObservedObject var appViewModel = App.shared
+    //MARK: INFUSE WITH APP CLASS DATA
     
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
 
@@ -24,6 +26,22 @@ struct SettingsView: View {
     
     @State var showconfirmationLogoutSheet: Bool = false
     @State var showconfirmationDownloadSheet: Bool = false
+    @State var showChangePasswordSheet: Bool = false
+    
+    var createdAt: String?
+    
+    
+    
+    init() {
+        _downloadProductstoDevice = State(initialValue: ((appViewModel.Data.UserData?.saveDataToDevice) ?? false))
+        _metric = State(initialValue: ((appViewModel.Data.UserData?.metric) ?? true))
+        _defaultcurrency = State(initialValue: ((appViewModel.Data.UserData?.currency) ?? "EUR"))
+        
+        //Kategorien hinzufügen
+        
+        
+        
+    }
     
     var body: some View {
         VStack
@@ -32,7 +50,9 @@ struct SettingsView: View {
             {
                 Section
                 {
-                    Button(action: {print("pressed")})
+                    Button(action: {
+                        showChangePasswordSheet = true
+                    })
                     {
                         HStack{
                             
@@ -41,12 +61,13 @@ struct SettingsView: View {
                                 .frame(width: 60, height: 60)
                             
                             VStack{
-                                Text("thiviyan.saravanamuthu@gmail.com")
+                                Text(verbatim: "thiviyan.saravanamuthu@gmail.com")
                                     .lineLimit(1)
                                     .font(.title2)
                                     .bold()
                                 
                                 Text("tap to change password")
+                                    
                                 
                             }
                             .padding()
@@ -132,6 +153,11 @@ struct SettingsView: View {
                         }
                     })
                 }
+                
+                Section{
+                    Text("Member since \(appViewModel.Data.UserData?.created_at ?? "Unknown Date")")
+                }
+                .listSectionSeparator(.hidden)
             }
             
         }
@@ -148,10 +174,13 @@ struct SettingsView: View {
                 downloadProductstoDevice = false
             }
             Button("download"){
-                App.downloadAllProducts()
+                App.shared.downloadAllProducts()
             }
             .bold()
             .tint(Color.green)
+        })
+        .sheet(isPresented: $showChangePasswordSheet, content: {
+            ChangePasswordView()
         })
     }
 }

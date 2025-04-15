@@ -9,15 +9,17 @@
 
 struct User: Codable
 {
-    let id: Int?
-    let email: String?
-    let password: String?
-    let login_method: String?
-    let is_active: Bool?
-    let created_at: String?
-    let currency: String?
-    let metric: Bool?
+    var id: Int?
+    var email: String?
+    var password: String?
+    var login_method: String?
+    var is_active: Bool?
+    var created_at: String?
+    var currency: String?
+    var metric: Bool?
     var lastJWT: String?
+    
+    var saveDataToDevice: Bool? = true
     
   
     
