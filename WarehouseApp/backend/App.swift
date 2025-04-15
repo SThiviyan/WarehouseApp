@@ -85,6 +85,10 @@ extension App {
     }
     
     
+    func changePassword(oldPassword: String, newPassword: String) -> Bool {
+        return false
+    }
+    
     
     func logout()
     {
