@@ -89,6 +89,11 @@ extension App {
     func logout()
     {
         //Logout methods, that deletes all data on file (syncs with server first)
+        
+        let defaults = UserDefaults.standard
+        
+        defaults.set(false, forKey: "LoggedIn")
+        defaults.set(true, forKey: "FirstLaunch")
     }
 }
 
@@ -138,6 +143,12 @@ extension App {
     }
     
     
+    
+    func addCategory(name: String) -> Bool
+    {
+        
+        return false
+    }
     
     func setCategories(_ categories: [Category])
     {
