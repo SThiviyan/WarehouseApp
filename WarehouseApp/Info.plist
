@@ -6,7 +6,14 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>https://localhost:3000/</key>
+			<key>https://192.168.1.105:3000/api</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>https://Thiviyans-MacBook-Pro.local:3000/</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>

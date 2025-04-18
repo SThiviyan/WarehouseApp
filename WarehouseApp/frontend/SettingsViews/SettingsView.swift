@@ -14,7 +14,7 @@ struct SettingsView: View {
     
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
 
-    @State var downloadProductstoDevice: Bool = false
+    @State var downloadProductstoDevice: Bool = true
     @State var addcategorysheet: Bool = false
     @State var defaultcurrency: String = "EUR"
     @State var metric: Bool = true
@@ -27,7 +27,7 @@ struct SettingsView: View {
     var createdAt: String?
     
     init() {
-        _downloadProductstoDevice = State(initialValue: app.Data.UserData?.saveDataToDevice ?? false)
+        _downloadProductstoDevice = State(initialValue: app.Data.UserData?.saveDataToDevice ?? true)
         _metric = State(initialValue: app.Data.UserData?.metric ?? true)
         _defaultcurrency = State(initialValue: app.Data.UserData?.currency ?? "EUR")
         

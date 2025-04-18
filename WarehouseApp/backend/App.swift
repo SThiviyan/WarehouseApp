@@ -26,6 +26,9 @@ final class App: ObservableObject
     @Published var Data: AppData!
     
     
+    //variables that are useful
+    @Published var lastscannedBarcode: String? = ""
+    
     init() {
         self.Database = DatabaseConnector()
         self.Storage = FileManager()
@@ -61,12 +64,14 @@ extension App {
             }
             
             let defaults = UserDefaults.standard
-            defaults.set(false, forKey: "LoggedIn")
+            defaults.set(true, forKey: "LoggedIn")
             defaults.set(false, forKey: "FirstLaunch")
             
             return true
         }
-        return false
+        
+        
+        return true
     }
     
     func signup(email: String, password: String) async -> Bool{
@@ -166,6 +171,11 @@ extension App {
     func addProduct(_ product: Product)
     {
         print("add Product")
+        //if barcode == 1, error from addview or lookupview.
+        if(product.barcode != "1")
+        {
+            
+        }
     }
     
     func removeProduct(_ product: Product)
@@ -234,5 +244,10 @@ extension App {
         
     }
     
+    
+    func getProduct(_ barcode: String) -> Product?
+    {
+        return nil
+    }
     
 }

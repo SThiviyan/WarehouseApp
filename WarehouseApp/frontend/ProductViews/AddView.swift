@@ -23,7 +23,7 @@ struct AddView: View {
     
     @ObservedObject var app = App.shared
     
-    @State var Product: Product?
+    @State var product: Product?
     
     
     //MARK: Variables related to the photo Picker
@@ -51,6 +51,7 @@ struct AddView: View {
     //MARK: Variable concering ScanView and to check if product was scanned before
     @State var productscanned: Bool = false
     @State var showScanView: Bool = false
+   // @State var scanresult: String = ""
     
     
     init(product: Product?) {
@@ -58,18 +59,21 @@ struct AddView: View {
         
         if(product != nil)
         {
-            self.Product = product
+            self.product = product
         }
         
-        _Product = State(initialValue: product)
+        _product = State(initialValue: product)
         _productname = State(initialValue: product?.productname ?? "")
         _producername = State(initialValue: product?.producer ?? "")
         _productprice = State(initialValue: String(product?.price ?? 0))
-        _currency = State(initialValue: product?.currency ?? "eur")
+        _currency = State(initialValue: product?.currency ?? "EUR")
         _productDescription = State(initialValue: product?.description ?? "")
         _productUnit = State(initialValue: product?.unit ?? "kg")
         _productsize = State(initialValue: String(product?.size ?? 0))
         _categorystring = State(initialValue: product?.category ?? "Lebensmittel")
+        
+       // if(scanresult != )
+        
     }
     
     var body: some View {
@@ -125,11 +129,7 @@ struct AddView: View {
                     
                     
                     Section{
-                        TextField("Produktbezeichnung", text: $productname)
-                            .font(.headline)
-                        TextField("Hersteller/Marke", text: $producername)
-                        
-                        
+                        productDetailsView(productname: $productname, producername: $producername)
                     }
                     
                     Section
@@ -158,55 +158,26 @@ struct AddView: View {
                         TextField("Beschreibung", text: $productDescription)
                     }
                     
-                    Section{
-                        HStack{
-                            TextField("Preis", text: $productprice)
-                                .keyboardType(.numbersAndPunctuation)
-                                //.textContentType(.n)
-                            Picker("", selection: $currency) {
-                                Text("€").tag("EUR")
-                                Text("$").tag("USD")
-                                Text("£").tag("GBP")
-                            }.labelsHidden()
-                                .pickerStyle(.menu)
-                                
-                        }
-                       
+                    Section
+                    {
+                        currencyPicker(selectedCurrency: $currency, productprice: $productprice)
                     }
                     
                     Section("Für die Erkennung mithilfe der Kamera")
                     {
-                        HStack
-                        {
                             if(!productscanned)
                             {
-                                Button(action: {
-                                    //adding ScanView
-                                    showScanView = true
-                                    
-                                    
-                                }, label: {
-                                    Text("Barcode Scannen")
-                                        .bold()
-                                    
-                                })
-                                
-                                Spacer()
-                                
-                                Image(systemName: "camera")
-                                    .foregroundStyle(.blue)
+                                BarcodeNotScannedView(showScanView: $showScanView)
                             }
-                            
                             else
                             {
                                 //if produkt already scanned, there needs to be another view
+                                BarcodeScannedView(showScanView: $showScanView, product: $product)
                             }
-                        }
-                        
                     }
                     
                     
-                    
+                    /*
                     Section{
                         HStack{
                             Spacer()
@@ -230,6 +201,7 @@ struct AddView: View {
                         }
                     }
                     .listRowBackground(Color.clear)
+                     */
 
 
                 }
@@ -249,6 +221,22 @@ struct AddView: View {
                             }
                         })
                     })
+                    
+                    ToolbarItem(placement: .topBarTrailing, content: {
+                        Button(action: {
+                            //save item
+                            //let product = Product(name: "Test", price: 10.0, image: UIImage(systemName: "photo")!)
+                            
+                            
+                            App.shared.addProduct(product ?? Product(barcode: "1"))
+                            dismiss()
+                        }, label: {
+                            
+                            Text("speichern")
+                                .fontWeight(.bold)
+                                //.frame(width: UIScreen.main.bounds.width * 0.85, height: 40)
+                        })
+                    })
                 }
                 .sheet(isPresented: $showPhotoPicker, content: {
                     CameraImagePicker(showImagePicker: $showPhotoPicker, image: $selectedPhoto, sourceType: $ImagePickerSourceType)
@@ -257,7 +245,7 @@ struct AddView: View {
                     showScanView = false
                     //ScanView.UIViewControllerType().openedViaAddView = false
                 }, content: {
-                    ScanView()
+                    ScanView(currentView: self)
                 })
                 
                
@@ -271,3 +259,96 @@ struct AddView: View {
 
 
 
+struct currencyPicker: View {
+    
+    @Binding var selectedCurrency: String
+    @Binding var productprice: String
+    
+    var body: some View {
+        
+        HStack{
+            TextField("Preis", text: $productprice)
+                .keyboardType(.numbersAndPunctuation)
+                //.textContentType(.n)
+            Picker("", selection: $selectedCurrency) {
+                Text("€").tag("EUR")
+                Text("$").tag("USD")
+                Text("£").tag("GBP")
+            }.labelsHidden()
+                .pickerStyle(.menu)
+                
+        }
+    }
+}
+
+
+
+struct productDetailsView: View {
+    
+    @Binding var productname: String
+    @Binding var producername: String
+    
+    
+    var body: some View
+    {
+        TextField("Produktbezeichnung", text: $productname)
+            .font(.headline)
+        TextField("Hersteller/Marke", text: $producername)
+        
+    }
+    
+}
+
+
+struct BarcodeNotScannedView: View {
+   @Binding var showScanView: Bool
+    
+    
+    var body: some View {
+        HStack
+        {
+            Button(action: {
+                //adding ScanView
+                showScanView = true
+                
+                
+            }, label: {
+                Text("Barcode Scannen")
+                    .bold()
+                
+            })
+            
+            Spacer()
+            
+            Image(systemName: "camera")
+                .foregroundStyle(.blue)
+        }
+    }
+}
+
+
+struct BarcodeScannedView: View {
+    @Binding var showScanView: Bool
+    @Binding var product: Product?
+    
+    
+    var body: some View {
+        
+        HStack{
+            Button(action: {
+                showScanView = true
+            }, label: {
+                Text("Barcode erneut Scannen")
+                    .bold()
+            })
+            Spacer()
+            
+            Image(systemName: "camera")
+                .foregroundStyle(.blue)
+            
+        }
+        
+        Text("scanned Barcode: \(product?.barcode ?? "")")
+            .bold()
+    }
+}

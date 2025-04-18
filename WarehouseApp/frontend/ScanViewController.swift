@@ -10,6 +10,7 @@
 import UIKit
 import AVFoundation
 import Vision
+import SwiftUI
 
 class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -22,12 +23,13 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     var cameraOutput = AVCaptureVideoDataOutput()
     
     var previewLayer: AVCaptureVideoPreviewLayer!
-        
+            
     
     private let visionQueue = DispatchQueue(label: "visionQueue")
     private var framecounter = 0 //Throttle processing
     
-   
+    var currentAddView: AddView? = nil
+    var openedViaAddView: Bool = false
     
     //MARK: UI Elements
     let FlashButton: UIButton =
@@ -247,10 +249,25 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                         {
                             DispatchQueue.main.async
                             {
-                                self.captureSession.stopRunning()
+                                //self.captureSession.stopRunning()
                                 
                                 
-                                self.showBarcodeAlert(payload: payload)
+                                //self.showBarcodeAlert(payload: payload)
+                                if(self.openedViaAddView)
+                                {
+                                    self.dismiss(animated: true, completion: {
+                                        self.currentAddView?.product?.barcode = payload
+                                        self.openedViaAddView = false
+                                        self.currentAddView?.productscanned = true
+                                        
+                                        print(payload)
+                                        self.currentAddView = nil
+                                    })
+                                }
+                                else
+                                {
+                                    self.BarcodeDetected(payload: payload)
+                                }
                             }
                         }
                     }
@@ -289,9 +306,30 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     func BarcodeDetected(payload: String)
     {
         
-        //let d = DatabaseConncetor()
         
-     
+        
+        if(App.shared.getProduct(payload) == nil)
+        {
+            let product = Product(barcode: payload)
+            
+            let hostingController = UIHostingController(rootView: AddView(product: product))
+            present(hostingController, animated: true)
+        }
+        else{
+            
+            
+            let product = App.shared.getProduct(payload)!
+            let hostingController = UIHostingController(rootView: LookUpView(product: product))
+            
+            present(hostingController, animated: true)
+        }
+        
+        
+        /*
+        DispatchQueue.main.async(execute: {
+            self.captureSession.startRunning()
+        })
+         */
     }
     
 }

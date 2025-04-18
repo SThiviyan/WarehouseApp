@@ -15,7 +15,7 @@ class TableViewController: UIViewController
     
     
     //MARK: INFUSE WITH APP DATA FROM APP CLASS
-    @ObservedObject var data = App.shared
+    @ObservedObject var app = App.shared
     
     @State var filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
     
@@ -149,16 +149,16 @@ extension TableViewController: UISearchBarDelegate
 extension TableViewController: UITableViewDelegate, UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.Data.products?.count ?? 0
+        return app.Data.products?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell( withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
         
-        cell.configure(product: data.Data.products?[indexPath.row] ?? Product())
+        cell.configure(product: app.Data.products?[indexPath.row] ?? Product())
         
-        
+        print(app.Data.products?[indexPath.row] ?? Product())
 
         
         return cell
@@ -172,7 +172,11 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         let cell = tableView.cellForRow(at: indexPath) as! tablecell
                 
         let vc = UIHostingController(rootView: LookUpView(product: cell.product))
-
+        
+        cell.product.productname = "changedName"
+        
+        print(app.Data.products?[indexPath.row] ?? Product())
+        
         
         navigationController?.pushViewController(vc, animated: true)
         

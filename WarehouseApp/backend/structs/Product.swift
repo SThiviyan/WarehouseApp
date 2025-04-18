@@ -37,7 +37,7 @@ struct Product: Codable {
          category: [String],
          image: UIImage,
          producer: String,
-         barcode: String? = nil) {
+         barcode: String? = "0") {
         
         
         self.id = 0
@@ -59,10 +59,23 @@ struct Product: Codable {
         self.price = 0.0
         self.currency = "EUR"
         self.size = 0.0
-        self.unit = ""
-        self.category = ""
+        self.unit = "kg"
+        self.category = "Lebensmittel"
         self.producer = ""
-        self.barcode = ""
+        self.barcode = "0"
+    }
+    
+    
+    init(barcode: String)
+    {
+        self.productname = ""
+        self.price = 0.0
+        self.currency = "EUR"
+        self.size = 0.0
+        self.unit = "kg"
+        self.category = "Lebensmittel"
+        self.producer = ""
+        self.barcode = barcode
     }
     
   

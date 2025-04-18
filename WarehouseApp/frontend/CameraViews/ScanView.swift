@@ -9,8 +9,14 @@ import SwiftUI
 
 struct ScanView: UIViewControllerRepresentable {
 
+    
+    
+    //@Binding var product: Product
     let vc = ScanViewController()
-
+    
+    var barcode: String? = ""
+    
+    let currentView: any View
     
     final class Coordinator {
         var parent: ScanView
@@ -29,8 +35,8 @@ struct ScanView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> UINavigationController {
-        vc.modalPresentationStyle = .overFullScreen
-        
+        //vc.modalPresentationStyle = .overFullScreen
+                
         // Add the navigation bar button with the coordinator's action
         vc.navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .cancel,
@@ -44,7 +50,8 @@ struct ScanView: UIViewControllerRepresentable {
         
         let navController = UINavigationController(rootViewController: vc)
         
-        
+        vc.openedViaAddView = true
+        vc.currentAddView = currentView as? AddView
         
         
         return navController
@@ -54,6 +61,7 @@ struct ScanView: UIViewControllerRepresentable {
     }
     
     func barButtonPressed() {
+        vc.openedViaAddView = false
         vc.dismiss(animated: true)
     }
 }
