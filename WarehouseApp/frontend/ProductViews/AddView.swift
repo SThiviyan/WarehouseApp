@@ -24,6 +24,7 @@ struct AddView: View {
     @ObservedObject var app = App.shared
     
     @State var product: Product?
+    @Binding var scrollToSection: Int?
     
     
     //MARK: Variables related to the photo Picker
@@ -54,7 +55,10 @@ struct AddView: View {
    // @State var scanresult: String = ""
     
     
-    init(product: Product?) {
+    init(product: Product?, scrolltoSection: Binding<Int?>?) {
+        
+        @State var section: Int? = 0
+        self._scrollToSection = scrolltoSection ?? $section
         
         
         if(product != nil)
@@ -74,97 +78,104 @@ struct AddView: View {
         
        // if(scanresult != )
         
+        
+        
     }
     
     var body: some View {
         NavigationView{
-                Form{
-                    
-                    Section{
-                        HStack{
-                            Spacer()
-                            Button(action:{}, label: {
-                                
-                                Image(uiImage: selectedPhoto)
-                                    .resizable()
-                                    .scaledToFill()
-                                
-                                
-                            })
-                            .clipShape(Circle())
-                            .frame(width: 150, height: 150, alignment: .center)
-                            //.padding()
-                            Spacer()
-                        }
-                        
-                        HStack{
-                            Spacer()
-                            Button(action: {  showPhotoPickerAlert = true}, label: {
-                                Text("Foto hinzufügen")
+            ScrollViewReader{   proxy in
+                    Form{
+                        Section{
+                            HStack{
+                                Spacer()
+                                Button(action:{}, label: {
+                                    
+                                    Image(uiImage: selectedPhoto)
+                                        .resizable()
+                                        .scaledToFill()
+                                    
+                                    
+                                })
+                                .clipShape(Circle())
+                                .frame(width: 150, height: 150, alignment: .center)
+                                //.padding()
+                                Spacer()
+                            }
+                            
+                            HStack{
+                                Spacer()
+                                Button(action: {  showPhotoPickerAlert = true}, label: {
+                                    Text("Foto hinzufügen")
+                                        .bold()
+                                })
+                                .buttonStyle(.borderless)
+                                .confirmationDialog("Foto hinzufügen", isPresented: $showPhotoPickerAlert, actions: {
+                                    Button("Kamera"){
+                                        ImagePickerSourceType = .camera
+                                        showPhotoPicker = true
+                                    }
                                     .bold()
-                            })
-                            .buttonStyle(.borderless)
-                            .confirmationDialog("Foto hinzufügen", isPresented: $showPhotoPickerAlert, actions: {
-                                Button("Kamera"){
-                                    ImagePickerSourceType = .camera
-                                    showPhotoPicker = true
-                                }
-                                .bold()
-                                
-                                Button("Foto hinzufügen")
-                                {
-                                    ImagePickerSourceType = .photoLibrary
-                                    showPhotoPicker = true
-                                }
-                               
-                                
-                                
-                            })
-                            Spacer()
-                        }
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                  
-                    
-                    
-                    Section{
-                        productDetailsView(productname: $productname, producername: $producername)
-                    }
-                    
-                    Section
-                    {
-                        Picker("Kategorie", selection: $categorystring) {
-                            ForEach(filterarray, id: \.self) {
-                                Text($0)
+                                    
+                                    Button("Foto hinzufügen")
+                                    {
+                                        ImagePickerSourceType = .photoLibrary
+                                        showPhotoPicker = true
+                                    }
+                                    
+                                    
+                                    
+                                })
+                                Spacer()
                             }
-                        }.pickerStyle(.menu)
-                    }
-                    
-                   
-                    Section{
-                        HStack{
-                            TextField("Menge", text: $productsize)
-                                .keyboardType(.decimalPad)
-                            Picker("", selection: $productUnit) {
-                                Text("Mililiter").tag("ml")
-                                Text("Liter").tag("l")
-                                Text("Gramm").tag("g")
-                                Text("Kilogrammm").tag("kg")
-                            }
-                            .labelsHidden()
-                            .pickerStyle(.menu)
                         }
-                        TextField("Beschreibung", text: $productDescription)
-                    }
-                    
-                    Section
-                    {
-                        currencyPicker(selectedCurrency: $currency, productprice: $productprice)
-                    }
-                    
-                    Section("Für die Erkennung mithilfe der Kamera")
-                    {
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .id(0)
+                        
+                        
+                        
+                        Section{
+                            productDetailsView(productname: $productname, producername: $producername)
+                        }
+                        .id(1)
+                        
+                        Section
+                        {
+                            Picker("Kategorie", selection: $categorystring) {
+                                ForEach(filterarray, id: \.self) {
+                                    Text($0)
+                                }
+                            }.pickerStyle(.menu)
+                        }
+                        .id(2)
+                        
+                        
+                        Section{
+                            HStack{
+                                TextField("Menge", text: $productsize)
+                                    .keyboardType(.decimalPad)
+                                Picker("", selection: $productUnit) {
+                                    Text("Mililiter").tag("ml")
+                                    Text("Liter").tag("l")
+                                    Text("Gramm").tag("g")
+                                    Text("Kilogrammm").tag("kg")
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.menu)
+                            }
+                            TextField("Beschreibung", text: $productDescription)
+                        }
+                        .id(3)
+                        
+                        Section
+                        {
+                            currencyPicker(selectedCurrency: $currency, productprice: $productprice)
+                        }
+                        .id(4)
+                        
+                        Section("Für die Erkennung mithilfe der Kamera")
+                        {
                             if(!productscanned)
                             {
                                 BarcodeNotScannedView(showScanView: $showScanView)
@@ -174,36 +185,45 @@ struct AddView: View {
                                 //if produkt already scanned, there needs to be another view
                                 BarcodeScannedView(showScanView: $showScanView, product: $product)
                             }
-                    }
-                    
-                    
-                    /*
-                    Section{
-                        HStack{
-                            Spacer()
-                            Button(action: {
-                                
-                                if(Product != nil)
-                                {
-                                    
-                                }
-                                
-                                dismiss()
-                            }, label: {
-                                Text("speichern")
-                                    .fontWeight(.bold)
-                                    .frame(width: UIScreen.main.bounds.width * 0.85, height: 40)
-                                
-                            })
-                            .bold()
-                            .buttonStyle(.borderedProminent)
-                            Spacer()
                         }
+                        .id(5)
+                        
+                        
+                        /*
+                         Section{
+                         HStack{
+                         Spacer()
+                         Button(action: {
+                         
+                         if(Product != nil)
+                         {
+                         
+                         }
+                         
+                         dismiss()
+                         }, label: {
+                         Text("speichern")
+                         .fontWeight(.bold)
+                         .frame(width: UIScreen.main.bounds.width * 0.85, height: 40)
+                         
+                         })
+                         .bold()
+                         .buttonStyle(.borderedProminent)
+                         Spacer()
+                         }
+                         }
+                         .listRowBackground(Color.clear)
+                         */
                     }
-                    .listRowBackground(Color.clear)
-                     */
-
-
+                    .onAppear(perform: {
+                        if let section = scrollToSection {
+                                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                       withAnimation {
+                                           proxy.scrollTo(section, anchor: .top)
+                                       }
+                                   }
+                               }
+                    })
                 }
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .navigationTitle("Produkt hinzufügen")
@@ -243,7 +263,6 @@ struct AddView: View {
                 })
                 .sheet(isPresented: $showScanView, onDismiss: {
                     showScanView = false
-                    //ScanView.UIViewControllerType().openedViaAddView = false
                 }, content: {
                     ScanView(currentView: self)
                 })

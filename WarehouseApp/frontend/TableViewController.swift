@@ -94,7 +94,8 @@ class TableViewController: UIViewController
     {
         print("add product")
                 
-        let addViewSwiftUI = AddView(product: nil)
+        @State var section: Int? = 0
+        let addViewSwiftUI = AddView(product: nil, scrolltoSection: $section)
         let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
         hostingcontroller.navigationItem.title = "Produkt hinzufügen"
         

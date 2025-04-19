@@ -26,7 +26,7 @@ struct LookUpView: View {
     //For Toggle
     @State var ScanningIsOn: Bool = true
     
-   
+    @State var ScrollToSection: Int? = 5
     
     var body: some View {
         
@@ -101,12 +101,18 @@ struct LookUpView: View {
                 }
             })
         }
-        .sheet(isPresented: $ShowScanView, content: {
+        .sheet(isPresented: $ShowScanView, onDismiss: {
+            ShowScanView = false
+        },content: {
             //ScanView speicherung muss gemacht werden, bzw. Parameter für die View, damit man weiß für welches Objekt man speichern muss
             //ScanView()
+            AddView(product: product, scrolltoSection: $ScrollToSection)
+            
         })
-        .sheet(isPresented: $ShowAddView, content: {
-            AddView(product: product)
+        .sheet(isPresented: $ShowAddView, onDismiss: {
+            ShowAddView = false
+        },content: {
+            AddView(product: product, scrolltoSection: nil)
         })
         .onChange(of: ShowScanView, {
             App.shared.setProduct(product ?? Product(barcode: "1"))

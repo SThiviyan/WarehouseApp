@@ -62,6 +62,7 @@ struct ScanView: UIViewControllerRepresentable {
     
     func barButtonPressed() {
         vc.openedViaAddView = false
+        
         vc.dismiss(animated: true)
     }
 }
