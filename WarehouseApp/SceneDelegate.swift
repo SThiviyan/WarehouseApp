@@ -32,25 +32,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
         
         let defaults = UserDefaults.standard
         
+        @State var loggedIn = defaults.bool(forKey: "LoggedIn")
+        @State var firstLaunch = defaults.bool(forKey: "FirstLaunch")
         
         
-        if(!defaults.bool(forKey: "FirstLaunch") && defaults.bool(forKey: "LoggedIn"))
-        {
-            print(defaults.bool(forKey: "FirstTime"))
-            window.rootViewController = tabbar
-            
-            print("Normal App Launch")
-
-        }
-      
-        else{
-            
-            //let navcontroller = UINavigationController(rootViewController: UIHostingController(rootView: StartupView()))
-            
-            window.rootViewController = UIHostingController(rootView: StartupView())
-            print("FirstTime App Launch")
-
-        }
+        let rootView = RootView(isLoggedIn: $loggedIn, firstLaunch: $firstLaunch).environmentObject(App.shared)
+        
+        window.rootViewController = UIHostingController(rootView: rootView)
         
         window.makeKeyAndVisible()
 
@@ -87,3 +75,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
 
 }
 
+
+
+struct RootView: View {
+    @EnvironmentObject var app: App
+    @Binding var isLoggedIn: Bool
+    @Binding var firstLaunch: Bool
+    
+    var body: some View {
+        if !firstLaunch && isLoggedIn {
+            TabbarControllerWrapper()
+        }
+        else
+        {
+            StartupView()
+        }
+            
+    }
+}

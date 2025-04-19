@@ -5,13 +5,12 @@
 //  Created by Thiviyan Saravanamuthu on 26.03.25.
 //
 
-
 import SwiftUI
 
 struct SettingsView: View {
-    
-    @ObservedObject var app = App.shared
-    
+
+    @EnvironmentObject var app: App
+
     let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
 
     @State var downloadProductstoDevice: Bool = true
@@ -23,20 +22,8 @@ struct SettingsView: View {
     @State var newcategoryname: String = ""
     @State var categoryalreadyadded: Bool = false
     @State var showChangePasswordSheet: Bool = false
-    
-    var createdAt: String?
-    
-    init() {
-        _downloadProductstoDevice = State(initialValue: app.Data.UserData?.saveDataToDevice ?? true)
-        _metric = State(initialValue: app.Data.UserData?.metric ?? true)
-        _defaultcurrency = State(initialValue: app.Data.UserData?.currency ?? "EUR")
-        
-        createdAt = app.Data.UserData?.created_at?
-            .split(separator: "T")
-            .first
-            .map(String.init)
-    }
-    
+    @State var createdAt: String? = nil
+
     var body: some View {
         VStack {
             Form {
@@ -87,10 +74,19 @@ struct SettingsView: View {
         .alert("Kategorie bereits hinzugefügt", isPresented: $categoryalreadyadded) {
             Button("okay", role: .cancel) {}
         }
+        .onAppear {
+            downloadProductstoDevice = app.Data.UserData?.saveDataToDevice ?? true
+            metric = app.Data.UserData?.metric ?? true
+            defaultcurrency = app.Data.UserData?.currency ?? "EUR"
+            createdAt = app.Data.UserData?.created_at?
+                .split(separator: "T")
+                .first
+                .map(String.init)
+        }
     }
-    
+
     // MARK: Sections
-    
+
     private var emailSection: some View {
         Section {
             Button(action: {
@@ -100,7 +96,7 @@ struct SettingsView: View {
                     Image(systemName: "person.circle")
                         .resizable()
                         .frame(width: 60, height: 60)
-                    
+
                     VStack(alignment: .leading) {
                         Text(verbatim: "thiviyan.saravanamuthu@gmail.com")
                             .lineLimit(1)
@@ -114,20 +110,20 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private var productSection: some View {
         Section("Produkte") {
             Toggle(isOn: $downloadProductstoDevice) {
                 Text("Produkte offline verfügbar machen")
             }
-            .onChange(of: downloadProductstoDevice, {
+            .onChange(of: downloadProductstoDevice) {
                 showconfirmationDownloadSheet = downloadProductstoDevice
                 app.Data.UserData?.saveDataToDevice = downloadProductstoDevice
                 print(app.Data.UserData)
-            })
+            }
         }
     }
-    
+
     private var categorySection: some View {
         Section("Kategorien") {
             DisclosureGroup("Kategorien") {
@@ -150,7 +146,7 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private var currencySection: some View {
         Section("Währung") {
             Picker(selection: $defaultcurrency, label: Text("Standardwährung")) {
@@ -159,25 +155,25 @@ struct SettingsView: View {
                 Text("$").tag("USD")
             }
             .pickerStyle(.menu)
-            .onChange(of: defaultcurrency, {
+            .onChange(of: defaultcurrency) {
                 app.Data.UserData?.currency = defaultcurrency
                 print(app.Data.UserData)
-            })
+            }
         }
     }
-    
+
     private var unitSection: some View {
         Section("Einheiten") {
             Toggle(isOn: $metric) {
                 Text("Metrisches System")
             }
-            .onChange(of: metric, {
+            .onChange(of: metric) {
                 app.Data.UserData?.metric = metric
                 print(app.Data.UserData)
-            })
+            }
         }
     }
-    
+
     private var logoutSection: some View {
         Section {
             Button(action: {
@@ -193,7 +189,7 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private var memberSinceSection: some View {
         Section {
             HStack {

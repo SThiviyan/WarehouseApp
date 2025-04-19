@@ -21,7 +21,7 @@ struct AddView: View {
     @Environment(\.dismiss) var dismiss
     
     
-    @ObservedObject var app = App.shared
+    @EnvironmentObject var app: App
     
     @State var product: Product?
     @Binding var scrollToSection: Int?
@@ -53,6 +53,7 @@ struct AddView: View {
     @State var productscanned: Bool = false
     @State var showScanView: Bool = false
    // @State var scanresult: String = ""
+    //@State var section: Int? = 0
     
     
     init(product: Product?, scrolltoSection: Binding<Int?>?) {

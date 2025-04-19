@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LookUpView: View {
     
-    @ObservedObject var appstate = App.shared
+    @EnvironmentObject var appstate: App
     @State var product: Product?
     //MARK: Infuse this view with a Product from App class
     
@@ -57,11 +57,12 @@ struct LookUpView: View {
                         .padding(.top)
                     Text(product?.producer ?? "")
                     Text(product?.description ?? "")
+                        .opacity(product?.description == "" ? 0 : 1)
                     
                 }
                 
                 
-                Section("Category")
+                Section("Kategorie")
                 {
                     Text(product?.category ?? "")
                 }
@@ -114,10 +115,8 @@ struct LookUpView: View {
         },content: {
             AddView(product: product, scrolltoSection: nil)
         })
-        .onChange(of: ShowScanView, {
-            App.shared.setProduct(product ?? Product(barcode: "1"))
-        })
-        }
+        
+    }
         
     
         

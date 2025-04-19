@@ -17,7 +17,7 @@ func getTabbar() -> UITabBarController {
     let secondVC = UINavigationController(rootViewController: TableViewController())
     
     
-    let vc = UIHostingController(rootView: SettingsView())
+    let vc = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
     
     let thirdVC = UINavigationController(rootViewController: vc)
     
@@ -34,3 +34,17 @@ func getTabbar() -> UITabBarController {
     
     return tabbar
 }
+
+
+
+struct TabbarControllerWrapper: UIViewControllerRepresentable {
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        
+    }
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        return getTabbar()
+    }
+    
+}
+

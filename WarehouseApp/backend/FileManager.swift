@@ -18,16 +18,20 @@ class FileManager {
     }
     
     func DataOnFileSystem() -> Bool {
-        
-        
-        return false
+        return true
     }
     
     
     
-    func getAppData() -> [AppData]?
+    func getAppData() -> AppData?
     {
-        return nil
+        var appData = AppData()
+        
+        appData.products = getDummyProducts()
+        
+        
+        
+        return appData
     }
     
     

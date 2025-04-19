@@ -23,7 +23,7 @@ final class App: ObservableObject
     let Database: DatabaseConnector!
     let Storage: FileManager!
     
-    @Published var Data: AppData!
+    @Published var Data: AppData
     
     
     //variables that are useful
@@ -34,14 +34,35 @@ final class App: ObservableObject
         self.Storage = FileManager()
         
         Data = AppData()
-        //App.shared.Data.products = getDummyProducts()
-        if(self.Storage.DataOnFileSystem())
-        {
-            
-        }
-        
+
+
+        // LOADS DATA FROM FILE SYSTEM
         Data.products = getDummyProducts()
+        let _appdata = self.Storage.getAppData()
+            
+        if(_appdata == nil)
+        {
+            Task
+            {
+                //DOES INTIIALSETUP BY LOADING FILES FROM SERVER
+                Data = await performInitialSetup()!
+            }
+        }
+        else
+        {
+            if(Data.UserData != nil)
+            {
+                Data = _appdata!
+            }
+            else
+            {
+                
+            }
+        }
+            
     }
+       
+    
     
 }
 
@@ -60,7 +81,7 @@ extension App {
             
             if(syncWithServer)
             {
-                
+                Data = await performInitialSetup()!
             }
             
             let defaults = UserDefaults.standard
@@ -111,7 +132,7 @@ extension App {
 
 
 //
-// FILESYSTEM METHODS
+// DATABASE METHODS FOR FILESYSTEM
 //
 
 extension App {
@@ -138,7 +159,7 @@ extension App {
 
 
 //
-//  SET METHODS
+//  USER METHODS (USER; CATEGORIES)
 //
 
 extension App {
@@ -146,10 +167,14 @@ extension App {
     
     func setUser(_ user: User)
     {
-        
-        print("Setting usedatar: \(String(describing: user.email))")
         Data.UserData = user
     }
+    
+    func getUser() -> User?
+    {
+        return Data.UserData
+    }
+    
     
     
     
@@ -164,6 +189,11 @@ extension App {
         
     }
     
+    func removeCategory(_ category: Category)
+    {
+        
+        
+    }
     
     
     
@@ -189,23 +219,31 @@ extension App {
         
     }
     
+    func getProduct(_ barcode: String) -> Product?
+    {
+        return nil
+    }
+    
+    
     
 }
 
 
 
 //
-// GET METHODS
+// INITIAL SETUP METHODS
 //
 
 extension App {
     
-    func performInitialSetup() async
+    func performInitialSetup() async -> AppData?
     {
         await setUser()
         await setCategories()
         await setUnits()
         await setCurrencies()
+        
+        return nil
     }
     
     
@@ -213,8 +251,9 @@ extension App {
     {
         return true
     }
+        
     
-    
+    //resetting JWT
     func setUser() async
     {
         let jwt = Data.UserData?.lastJWT ?? ""
@@ -222,32 +261,21 @@ extension App {
         Data.UserData = user
     }
     
-    
     func setCategories() async
     {
         
     }
     
-    func setProducts() async
-    {
-        
-    }
-    
-    func setUnits() async
-    {
-        
-    }
     
     func setCurrencies() async
     {
         
-        
     }
     
     
-    func getProduct(_ barcode: String) -> Product?
+    func setUnits() async
     {
-        return nil
+        
     }
     
 }

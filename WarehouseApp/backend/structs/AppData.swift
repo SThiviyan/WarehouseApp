@@ -8,9 +8,9 @@
 
 struct AppData
 {
-    var categories: [Category]?
-    var products: [Product]?
-    var units: [Unit]?
+    var categories: [Category]
+    var products: [Product]
+    var units: [Unit]
     var UserData: User?
     var currencies: [Currency]? 
     
@@ -23,6 +23,8 @@ struct AppData
     }
     
     init(){
-        
+        products = []
+        categories = []
+        units = []
     }
 }

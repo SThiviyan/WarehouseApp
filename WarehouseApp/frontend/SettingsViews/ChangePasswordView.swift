@@ -11,7 +11,7 @@ struct ChangePasswordView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @ObservedObject var app = App.shared
+    @EnvironmentObject var app: App
     
     @State private var oldPassword: String = ""
     @State private var newPassword: String = ""
