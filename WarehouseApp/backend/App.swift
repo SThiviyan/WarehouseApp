@@ -47,21 +47,23 @@ extension App {
     func login(email: String, password: String, syncWithServer: Bool) async -> Bool {
         if let loginRequest = await Database.login(email: email, password: password){
             
-            await MainActor.run{
-                App.shared.Data.UserData = loginRequest.user
-                App.shared.Data.UserData?.lastJWT = loginRequest.token
-            }
+            var user = loginRequest.user
+            user.lastJWT = loginRequest.token
             
             if(syncWithServer)
             {
-                if let setupData = await performInitialSetup(){
+                if let setupData = await performInitialSetup(user: user){
                     await MainActor.run(body: {
                         Data = setupData
+                        print("SETUPDATA--------------------------------------------")
                         print(setupData)
-                        //Data.products = getDummyProducts()
+                        print("-----------------------------------------------------")
                     })
                 }
             }
+            
+           
+
             
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: "LoggedIn")
@@ -70,7 +72,7 @@ extension App {
         }
         
         
-        return true
+        return false
     }
     
     func signup(email: String, password: String) async -> Bool{
@@ -147,11 +149,41 @@ extension App {
     {
         //Saves AppData to a Database or storage
     }
-
-    func downloadAllProducts()
+    
+    
+    func fetchAllProducts(jwt: String) async -> [Product]
     {
         
+        
+        return getDummyProducts()
     }
+    
+    func fetchUserData(jwt: String) async -> User?
+    {
+        let user = await Database.getUser(jwt)
+        
+        return user
+    }
+    
+    func fetchCategories(jwt: String) async -> [Category]
+    {
+        return getDummyCategories()
+    }
+    
+    func fetchUnits(jwt: String) async -> [Unit]
+    {
+        let units = await Database.getUnits(jwt)
+        
+        return units
+    }
+    
+    func fetchCurrencies(jwt: String) async -> [Currency]
+    {
+        let currencies = await Database.getCurrencies(jwt)
+        
+        return currencies
+    }
+    
 }
 
 
@@ -261,23 +293,35 @@ extension App {
 extension App {
     
     @MainActor
-    func performInitialSetup() async -> AppData?
+    func performInitialSetup(user: User) async -> AppData?
     {
-        if let userdata = Storage.getAppData() {
-            return userdata
-        }
-        else{
+        //if var userdata = Storage.getAppData() {
+        //    userdata.UserData = user
+        //    return userdata
+        //}
+        //else{
             
-            let data = AppData()
+            var data = AppData()
+            
+            if(user.lastJWT == nil || user.lastJWT == "")
+            {
+                return nil
+            }
             
             
-            await setUser()
-            await setCategories()
-            await setUnits()
-            await setCurrencies()
+            data.UserData = user
+            data.units = await fetchUnits(jwt: user.lastJWT!)
+            data.products = await fetchAllProducts(jwt: user.lastJWT!)
+            data.currencies = await fetchCurrencies(jwt: user.lastJWT!)
             
-        }
-        return nil
+            
+            print("USERDATA::::::::::::::::::::::::::::::::::::::::::::::::::")
+            print(data)
+            print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+
+            
+            return data
+        //}
     }
     
     

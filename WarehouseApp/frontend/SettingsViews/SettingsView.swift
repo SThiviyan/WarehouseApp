@@ -52,7 +52,10 @@ struct SettingsView: View {
                 downloadProductstoDevice = false
             }
             Button("download") {
-                App.shared.downloadAllProducts()
+                Task{
+                    //MARK: ADD FETCHING
+                    //await App.shared.fetchAllProducts()
+                }
             }
             .bold()
             .tint(.green)

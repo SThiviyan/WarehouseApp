@@ -26,5 +26,6 @@ struct AppData
         products = []
         categories = []
         units = []
+        UserData = User()
     }
 }

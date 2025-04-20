@@ -154,7 +154,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
         DispatchQueue.main.async
         {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3)
             {
                 self.camerapreviewlayer()
             }

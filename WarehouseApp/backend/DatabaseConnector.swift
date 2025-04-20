@@ -115,8 +115,8 @@ class DatabaseConnector {
     // CATEGORIES
     //
     
-    func getCategories(_ jwt: String) async -> [Category]? {
-        if(jwt.isEmpty){return nil}
+    func getCategories(_ jwt: String) async -> [Category] {
+        if(jwt.isEmpty){return []}
     
         let url = baseURL + "/categories"
         let jwt = jwt
@@ -128,7 +128,7 @@ class DatabaseConnector {
         }
         catch{
             print("Error: \(error)")
-            return nil
+            return []
         }
     }
     
@@ -144,8 +144,8 @@ class DatabaseConnector {
     //  UNITS
     //
     
-    func getUnits(_ jwt: String) async -> [Unit]?{
-        if(jwt.isEmpty){return nil}
+    func getUnits(_ jwt: String) async -> [Unit]{
+        if(jwt.isEmpty){return []}
     
         let url = baseURL + "/units"
         let jwt = jwt
@@ -157,12 +157,12 @@ class DatabaseConnector {
         }
         catch{
             print("Error: \(error)")
-            return nil
+            return []
         }
      }
     
-    func getCurrencies(_ jwt: String) async -> [Currency]?{
-         if(jwt.isEmpty){return nil}
+    func getCurrencies(_ jwt: String) async -> [Currency]{
+         if(jwt.isEmpty){return []}
      
          let url = baseURL + "/currencies"
          let jwt = jwt
@@ -174,7 +174,7 @@ class DatabaseConnector {
          }
          catch{
              print("Error: \(error)")
-             return nil
+             return []
          }
     }
     
@@ -189,9 +189,9 @@ class DatabaseConnector {
         return false
     }
     
-    func getProduct()
+    func getProducts() -> [Product]
     {
-        
+        return []
     }
     
     func addProduct(_ product: Product, _ imageData: Data, _ jwt: String) async -> Bool {

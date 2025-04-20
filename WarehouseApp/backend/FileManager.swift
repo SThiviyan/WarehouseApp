@@ -32,7 +32,7 @@ class FileManager {
         appData.categories = getDummyCategories()
 
     
-        return appData
+        return nil
     }
     
     

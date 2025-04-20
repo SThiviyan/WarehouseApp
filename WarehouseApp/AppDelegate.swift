@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //here!
             //Login again to ensure JWT is correct
             
-            if(App.shared.Data.UserData == nil)
+            if(App.shared.Data.UserData?.email == nil)
             {
                 defaults.set(false, forKey: "LoggedIn")
             }
@@ -44,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let password = App.shared.Data.UserData?.password ?? ""
                 
                 Task{
+                    print("Login")
                     if await App.shared.login(email: email, password: password, syncWithServer: true) {
                         defaults.set(true, forKey: "LoggedIn")
                     }
@@ -51,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     {
                         defaults.set(false, forKey: "LoggedIn")
                     }
+                    print("LoginEnd")
                 }
                 
             }

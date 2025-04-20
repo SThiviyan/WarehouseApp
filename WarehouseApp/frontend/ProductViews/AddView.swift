@@ -129,7 +129,10 @@ struct AddView: View {
             
             if(product == nil)
             {
-                categorystring = app.Data.categories[0].name
+                if(app.Data.categories.count > 0)
+                {
+                    categorystring = app.Data.categories[0].name
+                }
             }
 
             //MARK: Automatically scroll to specific section if requested
