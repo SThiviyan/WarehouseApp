@@ -16,7 +16,8 @@ class TableViewController: UIViewController
     
     //MARK: INFUSE WITH APP DATA FROM APP CLASS
     let app = App.shared
-    
+    @State var section: Int? = 0
+
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
@@ -92,16 +93,20 @@ class TableViewController: UIViewController
     {
         print("add product")
                 
-        @State var section: Int? = 0
-        let addViewSwiftUI = AddView(product: nil, scrollToSection: $section)
+        let addViewSwiftUI = AddView(product: nil, scrollToSection: $section, onSave: {
+            DispatchQueue.main.async {
+                self.table.reloadData()
+            }
+        })
+            .environmentObject(app)
         let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
         hostingcontroller.navigationItem.title = "Produkt hinzufügen"
         
         
         
         //presentationController.prefersGrabberVisible = true
+        //present(hostingcontroller, animated: true)
         present(hostingcontroller, animated: true)
-
     }
     
     func setconstraints()

@@ -58,7 +58,7 @@ extension App {
                     await MainActor.run(body: {
                         Data = setupData
                         print(setupData)
-                        Data.products = getDummyProducts()
+                        //Data.products = getDummyProducts()
                     })
                 }
             }
@@ -84,6 +84,7 @@ extension App {
             return true
         }
         
+        //MARK: ON PURPOSE FOR DEVICE TESTING
         return false
     }
     
@@ -176,19 +177,23 @@ extension App {
     
     
     
-    func addProduct(_ product: Product)
+    func addProduct(_ product: Product) -> Bool
     {
-        print("add Product")
-        //if barcode == 1, error from addview or lookupview.
-        if(product.barcode != "1")
+        if(product.barcode == "1")
         {
-            
+            return false
         }
+        Data.products.append(product)
+        //saveAppData to file
+        
+        return true
     }
     
     func removeProduct(_ product: Product)
     {
         print("remove Product")
+        
+        
     }
     
     func setProduct(_ product: Product)

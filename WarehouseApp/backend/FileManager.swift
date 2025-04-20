@@ -27,7 +27,8 @@ class FileManager {
     {
         var appData = AppData()
         
-        appData.products = getDummyProducts()
+        //appData.products = getDummyProducts()
+        appData.products = []
         appData.categories = getDummyCategories()
 
     

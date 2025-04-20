@@ -90,6 +90,28 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         }
     }
     
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        /*
+        if(!captureSession.isRunning)
+        {
+            captureSession.startRunning()
+        }
+         */
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        /*
+        if(captureSession.isRunning)
+        {
+            captureSession.stopRunning()
+        }
+         */
+    }
    
   
     
@@ -97,7 +119,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     func setup_start_captureSession()
     {
     
-         DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .background).async {
             
             
             self.captureSession = AVCaptureSession()
@@ -161,8 +183,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                     
                     AVCaptureDevice.requestAccess(for: .video, completionHandler: {(granted: Bool) in
                         if granted {
-                            DispatchQueue.main.async
-                            {
+                            DispatchQueue.main.async {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2)
                                 {
                                     self.camerapreviewlayer()
