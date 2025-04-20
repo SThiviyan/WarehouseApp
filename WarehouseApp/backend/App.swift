@@ -191,15 +191,27 @@ extension App {
     
     func removeProduct(_ product: Product)
     {
-        print("remove Product")
-        
+        for i in 0..<Data.products.count
+        {
+            if(Data.products[i].deviceid == product.deviceid)
+            {
+                Data.products.remove(at: i)
+            }
+        }
         
     }
     
-    func setProduct(_ product: Product)
+    func setProduct(newproduct: Product, oldproduct: Product) -> Bool
     {
-        print("Setting product with name: \(product.productname)")
+        for i in 0..<Data.products.count
+        {
+            if(Data.products[i].deviceid == oldproduct.deviceid)
+            {
+                Data.products[i] = newproduct
+            }
+        }
         
+        return true
     }
     
     func getProduct(_ barcode: String) -> Product?

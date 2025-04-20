@@ -15,7 +15,9 @@ struct AddView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var app: App
 
-    @State var product: Product?
+    @Binding var product: Product?
+    @State var tempProduct: Product? = nil
+    @State var isEditing: Bool = false
     @Binding var scrollToSection: Int?
     var onSave: (()->Void)? = nil
 
@@ -35,11 +37,17 @@ struct AddView: View {
     @State var productDescription: String = ""
     @State var productUnit: String = "kg"
     @State var productsize: String = ""
-    @State var categorystring: String = "Lebensmittel" //change this
+    @State var categorystring: String = ""
 
     //MARK: Variable concering ScanView and to check if product was scanned before
     @State var productscanned: Bool = false
     @State var showScanView: Bool = false
+    
+    
+    @State var showemptyfieldalert: Bool = false
+    @State var errorAlert: Bool = false
+    
+    
 
     var body: some View {
         NavigationView {
@@ -76,6 +84,8 @@ struct AddView: View {
             }) {
                 ScanView(currentView: self)
             }
+            
+            
         }
     }
 
@@ -112,6 +122,13 @@ struct AddView: View {
                 productUnit = product.unit ?? ""
                 productsize = String(product.size ?? 0)
                 categorystring = product.category ?? ""
+                isEditing = true
+                tempProduct = product
+            }
+            
+            if(product == nil)
+            {
+                categorystring = app.Data.categories[0].name
             }
 
             //MARK: Automatically scroll to specific section if requested
@@ -123,6 +140,14 @@ struct AddView: View {
                 }
             }
         }
+        .alert("Fehler", isPresented: $showemptyfieldalert, actions: {
+            Button("okay", role: .cancel)
+            {}},
+            message: { Text("Die Produktbezeichnung darf nicht leer sein!")})
+        .alert("Fehler", isPresented: $errorAlert, actions: {
+            Button("okay", role: .cancel)
+            {}},
+            message: { Text("Es gab einen Fehler beim hinzufügen des Produktes. Probiere es später noch einmal!")})
     }
 
     var photoSection: some View {
@@ -225,12 +250,43 @@ struct AddView: View {
         
             
         let pr = Product(productname: productname, price: Double(productprice) ?? 0.0, currency: currency, size: Double(productsize) ?? 0.0, unit: productUnit, category: [categorystring], image: UIImage(), producer: producername, barcode: barcode)
+        
+        product = pr
 
-        if App.shared.addProduct(pr) == true {
-            print(App.shared.Data.products)
-            onSave?()
-            dismiss()
+        if(productname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        {
+            showemptyfieldalert = true
+            print("field empty")
         }
+        else
+        {
+            showemptyfieldalert = false
+            
+            if isEditing
+            {
+                isEditing = false
+                if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!) == true {
+                    onSave?()
+                    dismiss()
+                }
+                else
+                {
+                    errorAlert = true
+                }
+            }
+            else
+            {
+                if App.shared.addProduct(pr) == true {
+                    onSave?()
+                    dismiss()
+                }
+                else
+                {
+                    errorAlert = true
+                }
+            }
+        }
+        
     }
 }
 

@@ -107,13 +107,13 @@ struct LookUpView: View {
         },content: {
             //ScanView speicherung muss gemacht werden, bzw. Parameter für die View, damit man weiß für welches Objekt man speichern muss
             //ScanView()
-            AddView(product: product, scrollToSection: $ScrollToSection)
+            AddView(product: $product, scrollToSection: $ScrollToSection)
             
         })
         .sheet(isPresented: $ShowAddView, onDismiss: {
             ShowAddView = false
         },content: {
-            AddView(product: product, scrollToSection: $ScrollToSection)
+            AddView(product: $product, scrollToSection: $ScrollToSection)
         })
         .onChange(of: ShowScanView, {
             if(ShowScanView == true)

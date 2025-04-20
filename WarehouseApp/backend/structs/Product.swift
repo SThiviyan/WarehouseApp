@@ -9,7 +9,8 @@ import UIKit
 
 struct Product: Codable {
     
-    var id: Int?
+    var deviceid: UUID
+    var serverId: Int?
     
     var barcode: String?
     var productname: String?
@@ -40,7 +41,7 @@ struct Product: Codable {
          barcode: String? = "0") {
         
         
-        self.id = 0
+        self.deviceid = UUID()
         self.productname = productname
         self.price = price
         self.currency = currency
@@ -55,6 +56,7 @@ struct Product: Codable {
     
     init()
     {
+        self.deviceid = UUID()
         self.productname = ""
         self.price = 0.0
         self.currency = "EUR"
@@ -68,6 +70,7 @@ struct Product: Codable {
     
     init(barcode: String)
     {
+        self.deviceid = UUID()
         self.productname = ""
         self.price = 0.0
         self.currency = "EUR"

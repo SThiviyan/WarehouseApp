@@ -17,12 +17,13 @@ class TableViewController: UIViewController
     //MARK: INFUSE WITH APP DATA FROM APP CLASS
     let app = App.shared
     @State var section: Int? = 0
+    @State var product: Product?
 
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
         
-        s.placeholder = "Search"
+        s.placeholder = "Suche"
         s.translatesAutoresizingMaskIntoConstraints = false
         s.layer.borderWidth = 0
         s.backgroundImage = UIImage()
@@ -66,7 +67,7 @@ class TableViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Search"
+        self.title = "Suche"
         self.navigationItem.largeTitleDisplayMode = .always
             
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButton_pressed))
@@ -88,12 +89,17 @@ class TableViewController: UIViewController
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        table.reloadData()
+    }
     
     @objc func plusButton_pressed()
     {
         print("add product")
                 
-        let addViewSwiftUI = AddView(product: nil, scrollToSection: $section, onSave: {
+        let addViewSwiftUI = AddView(product: $product, scrollToSection: $section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
             }
@@ -185,11 +191,23 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         navigationController?.pushViewController(vc, animated: true)
         
         //vc.title = products[indexPath.row].productname ?? ""
-         
         
     }
     
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+            
+            
+            let cell = tableView.cellForRow(at: indexPath) as! tablecell
+            let product = cell.getProduct()
+            self.app.removeProduct(product)
+            tableView.deleteRows(at: [indexPath], with: .bottom)
+            completionHandler(true)
+        }
+        
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
  
 }
 

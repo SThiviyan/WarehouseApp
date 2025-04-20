@@ -31,6 +31,10 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     var currentAddView: AddView? = nil
     var openedViaAddView: Bool = false
     
+    @State var scrollTo: Int? = 0
+    @State var product: Product? = nil
+    
+    
     //MARK: UI Elements
     let FlashButton: UIButton =
     {
@@ -331,11 +335,9 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
         if(App.shared.getProduct(payload) == nil)
         {
-            let product = Product(barcode: payload)
+            product = Product(barcode: payload)
             
-            @State var scrollTo: Int? = 0
-            
-            let hostingController = UIHostingController(rootView: AddView(product: product, scrollToSection: $scrollTo).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: AddView(product: $product, scrollToSection: $scrollTo).environmentObject(App.shared))
             present(hostingController, animated: true)
         }
         else{

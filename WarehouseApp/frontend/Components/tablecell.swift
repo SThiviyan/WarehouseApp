@@ -135,7 +135,7 @@ class tablecell: UITableViewCell
         return productname.text ?? ""
     }
     
-    func getProduct() -> Product?
+    func getProduct() -> Product
     {
         return product
     }
