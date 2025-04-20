@@ -11,8 +11,6 @@ struct SettingsView: View {
 
     @EnvironmentObject var app: App
 
-    let filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
-
     @State var downloadProductstoDevice: Bool = true
     @State var addcategorysheet: Bool = false
     @State var defaultcurrency: String = "EUR"
@@ -65,7 +63,7 @@ struct SettingsView: View {
         .alert("Wie soll deine neue Kategorie heißen?", isPresented: $addcategorysheet) {
             TextField("neue Kategorie", text: $newcategoryname)
             Button("abbrechen", role: .cancel) {}
-            Button("hinzufügen") {
+            Button("hinzufügen") {                
                 if !app.addCategory(name: newcategoryname) {
                     categoryalreadyadded.toggle()
                 }
@@ -119,7 +117,6 @@ struct SettingsView: View {
             .onChange(of: downloadProductstoDevice) {
                 showconfirmationDownloadSheet = downloadProductstoDevice
                 app.Data.UserData?.saveDataToDevice = downloadProductstoDevice
-                print(app.Data.UserData)
             }
         }
     }
@@ -127,8 +124,8 @@ struct SettingsView: View {
     private var categorySection: some View {
         Section("Kategorien") {
             DisclosureGroup("Kategorien") {
-                ForEach(filterarray, id: \.self) { filter in
-                    Text(filter)
+                ForEach(app.Data.categories, id: \.id) { filter in
+                    Text(filter.name)
                         .swipeActions {
                             Button("Delete") {
                                 print("Delete \(filter)")
@@ -157,7 +154,6 @@ struct SettingsView: View {
             .pickerStyle(.menu)
             .onChange(of: defaultcurrency) {
                 app.Data.UserData?.currency = defaultcurrency
-                print(app.Data.UserData)
             }
         }
     }
@@ -169,7 +165,6 @@ struct SettingsView: View {
             }
             .onChange(of: metric) {
                 app.Data.UserData?.metric = metric
-                print(app.Data.UserData)
             }
         }
     }

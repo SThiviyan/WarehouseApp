@@ -157,3 +157,14 @@ func getDummyProducts() -> [Product]
     
     return products
 }
+
+
+func getDummyCategories() -> [Category] {
+    return [Category(id: 0, user_id: 1, name: "Lebensmittel"),
+            Category(id: 1, user_id: 1, name: "Getränke"),
+            Category(id: 2, user_id: 1, name: "Haushaltswaren"),
+            Category(id: 3, user_id: 1, name: "Süßwaren"),
+            Category(id: 4, user_id: 1, name: "Spielzeug"),
+            Category(id: 5, user_id: 1, name: "Schreibwaren")
+    ]
+}

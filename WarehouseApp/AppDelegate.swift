@@ -14,8 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) async -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
         
         
         
@@ -25,9 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(false, forKey: "LoggedIn")
         }
         
-        if defaults.object(forKey: "FirstLaunch") == nil {
-            defaults.set(true, forKey: "FirstLaunch")
-        }
         
         //LoadApp structure from File or Database
         
@@ -39,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if(App.shared.Data.UserData == nil)
             {
                 defaults.set(false, forKey: "LoggedIn")
-                defaults.set(false, forKey: "FirstLaunch")
             }
             else
             {
@@ -56,10 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 
-                
             }
             
-            //App.shared.login(email: App.shared., password: T##String)
             
         }
         

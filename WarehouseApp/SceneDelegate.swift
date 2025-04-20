@@ -25,18 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
         self.window = window
         window.windowScene = windowscene
         
-
-        
-        let tabbar = getTabbar()
-        
-        
-        let defaults = UserDefaults.standard
-        
-        @State var loggedIn = defaults.bool(forKey: "LoggedIn")
-        @State var firstLaunch = defaults.bool(forKey: "FirstLaunch")
-        
-        
-        let rootView = RootView(isLoggedIn: $loggedIn, firstLaunch: $firstLaunch).environmentObject(App.shared)
+        let rootView = RootView().environmentObject(App.shared)
         
         window.rootViewController = UIHostingController(rootView: rootView)
         
@@ -79,17 +68,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
 
 struct RootView: View {
     @EnvironmentObject var app: App
-    @Binding var isLoggedIn: Bool
-    @Binding var firstLaunch: Bool
+    @State var isLoggedIn: Bool = false
     
     var body: some View {
-        if !firstLaunch && isLoggedIn {
-            TabbarControllerWrapper()
+        NavigationStack{
+            if isLoggedIn {
+                TabbarControllerWrapper()
+            }
+            else
+            {
+                StartupView()
+            }
         }
-        else
-        {
-            StartupView()
-        }
-            
+        .onAppear(perform: {
+            let defaults = UserDefaults.standard
+            isLoggedIn = defaults.bool(forKey: "LoggedIn")
+        })
     }
+    
 }

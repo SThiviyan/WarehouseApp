@@ -17,8 +17,6 @@ class TableViewController: UIViewController
     //MARK: INFUSE WITH APP DATA FROM APP CLASS
     let app = App.shared
     
-    @State var filterarray = ["Lebensmittel", "Getränke", "Haushaltswaren", "Süßwaren", "Spielzeug", "Schreibwaren"]
-    
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
@@ -95,7 +93,7 @@ class TableViewController: UIViewController
         print("add product")
                 
         @State var section: Int? = 0
-        let addViewSwiftUI = AddView(product: nil, scrolltoSection: $section)
+        let addViewSwiftUI = AddView(product: nil, scrollToSection: $section)
         let hostingcontroller = UIHostingController(rootView: addViewSwiftUI)
         hostingcontroller.navigationItem.title = "Produkt hinzufügen"
         
@@ -203,12 +201,12 @@ extension TableViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filterarray.count
+        return app.Data.categories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: filterCell.identifier, for: indexPath) as! filterCell
-        cell.configure(productcategory: filterarray[indexPath.row])
+        cell.configure(productcategory: app.Data.categories[indexPath.row])
         
         
         return cell

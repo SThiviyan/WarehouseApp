@@ -54,9 +54,9 @@ class filterCell: UICollectionViewCell
         }
     }
     
-    func configure(productcategory: String)
+    func configure(productcategory: Category)
     {
-        textView.text = productcategory
+        textView.text = productcategory.name
     }
     
     func setupView()

@@ -32,38 +32,8 @@ final class App: ObservableObject
     init() {
         self.Database = DatabaseConnector()
         self.Storage = FileManager()
-        
         Data = AppData()
-
-
-        // LOADS DATA FROM FILE SYSTEM
-        Data.products = getDummyProducts()
-        let _appdata = self.Storage.getAppData()
-            
-        if(_appdata == nil)
-        {
-            Task
-            {
-                //DOES INTIIALSETUP BY LOADING FILES FROM SERVER
-                Data = await performInitialSetup()!
-            }
-        }
-        else
-        {
-            if(Data.UserData != nil)
-            {
-                Data = _appdata!
-            }
-            else
-            {
-                
-            }
-        }
-            
     }
-       
-    
-    
 }
 
 
@@ -76,23 +46,31 @@ extension App {
     
     func login(email: String, password: String, syncWithServer: Bool) async -> Bool {
         if let loginRequest = await Database.login(email: email, password: password){
-            App.shared.Data.UserData = loginRequest.user
-            App.shared.Data.UserData?.lastJWT = loginRequest.token
+            
+            await MainActor.run{
+                App.shared.Data.UserData = loginRequest.user
+                App.shared.Data.UserData?.lastJWT = loginRequest.token
+            }
             
             if(syncWithServer)
             {
-                Data = await performInitialSetup()!
+                if let setupData = await performInitialSetup(){
+                    await MainActor.run(body: {
+                        Data = setupData
+                        print(setupData)
+                        Data.products = getDummyProducts()
+                    })
+                }
             }
             
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: "LoggedIn")
-            defaults.set(false, forKey: "FirstLaunch")
             
             return true
         }
         
         
-        return true
+        return false
     }
     
     func signup(email: String, password: String) async -> Bool{
@@ -102,7 +80,6 @@ extension App {
             
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: "LoggedIn")
-            defaults.set(false, forKey: "FirstLaunch")
             
             return true
         }
@@ -121,9 +98,7 @@ extension App {
         //Logout methods, that deletes all data on file (syncs with server first)
         
         let defaults = UserDefaults.standard
-        
         defaults.set(false, forKey: "LoggedIn")
-        defaults.set(true, forKey: "FirstLaunch")
     }
 }
 
@@ -181,7 +156,10 @@ extension App {
     func addCategory(name: String) -> Bool
     {
         
-        return false
+        
+       Data.categories.append(Category(id: 7, user_id: 1, name: name))
+
+        return true
     }
     
     func setCategories(_ categories: [Category])
@@ -236,13 +214,23 @@ extension App {
 
 extension App {
     
+    @MainActor
     func performInitialSetup() async -> AppData?
     {
-        await setUser()
-        await setCategories()
-        await setUnits()
-        await setCurrencies()
-        
+        if let userdata = Storage.getAppData() {
+            return userdata
+        }
+        else{
+            
+            let data = AppData()
+            
+            
+            await setUser()
+            await setCategories()
+            await setUnits()
+            await setCurrencies()
+            
+        }
         return nil
     }
     
@@ -254,6 +242,7 @@ extension App {
         
     
     //resetting JWT
+    @MainActor
     func setUser() async
     {
         let jwt = Data.UserData?.lastJWT ?? ""
@@ -261,18 +250,20 @@ extension App {
         Data.UserData = user
     }
     
+    @MainActor
     func setCategories() async
     {
         
     }
     
     
+    @MainActor
     func setCurrencies() async
     {
         
     }
     
-    
+    @MainActor
     func setUnits() async
     {
         

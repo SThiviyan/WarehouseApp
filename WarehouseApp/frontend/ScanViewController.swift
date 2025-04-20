@@ -312,8 +312,9 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         {
             let product = Product(barcode: payload)
             
+            @State var scrollTo: Int? = 0
             
-            let hostingController = UIHostingController(rootView: AddView(product: product, scrolltoSection: nil).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: AddView(product: product, scrollToSection: $scrollTo).environmentObject(App.shared))
             present(hostingController, animated: true)
         }
         else{
