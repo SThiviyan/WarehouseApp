@@ -67,23 +67,25 @@ struct ChangePasswordView: View {
                 Spacer()
                 
                 Button(action: {
-                    if(newPassword == confirmPassword)
-                    {
-                        if app.changePassword(oldPassword: oldPassword, newPassword: newPassword)
+                    Task{
+                        if(newPassword == confirmPassword)
                         {
-                            showWrongOldPassword = false
-                            dismiss()
+                            if await app.changePassword(oldPassword: oldPassword, newPassword: newPassword)
+                            {
+                                showWrongOldPassword = false
+                                dismiss()
+                            }
+                            else
+                            {
+                                showWrongOldPassword = true
+                                showWrongConfirmPassword = false
+                            }
                         }
                         else
                         {
-                            showWrongOldPassword = true
-                            showWrongConfirmPassword = false
+                            showWrongConfirmPassword = true
+                            showWrongOldPassword = false
                         }
-                    }
-                    else
-                    {
-                        showWrongConfirmPassword = true
-                        showWrongOldPassword = false
                     }
                 }, label: {
                     Text("Bestätigen")

@@ -32,7 +32,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     var openedViaAddView: Bool = false
     
     @State var scrollTo: Int? = 0
-    @State var product: Product? = nil
+    @State var product: Product?
     
     
     //MARK: UI Elements
@@ -281,7 +281,11 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                                 if(self.openedViaAddView)
                                 {
                                     self.dismiss(animated: true, completion: {
-                                        self.currentAddView?.product?.barcode = payload
+                                        
+                                        
+                                        self.currentAddView?.productbarcode = payload
+                                        
+                                        print(self.currentAddView?.product)
                                         self.openedViaAddView = false
                                         self.currentAddView?.productscanned = true
                                         
@@ -343,8 +347,8 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         else{
             
             
-            let product = App.shared.getProduct(payload)!
-            let hostingController = UIHostingController(rootView: LookUpView(product: product).environmentObject(App.shared))
+            product = App.shared.getProduct(payload)!
+            let hostingController = UIHostingController(rootView: LookUpView(product: $product).environmentObject(App.shared))
             
             present(hostingController, animated: true)
         }

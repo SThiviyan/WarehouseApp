@@ -53,6 +53,19 @@ class DatabaseConnector {
     }
     
     
+    func changePassword(oldPassword: String, newPassword: String, jwt: String) async -> Bool  {
+        let url = baseURL + "/changepassword"
+        let payload: [String: Any] = [
+            "oldPassword": oldPassword,
+            "newPassword": newPassword
+        ]
+        let decoder = JSONDecoder()
+        
+        guard (await ServerRequest(url, "POST", jwt, payload: payload)) != nil else {return false}
+        return true
+    }
+    
+    
     
     
     

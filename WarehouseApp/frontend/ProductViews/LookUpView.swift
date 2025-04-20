@@ -10,7 +10,7 @@ import SwiftUI
 struct LookUpView: View {
     
     @EnvironmentObject var appstate: App
-    @State var product: Product?
+    @Binding var product: Product?
     //MARK: Infuse this view with a Product from App class
     
     @State var ProducerName: String = "Producer"
@@ -18,6 +18,7 @@ struct LookUpView: View {
     @State var Description: String = "Description"
     
     @State var ProductHasBarcode: Bool = true
+    @State var productBarcode: String = "0"
     
     //Previous Views
     @State var ShowScanView: Bool = false
@@ -84,7 +85,7 @@ struct LookUpView: View {
                 {
                     if(product?.barcode != "0")
                     {
-                        BarcodeScannedView(showScanView: $ShowScanView, product: $product)
+                        BarcodeScannedView(showScanView: $ShowScanView, barcode: $productBarcode)
                     }
                     else
                     {
@@ -94,6 +95,10 @@ struct LookUpView: View {
             }
             
         }
+        .onAppear(perform: {
+            print(product?.barcode)
+            productBarcode = product?.barcode ?? "0"
+        })
         .toolbar{
             ToolbarItem(placement: .confirmationAction, content: {
                 Button("Bearbeiten")

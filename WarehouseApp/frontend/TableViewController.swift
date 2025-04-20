@@ -180,8 +180,8 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         //let vc = LookUpVC()
         
         let cell = tableView.cellForRow(at: indexPath) as! tablecell
-                
-        let vc = UIHostingController(rootView: LookUpView(product: cell.product).environmentObject(App.shared))
+        product = cell.product
+        let vc = UIHostingController(rootView: LookUpView(product: $product).environmentObject(App.shared))
         
         
         print(App.shared.Data.products[indexPath.row])

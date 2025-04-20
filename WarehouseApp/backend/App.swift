@@ -32,7 +32,7 @@ final class App: ObservableObject
     init() {
         self.Database = DatabaseConnector()
         self.Storage = FileManager()
-        Data = AppData()
+        Data = Storage.getAppData() ?? AppData()
     }
 }
 
@@ -70,7 +70,7 @@ extension App {
         }
         
         
-        return false
+        return true
     }
     
     func signup(email: String, password: String) async -> Bool{
@@ -89,7 +89,25 @@ extension App {
     }
     
     
-    func changePassword(oldPassword: String, newPassword: String) -> Bool {
+    func changePassword(oldPassword: String, newPassword: String) async -> Bool {
+        
+        var jwt = App.shared.Data.UserData?.lastJWT ?? ""
+        
+        if(jwt == "")
+        {
+            if await !login(email: Data.UserData?.email ?? "", password: Data.UserData?.password ?? "", syncWithServer: false)
+            {
+                return false
+            }
+            
+            jwt = (App.shared.Data.UserData?.lastJWT)!
+        }
+        
+        if await Database.changePassword(oldPassword: oldPassword, newPassword: newPassword, jwt: jwt){
+            return true
+        }
+        
+        
         return false
     }
     
@@ -100,6 +118,8 @@ extension App {
         
         let defaults = UserDefaults.standard
         defaults.set(false, forKey: "LoggedIn")
+        
+        //Storage.removeFilesFromDevice()
     }
 }
 
@@ -112,6 +132,7 @@ extension App {
 //
 
 extension App {
+    
     func syncDataWithServer() async -> Bool
     {
         return true
@@ -216,6 +237,14 @@ extension App {
     
     func getProduct(_ barcode: String) -> Product?
     {
+        for i in 0..<Data.products.count
+        {
+            if (Data.products[i].barcode == barcode)
+            {
+                return Data.products[i]
+            }
+        }
+        
         return nil
     }
     

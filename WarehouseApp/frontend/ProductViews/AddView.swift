@@ -41,6 +41,7 @@ struct AddView: View {
 
     //MARK: Variable concering ScanView and to check if product was scanned before
     @State var productscanned: Bool = false
+    @State var productbarcode: String = "0"
     @State var showScanView: Bool = false
     
     
@@ -233,7 +234,7 @@ struct AddView: View {
             if !productscanned {
                 BarcodeNotScannedView(showScanView: $showScanView)
             } else {
-                BarcodeScannedView(showScanView: $showScanView, product: $product)
+                BarcodeScannedView(showScanView: $showScanView, barcode: $productbarcode)
             }
         }
     }
@@ -241,9 +242,9 @@ struct AddView: View {
     // MARK: Save Function
     func saveProduct() {
         
-        var barcode = product?.barcode
+        var barcode = productbarcode
         
-        if(barcode == nil)
+        if(barcode == "")
         {
             barcode = "0"
         }
@@ -357,7 +358,7 @@ struct BarcodeNotScannedView: View {
 
 struct BarcodeScannedView: View {
     @Binding var showScanView: Bool
-    @Binding var product: Product?
+    @Binding var barcode: String
 
     var body: some View {
         HStack {
@@ -371,7 +372,7 @@ struct BarcodeScannedView: View {
             Image(systemName: "camera")
                 .foregroundStyle(.blue)
         }
-        Text("scanned Barcode: \(String(describing: product?.barcode))")
+        Text("scanned Barcode: \(String(describing: barcode))")
             .bold()
     }
 }
