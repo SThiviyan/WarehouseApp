@@ -10,6 +10,13 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>https://169.254.240.198:3000</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>https://192.168.1.105:3000/api</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

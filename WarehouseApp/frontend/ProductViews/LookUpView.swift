@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LookUpView: View {
     
-    @EnvironmentObject var appstate: App
-    @Binding var product: Product?
+    @EnvironmentObject var app: App
+    @State var product: Product? = nil
     //MARK: Infuse this view with a Product from App class
     
     @State var ProducerName: String = "Producer"
@@ -28,6 +28,9 @@ struct LookUpView: View {
     @State var ScanningIsOn: Bool = true
     
     @State var ScrollToSection: Int? = 5
+    
+    @State var calledOverScanView: Bool = false
+    @State var parsedScanView: ScanViewController? = nil
     
     var body: some View {
         
@@ -96,8 +99,8 @@ struct LookUpView: View {
             
         }
         .onAppear(perform: {
-            print(product?.barcode)
             productBarcode = product?.barcode ?? "0"
+            product = app.selectedProduct
         })
         .toolbar{
             ToolbarItem(placement: .confirmationAction, content: {
@@ -112,13 +115,13 @@ struct LookUpView: View {
         },content: {
             //ScanView speicherung muss gemacht werden, bzw. Parameter für die View, damit man weiß für welches Objekt man speichern muss
             //ScanView()
-            AddView(product: $product, scrollToSection: $ScrollToSection)
+            AddView(product: product, scrollToSection: $ScrollToSection)
             
         })
         .sheet(isPresented: $ShowAddView, onDismiss: {
             ShowAddView = false
         },content: {
-            AddView(product: $product, scrollToSection: $ScrollToSection)
+            AddView(product: product, scrollToSection: $ScrollToSection)
         })
         .onChange(of: ShowScanView, {
             if(ShowScanView == true)
@@ -127,6 +130,18 @@ struct LookUpView: View {
             }
             else{
                 ScrollToSection = 0
+            }
+        })
+        .onDisappear(perform: {
+            if(calledOverScanView)
+            {
+                if(parsedScanView != nil)
+                {
+                    DispatchQueue.global(qos: .userInteractive).async{
+                        parsedScanView!.captureSession.startRunning()
+                    }
+                }
+                calledOverScanView = false
             }
         })
         

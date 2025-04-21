@@ -10,8 +10,7 @@ import Foundation
 
 class DatabaseConnector {
     //BASEURL
-    let baseURL = "https://localhost:3000/api"
-    
+    let baseURL = "https://169.254.13.98:3000/api"
     
     //
     // LOGIN AND SIGNUP

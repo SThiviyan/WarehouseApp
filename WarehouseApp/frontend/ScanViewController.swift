@@ -17,6 +17,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     //MARK: All variables for Camera and Vision
     var captureSession: AVCaptureSession!
+    var captureSessionInitialized: Bool = false
     
     var backCamera: AVCaptureDevice!
     var backInput: AVCaptureInput!
@@ -98,23 +99,32 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        /*
-        if(!captureSession.isRunning)
-        {
-            captureSession.startRunning()
+        if(captureSession != nil && captureSessionInitialized){
+            if(!captureSession.isRunning)
+            {
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.captureSession.startRunning()
+
+                }
+            }
         }
-         */
+         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        /*
-        if(captureSession.isRunning)
+        if(captureSession != nil && captureSessionInitialized)
         {
-            captureSession.stopRunning()
+            if(captureSession.isRunning)
+            {
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.captureSession.stopRunning()
+
+                }
+            }
         }
-         */
+         
     }
    
   
@@ -145,6 +155,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             
             self.captureSession.commitConfiguration()
 
+            self.captureSessionInitialized = true
             
             
             self.captureSession.startRunning()
@@ -284,8 +295,6 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                                         
                                         
                                         self.currentAddView?.productbarcode = payload
-                                        
-                                        print(self.currentAddView?.product)
                                         self.openedViaAddView = false
                                         self.currentAddView?.productscanned = true
                                         
@@ -339,18 +348,25 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
         if(App.shared.getProduct(payload) == nil)
         {
-            product = Product(barcode: payload)
+            App.shared.selectedProduct = Product(barcode: payload)
             
-            let hostingController = UIHostingController(rootView: AddView(product: $product, scrollToSection: $scrollTo).environmentObject(App.shared))
-            present(hostingController, animated: true)
+            let hostingController = UIHostingController(rootView: AddView(scrollToSection: $scrollTo, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
+            
+            present(hostingController, animated: true, completion: {
+                self.captureSession.stopRunning()
+            })
+            
         }
         else{
             
             
-            product = App.shared.getProduct(payload)!
-            let hostingController = UIHostingController(rootView: LookUpView(product: $product).environmentObject(App.shared))
+            App.shared.selectedProduct = App.shared.getProduct(payload)!
+            let hostingController = UIHostingController(rootView: LookUpView(calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
             
-            present(hostingController, animated: true)
+            present(hostingController, animated: true) {
+                    self.captureSession.stopRunning()
+            }
+            
         }
         
         

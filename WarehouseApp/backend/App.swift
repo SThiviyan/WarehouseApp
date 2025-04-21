@@ -26,8 +26,9 @@ final class App: ObservableObject
     @Published var Data: AppData
     
     
+    
     //variables that are useful
-    @Published var lastscannedBarcode: String? = ""
+    @Published var selectedProduct: Product?
     
     init() {
         self.Database = DatabaseConnector()
@@ -244,12 +245,9 @@ extension App {
     
     func removeProduct(_ product: Product)
     {
-        for i in 0..<Data.products.count
+        if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
-            if(Data.products[i].deviceid == product.deviceid)
-            {
-                Data.products.remove(at: i)
-            }
+            Data.products.remove(at: index)
         }
         
     }

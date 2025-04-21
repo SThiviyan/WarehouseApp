@@ -15,7 +15,7 @@ struct AddView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var app: App
 
-    @Binding var product: Product?
+    @State var product: Product? = nil
     @State var tempProduct: Product? = nil
     @State var isEditing: Bool = false
     @Binding var scrollToSection: Int?
@@ -48,7 +48,8 @@ struct AddView: View {
     @State var showemptyfieldalert: Bool = false
     @State var errorAlert: Bool = false
     
-    
+    @State var calledOverScanView: Bool = false
+    @State var parsedScanView: ScanViewController? = nil
 
     var body: some View {
         NavigationView {
@@ -114,6 +115,9 @@ struct AddView: View {
         }
         .onAppear {
             //MARK: Apply initial product data to form fields
+            
+            product = app.selectedProduct
+            
             if let product = product {
                 productname = product.productname ?? ""
                 producername = product.producer ?? ""
@@ -152,6 +156,27 @@ struct AddView: View {
             Button("okay", role: .cancel)
             {}},
             message: { Text("Es gab einen Fehler beim hinzufügen des Produktes. Probiere es später noch einmal!")})
+        .onDisappear(perform: {
+            productname = ""
+            producername = ""
+            productprice = ""
+            currency = ""
+            productDescription = ""
+            productUnit = ""
+            productsize = ""
+            categorystring = ""            
+            
+            if(calledOverScanView)
+            {
+                if(parsedScanView != nil)
+                {
+                    DispatchQueue.global(qos: .userInteractive).async(execute: {
+                        parsedScanView!.captureSession.startRunning()
+                        })
+                }
+                calledOverScanView = false
+            }
+        })
     }
 
     var photoSection: some View {
@@ -257,6 +282,12 @@ struct AddView: View {
         
         product = pr
 
+        print("1")
+        if(calledOverScanView)
+        {
+            isEditing = false
+        }
+
         if(productname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         {
             showemptyfieldalert = true
@@ -264,10 +295,14 @@ struct AddView: View {
         }
         else
         {
+            print("2")
+
             showemptyfieldalert = false
             
             if isEditing
             {
+                print("3")
+
                 isEditing = false
                 if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!) == true {
                     onSave?()
@@ -280,12 +315,16 @@ struct AddView: View {
             }
             else
             {
+                print("4")
+
                 if App.shared.addProduct(pr) == true {
+                    print("5")
                     onSave?()
                     dismiss()
                 }
                 else
                 {
+                    print("6")
                     errorAlert = true
                 }
             }

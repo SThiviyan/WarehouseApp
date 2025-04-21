@@ -18,7 +18,6 @@ class TableViewController: UIViewController
     let app = App.shared
     @State var section: Int? = 0
     @State var product: Product?
-
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
@@ -93,13 +92,15 @@ class TableViewController: UIViewController
         super.viewDidAppear(animated)
         
         table.reloadData()
+        
+        SetHorizontalScrollViewSize()
     }
     
     @objc func plusButton_pressed()
     {
         print("add product")
                 
-        let addViewSwiftUI = AddView(product: $product, scrollToSection: $section, onSave: {
+        let addViewSwiftUI = AddView(product: product, scrollToSection: $section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
             }
@@ -121,20 +122,39 @@ class TableViewController: UIViewController
             searchbar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             searchbar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchbar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            //searchbar.heightAnchor.constraint(equalToConstant: 50)
-            
-            horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
-            horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
-            horizontalfilterscroll.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -10),
-            horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 50),
-            
+            //searchbar.heightAnchor.constraint(equalToConstant: 50),
             table.topAnchor.constraint(equalTo: horizontalfilterscroll.bottomAnchor),
             table.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             table.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-            table.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, constant: -100)
-            
+            table.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor),
+            table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        
+        
+    }
     
+    func SetHorizontalScrollViewSize()
+    {
+        if(app.Data.categories.count > 0){
+            
+            NSLayoutConstraint.activate([
+                horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
+                horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
+                horizontalfilterscroll.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -10),
+                horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 50)
+            ])
+            
+        }
+        else
+        {
+            NSLayoutConstraint.activate([
+                horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
+                horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
+                horizontalfilterscroll.widthAnchor.constraint(equalToConstant: 0),
+                horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 0)
+            ])
+        }
     }
     
     
@@ -180,8 +200,15 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         //let vc = LookUpVC()
         
         let cell = tableView.cellForRow(at: indexPath) as! tablecell
-        product = cell.product
-        let vc = UIHostingController(rootView: LookUpView(product: $product).environmentObject(App.shared))
+        
+       
+        print("cellproduct----------------------")
+        print(cell.product)
+        print("---------------------------------")
+        
+        app.selectedProduct = cell.product
+        
+        let vc = UIHostingController(rootView: LookUpView().environmentObject(App.shared))
         
         
         print(App.shared.Data.products[indexPath.row])
