@@ -10,7 +10,7 @@ import Foundation
 
 class DatabaseConnector {
     //BASEURL
-    let baseURL = "https://169.254.13.98:3000/api"
+    let baseURL = "https://192.168.1.105:3000/api"
     
     //
     // LOGIN AND SIGNUP
@@ -188,9 +188,23 @@ class DatabaseConnector {
         return false
     }
     
-    func getProducts() -> [Product]
+    
+    func getProducts(jwt: String) async -> [Product]
     {
-        return []
+        if(jwt.isEmpty){return []}
+    
+        let url = baseURL + "/products"
+        let jwt = jwt
+        let decoder = JSONDecoder()
+    
+        do{
+            let products = try await decoder.decode([Product].self, from: ServerRequest(url, "GET", jwt, payload: nil) ?? Data())
+            return products
+        }
+        catch{
+            print("Error: \(error)")
+            return []
+        }
     }
     
     func addProduct(_ product: Product, _ imageData: Data, _ jwt: String) async -> Bool {

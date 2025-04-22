@@ -247,7 +247,7 @@ extension App {
     {
         if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
-            Data.products.remove(at: index)
+            Data.products.remove(at: index) 
         }
         
     }
