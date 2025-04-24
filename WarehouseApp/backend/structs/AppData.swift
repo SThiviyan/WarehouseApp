@@ -4,7 +4,8 @@
 //
 //  Created by Thiviyan Saravanamuthu on 09.04.25.
 //
-
+import Foundation
+import SwiftData
 
 struct AppData
 {

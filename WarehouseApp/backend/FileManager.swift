@@ -6,11 +6,16 @@
 //
 
 import Foundation
+import CoreData
+import SwiftUI
 
 
+//COREDATA
 
 class FileManager {
     
+    
+    @StateObject var coreDataStack = CoreDataStack.shared
     
     
     init() {
@@ -33,6 +38,13 @@ class FileManager {
 
     
         return nil
+    }
+    
+    
+    func saveAppData(appData: AppData) -> Bool{
+        
+        
+        return true
     }
     
     
