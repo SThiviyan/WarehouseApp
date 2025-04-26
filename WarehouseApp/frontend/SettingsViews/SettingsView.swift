@@ -70,6 +70,8 @@ struct SettingsView: View {
                 if !app.addCategory(name: newcategoryname) {
                     categoryalreadyadded.toggle()
                 }
+                
+                newcategoryname = ""
             }
         }
         .alert("Kategorie bereits hinzugefügt", isPresented: $categoryalreadyadded) {
@@ -127,7 +129,7 @@ struct SettingsView: View {
     private var categorySection: some View {
         Section("Kategorien") {
             DisclosureGroup("Kategorien") {
-                ForEach(app.Data.categories, id: \.id) { filter in
+                ForEach(app.Data.categories, id: \.name) { filter in
                     Text(filter.name)
                         .swipeActions {
                             Button("Delete") {

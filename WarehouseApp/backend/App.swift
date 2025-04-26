@@ -63,7 +63,6 @@ extension App {
                 }
             }
             
-           
 
             
             let defaults = UserDefaults.standard
@@ -212,7 +211,7 @@ extension App {
     {
         
         
-       Data.categories.append(Category(id: 7, user_id: 1, name: name))
+        Data.categories.append(Category(name: name))
 
         return true
     }

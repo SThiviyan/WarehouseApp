@@ -224,7 +224,7 @@ struct AddView: View {
     var categoryPickerSection: some View {
         Section {
             Picker("Kategorie", selection: $categorystring) {
-                ForEach(app.Data.categories, id: \.id) { category in
+                ForEach(app.Data.categories, id: \.name) { category in
                     Text(category.name).tag(category.name)
                 }
             }

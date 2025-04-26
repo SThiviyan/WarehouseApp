@@ -62,6 +62,8 @@ class TableViewController: UIViewController
         return t
     }()
     
+    var collectionViewHeightConstraint: NSLayoutConstraint?
+    var categorycount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,20 +73,23 @@ class TableViewController: UIViewController
             
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButton_pressed))
         
-      
-        view.addSubview(searchbar)
         searchbar.delegate = self
-
         
         table.register(tablecell.self, forCellReuseIdentifier: tablecell.identifier)
         table.delegate = self
         table.dataSource = self
+        view.addSubview(searchbar)
         view.addSubview(table)
-        
         view.addSubview(horizontalfilterscroll)
-
+        
         
         setconstraints()
+        
+        collectionViewHeightConstraint = horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 0)
+        collectionViewHeightConstraint?.isActive = true
+        
+        categorycount = app.Data.categories.count
+        
         
     }
     
@@ -92,8 +97,40 @@ class TableViewController: UIViewController
         super.viewDidAppear(animated)
         
         table.reloadData()
+        //horizontalfilterscroll.reloadData()
         
-        SetHorizontalScrollViewSize()
+        if(categorycount != app.Data.categories.count)
+        {
+            if app.Data.categories.count > 0 {
+                collectionViewHeightConstraint?.constant = 50
+            }
+            else
+            {
+                collectionViewHeightConstraint?.constant = 0
+            }
+            
+            var indexpaths: [IndexPath] = []
+            
+            for i in categorycount..<app.Data.categories.count{
+                indexpaths.append(IndexPath(row: i, section: 0))
+            }
+            
+            horizontalfilterscroll.insertItems(at: indexpaths)
+                
+                
+            for i in categorycount..<app.Data.categories.count{
+                if let cell  = horizontalfilterscroll.cellForItem(at: IndexPath(row: i, section: 0)) {
+                        UIView.animate(withDuration: 0.25) {
+                            cell.layoutIfNeeded()
+                        }
+                }
+            }
+          
+                
+            
+            
+            categorycount = app.Data.categories.count
+        }
     }
     
     @objc func plusButton_pressed()
@@ -122,40 +159,21 @@ class TableViewController: UIViewController
             searchbar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             searchbar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchbar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            //searchbar.heightAnchor.constraint(equalToConstant: 50),
+            searchbar.heightAnchor.constraint(equalToConstant: 50),
+            horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
+            horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
+            horizontalfilterscroll.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -10),
             table.topAnchor.constraint(equalTo: horizontalfilterscroll.bottomAnchor),
             table.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             table.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
             table.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor),
-            table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
         
         
         
     }
     
-    func SetHorizontalScrollViewSize()
-    {
-        if(app.Data.categories.count > 0){
-            
-            NSLayoutConstraint.activate([
-                horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
-                horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
-                horizontalfilterscroll.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -10),
-                horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 50)
-            ])
-            
-        }
-        else
-        {
-            NSLayoutConstraint.activate([
-                horizontalfilterscroll.topAnchor.constraint(equalTo: searchbar.bottomAnchor),
-                horizontalfilterscroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 4),
-                horizontalfilterscroll.widthAnchor.constraint(equalToConstant: 0),
-                horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 0)
-            ])
-        }
-    }
     
     
 }
@@ -257,7 +275,6 @@ extension TableViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: filterCell.identifier, for: indexPath) as! filterCell
         cell.configure(productcategory: app.Data.categories[indexPath.row])
-        
         
         return cell
     }
