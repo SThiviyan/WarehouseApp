@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="AppAppData" representedClassName="AppAppData" syncable="YES" codeGenerationType="class">
-        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AppCategory"/>
-        <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AppCurrency"/>
-        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AppProduct"/>
-        <relationship name="units" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AppUnit"/>
-        <relationship name="userData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppUser"/>
+    <entity name="CoreAppData" representedClassName="CoreAppData" syncable="YES" codeGenerationType="class">
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCategory"/>
+        <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreProduct"/>
+        <relationship name="units" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreUnit"/>
+        <relationship name="userData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUser"/>
     </entity>
-    <entity name="AppCategory" representedClassName="AppCategory" syncable="YES" codeGenerationType="class">
+    <entity name="CoreCategory" representedClassName="CoreCategory" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="AppCurrency" representedClassName="AppCurrency" syncable="YES" codeGenerationType="class">
+    <entity name="CoreCurrency" representedClassName="CoreCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="symbol" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="AppProduct" representedClassName="AppProduct" syncable="YES" codeGenerationType="class">
+    <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
         <attribute name="barcode" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -23,21 +23,21 @@
         <attribute name="productdescription" optional="YES" attributeType="String"/>
         <attribute name="serverId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="size" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppCategory"/>
-        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppCurrency"/>
-        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppProductImage"/>
-        <relationship name="unit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppUnit"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCategory"/>
+        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreProductImage"/>
+        <relationship name="unit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUnit"/>
     </entity>
-    <entity name="AppProductImage" representedClassName="AppProductImage" syncable="YES" codeGenerationType="class">
+    <entity name="CoreProductImage" representedClassName="CoreProductImage" syncable="YES" codeGenerationType="class">
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="serverFileName" optional="YES" attributeType="String"/>
         <attribute name="uploadedToServer" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
-    <entity name="AppUnit" representedClassName="AppUnit" syncable="YES" codeGenerationType="class">
+    <entity name="CoreUnit" representedClassName="CoreUnit" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="shortname" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="AppUser" representedClassName="AppUser" syncable="YES" codeGenerationType="class">
+    <entity name="CoreUser" representedClassName="CoreUser" syncable="YES" codeGenerationType="class">
         <attribute name="created_at" optional="YES" attributeType="String"/>
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -46,6 +46,6 @@
         <attribute name="login_method" optional="YES" attributeType="String"/>
         <attribute name="metric" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="password" optional="YES" attributeType="String"/>
-        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppCurrency"/>
+        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
     </entity>
 </model>
