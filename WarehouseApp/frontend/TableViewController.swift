@@ -97,6 +97,9 @@ class TableViewController: UIViewController
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        app.selectedProduct = nil
+
+        
         table.reloadData()
         //horizontalfilterscroll.reloadData()
         
@@ -145,7 +148,6 @@ class TableViewController: UIViewController
                 
     
             
-        app.selectedProduct = nil
         let addViewSwiftUI = AddView(scrollToSection: $section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
