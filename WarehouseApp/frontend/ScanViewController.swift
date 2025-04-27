@@ -350,7 +350,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         {
             App.shared.selectedProduct = Product(barcode: payload)
             
-            let hostingController = UIHostingController(rootView: AddView(scrollToSection: $scrollTo, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: AddView(scrollToSection: scrollTo, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
             
             present(hostingController, animated: true, completion: {
                 self.captureSession.stopRunning()

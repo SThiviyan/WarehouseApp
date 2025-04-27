@@ -16,8 +16,8 @@ class TableViewController: UIViewController
     
     //MARK: INFUSE WITH APP DATA FROM APP CLASS
     let app = App.shared
-    @State var section: Int? = 0
-    @State var product: Product?
+    var section: Int? = 0
+    var product: Product?
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
@@ -148,7 +148,7 @@ class TableViewController: UIViewController
                 
     
             
-        let addViewSwiftUI = AddView(scrollToSection: $section, onSave: {
+        let addViewSwiftUI = AddView(scrollToSection: section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
             }

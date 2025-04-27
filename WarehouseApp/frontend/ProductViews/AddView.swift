@@ -18,7 +18,7 @@ struct AddView: View {
     @State var product: Product? = nil
     @State var tempProduct: Product? = nil
     @State var isEditing: Bool = false
-    @Binding var scrollToSection: Int?
+    @State var scrollToSection: Int?
     var onSave: (()->Void)? = nil
 
     //MARK: Variables related to the photo Picker
