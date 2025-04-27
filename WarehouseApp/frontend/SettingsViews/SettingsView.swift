@@ -67,7 +67,7 @@ struct SettingsView: View {
             TextField("neue Kategorie", text: $newcategoryname)
             Button("abbrechen", role: .cancel) {}
             Button("hinzufügen") {                
-                if !app.addCategory(name: newcategoryname) {
+                if !app.addCategory(category: Category(name: newcategoryname)) {
                     categoryalreadyadded.toggle()
                 }
                 
@@ -134,6 +134,7 @@ struct SettingsView: View {
                         .swipeActions {
                             Button("Delete") {
                                 print("Delete \(filter)")
+                                app.removeCategory(filter)
                             }
                         }
                 }

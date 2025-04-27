@@ -207,24 +207,33 @@ extension App {
     
     
     
-    func addCategory(name: String) -> Bool
+    func addCategory(category: Category) -> Bool
     {
         
-        
-        Data.categories.append(Category(name: name))
-
+        if(Data.categories.contains(where: { $0.name.lowercased() == category.name.lowercased() } ))
+        {
+            return false
+        }
+        Data.categories.append(category)
         return true
     }
     
     func setCategories(_ categories: [Category])
     {
+        Data.categories = categories
+    }
+    
+    func renameCategory(oldCategory: Category, newName: String)
+    {
+        let oldCategoryName = oldCategory.name.lowercased()
+        let index = Data.categories.firstIndex(where: {$0.name.lowercased() == oldCategoryName})
         
+        Data.categories.replaceSubrange(index!..<index!, with: [Category(name: newName)])
     }
     
     func removeCategory(_ category: Category)
     {
-        
-        
+        Data.categories.removeAll(where: { $0.name.lowercased() == category.name.lowercased()})
     }
     
     
