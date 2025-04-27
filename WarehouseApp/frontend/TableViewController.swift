@@ -81,6 +81,7 @@ class TableViewController: UIViewController
         view.addSubview(searchbar)
         view.addSubview(table)
         view.addSubview(horizontalfilterscroll)
+        horizontalfilterscroll.alpha = 0
         
         
         setconstraints()
@@ -108,6 +109,11 @@ class TableViewController: UIViewController
             {
                 collectionViewHeightConstraint?.constant = 0
             }
+            
+            UIView.animate(withDuration: 0.25, animations: {
+                self.view.layoutIfNeeded()
+                self.horizontalfilterscroll.alpha = 1
+            })
             
             var indexpaths: [IndexPath] = []
             
