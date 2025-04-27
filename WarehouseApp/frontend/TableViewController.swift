@@ -143,7 +143,10 @@ class TableViewController: UIViewController
     {
         print("add product")
                 
-        let addViewSwiftUI = AddView(product: product, scrollToSection: $section, onSave: {
+    
+            
+        app.selectedProduct = nil
+        let addViewSwiftUI = AddView(scrollToSection: $section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
             }

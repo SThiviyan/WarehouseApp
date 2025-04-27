@@ -63,6 +63,7 @@ struct AddView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         dismiss()
+                        
                     }, label: {
                         HStack {
                             Image(systemName: "chevron.left")
@@ -86,6 +87,27 @@ struct AddView: View {
             }) {
                 ScanView(currentView: self)
             }
+            .onDisappear(perform: {
+                productname = ""
+                producername = ""
+                productprice = ""
+                currency = ""
+                productDescription = ""
+                productUnit = ""
+                productsize = ""
+                categorystring = ""
+                
+                if(calledOverScanView)
+                {
+                    if(parsedScanView != nil)
+                    {
+                        DispatchQueue.global(qos: .userInteractive).async(execute: {
+                            parsedScanView!.captureSession.startRunning()
+                            })
+                    }
+                    calledOverScanView = false
+                }
+            })
             
             
         }
@@ -156,27 +178,7 @@ struct AddView: View {
             Button("okay", role: .cancel)
             {}},
             message: { Text("Es gab einen Fehler beim hinzufügen des Produktes. Probiere es später noch einmal!")})
-        .onDisappear(perform: {
-            productname = ""
-            producername = ""
-            productprice = ""
-            currency = ""
-            productDescription = ""
-            productUnit = ""
-            productsize = ""
-            categorystring = ""            
-            
-            if(calledOverScanView)
-            {
-                if(parsedScanView != nil)
-                {
-                    DispatchQueue.global(qos: .userInteractive).async(execute: {
-                        parsedScanView!.captureSession.startRunning()
-                        })
-                }
-                calledOverScanView = false
-            }
-        })
+        
     }
 
     var photoSection: some View {
