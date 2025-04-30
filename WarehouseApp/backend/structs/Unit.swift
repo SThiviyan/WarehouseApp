@@ -9,12 +9,10 @@
 
 struct Unit: Codable
 {
-    let id: Int
     let name: String
     let shortname: String
     
-    init(id: Int, name: String, shortname: String) {
-        self.id = id
+    init(name: String, shortname: String) {
         self.name = name
         self.shortname = shortname
     }

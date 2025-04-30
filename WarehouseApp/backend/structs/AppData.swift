@@ -13,20 +13,22 @@ struct AppData
     var products: [Product]
     var units: [Unit]
     var UserData: User?
-    var currencies: [Currency]? 
+    var currencies: [Currency]
     
     
-    init(categories: [Category], products: [Product], units: [Unit], UserData: User) {
+    init(categories: [Category], products: [Product], units: [Unit], UserData: User, currencies: [Currency]) {
         self.categories = categories
         self.products = products
         self.units = units
         self.UserData = UserData
+        self.currencies = currencies
     }
     
     init(){
         products = []
         categories = []
         units = []
+        currencies = []
         UserData = User()
     }
 }
