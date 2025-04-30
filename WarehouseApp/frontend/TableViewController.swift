@@ -237,7 +237,7 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         
         app.selectedProduct = cell.product
         
-        let vc = UIHostingController(rootView: LookUpView().environmentObject(App.shared))
+        let vc = UIHostingController(rootView: LookUpView(product: cell.product).environmentObject(App.shared))
         
         
         print(App.shared.Data.products[indexPath.row])

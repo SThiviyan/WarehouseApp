@@ -10,7 +10,7 @@ import SwiftUI
 struct LookUpView: View {
     
     @EnvironmentObject var app: App
-    @State var product: Product? = nil
+    @State var product: Product
     //MARK: Infuse this view with a Product from App class
     
     @State var ProducerName: String = "Producer"
@@ -55,27 +55,27 @@ struct LookUpView: View {
                 
                 Section("Details")
                 {
-                    Text(product?.productname ?? "")
+                    Text(product.productname ?? "")
                         .font(.title2)
                         .bold()
                         .padding(.top)
-                    Text(product?.producer ?? "")
-                    Text(product?.description ?? "")
-                        .opacity(product?.description == "" ? 0 : 1)
+                    Text(product.producer ?? "")
+                    Text(product.description ?? "")
+                        .opacity(product.description == "" ? 0 : 1)
                     
                 }
                 
                 
                 Section("Kategorie")
                 {
-                    Text(product?.category ?? "")
+                    Text(product.category ?? "")
                 }
                 
                 Section("Preis")
                 {
                     HStack{
                         Spacer()
-                        Text(getPriceSizeString(price: product?.price, currency: product?.currency, size: product?.size, unit: product?.unit))
+                        Text(getPriceSizeString(price: product.price, currency: product.currency, size: product.size, unit: product.unit))
                             .font(.largeTitle)
                             .padding()
                             .bold()
@@ -86,7 +86,7 @@ struct LookUpView: View {
                 
                 Section("Scanning")
                 {
-                    if(product?.barcode != "0")
+                    if(product.barcode != "0")
                     {
                         BarcodeScannedView(showScanView: $ShowScanView, barcode: $productBarcode)
                     }
@@ -99,8 +99,8 @@ struct LookUpView: View {
             
         }
         .onAppear(perform: {
-            productBarcode = product?.barcode ?? "0"
-            product = app.selectedProduct
+            productBarcode = product.barcode ?? "0"
+            product = app.selectedProduct ?? Product()
         })
         .toolbar{
             ToolbarItem(placement: .confirmationAction, content: {
