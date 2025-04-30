@@ -15,61 +15,69 @@ import SwiftUI
 class FileManager {
     
     
-    @StateObject var coreDataStack = CoreDataStack.shared
-    
-    
-    init() {
-        
-    }
+    let coreDataStack = CoreDataStack.shared
+    init(){}
     
     func DataOnFileSystem() -> Bool {
-        return true
+        return coreDataStack.hasAppData() 
     }
-    
     
     
     func getAppData() -> AppData?
     {
-        var appData = AppData()
-        
-        //appData.products = getDummyProducts()
-        appData.products = []
-        appData.categories = getDummyCategories()
-
+        let appData = coreDataStack.getAppData()
     
-        return nil
+        return appData
     }
     
     
-    func saveAppData(appData: AppData) -> Bool{
-        
-        
-        return true
+    func saveAppData(appData: AppData) -> Bool
+    {
+        print("savedAppData")
+        return coreDataStack.saveAppData(data: appData)
+    }
+    
+    func saveProduct(product: Product) -> Bool
+    {
+        return coreDataStack.saveProduct(item: product)
+    }
+    
+    func deleteProduct(product: Product) -> Bool
+    {
+        return coreDataStack.deleteProduct(item: product)
+    }
+    
+    func addCategory(oldCategory: Category?,category: Category) -> Bool //add and rename
+    {
+        return coreDataStack.addCategory(oldCategory: oldCategory, newCategory: category)
+    }
+    
+    func deleteCategory(category: Category) -> Bool
+    {
+        return coreDataStack.deleteCategory(category: category)
+    }
+    
+    func removeAppData() -> Bool
+    {
+        return coreDataStack.deleteAllCoreDataObjects()
     }
     
     
     
-    func saveJSONtoFile(data: Data, fileName: String) {
-        
+    
+    
+    // Images
+    
+    func saveImage(image: Data, name: String) -> Bool
+    {
+        return true //TODO
     }
     
     
-    func deleteJSONFile(fileName: String) {
-        
+    func deleteImage(name: String) -> Bool
+    {
+        return true //TODO
     }
-    
-    
-    func readJSONfromFile(fileName: String) -> Data? {
-        return nil
-    }
-    
-    func writeJSONtoFile(data: Data, fileName: String) {
-        
-        
-        
-    }
-    
-    
     
     
 }
