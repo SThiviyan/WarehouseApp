@@ -83,6 +83,8 @@ struct RootView: View {
         .onAppear(perform: {
             let defaults = UserDefaults.standard
             isLoggedIn = defaults.bool(forKey: "LoggedIn")
+            
+            
         })
     }
     

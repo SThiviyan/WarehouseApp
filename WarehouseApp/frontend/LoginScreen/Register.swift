@@ -71,7 +71,6 @@ struct Register: View {
                     {
                         let defaults = UserDefaults.standard
                         defaults.set(true, forKey: "LoggedIn")
-                        defaults.set(false, forKey: "FirstLaunch")
                         
                         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let window = windowScene.windows.first {
                             

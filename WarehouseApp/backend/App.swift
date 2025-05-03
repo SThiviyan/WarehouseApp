@@ -34,6 +34,7 @@ final class App: ObservableObject
         self.Database = DatabaseConnector()
         self.Storage = FileManager()
         Data = Storage.getAppData() ?? AppData()
+        print(Storage.getAppData())
     }
 }
 
@@ -51,19 +52,25 @@ extension App {
             var user = loginRequest.user
             user.lastJWT = loginRequest.token
             
+            
             if(syncWithServer)
             {
                 if let setupData = await performInitialSetup(user: user){
-                    await MainActor.run(body: {
+                    
+                    print("==================================")
+                    print (setupData)
+                    print("==================================")
+
+                    let saveSucceeded = await MainActor.run { () -> Bool in
                         Data = setupData
-                        print("SETUPDATA--------------------------------------------")
-                        print(setupData)
-                        print("-----------------------------------------------------")
-                    })
+                        return Storage.saveAppData(appData: Data)
+                    }
+                    
+                    guard saveSucceeded else {return false}
+                    
                 }
             }
             
-
             
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: "LoggedIn")
@@ -121,7 +128,7 @@ extension App {
         let defaults = UserDefaults.standard
         defaults.set(false, forKey: "LoggedIn")
         
-        //Storage.removeFilesFromDevice()
+        Storage.removeAppData()
     }
 }
 
@@ -301,11 +308,11 @@ extension App {
     @MainActor
     func performInitialSetup(user: User) async -> AppData?
     {
-        //if var userdata = Storage.getAppData() {
-        //    userdata.UserData = user
-        //    return userdata
-        //}
-        //else{
+        if var userdata = Storage.getAppData() {
+            userdata.UserData = user
+            return userdata
+        }
+        else{
             
             var data = AppData()
             
@@ -320,14 +327,14 @@ extension App {
             data.products = await fetchAllProducts(jwt: user.lastJWT!)
             data.currencies = await fetchCurrencies(jwt: user.lastJWT!)
             
-            
+            /*
             print("USERDATA::::::::::::::::::::::::::::::::::::::::::::::::::")
             print(data)
             print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-
+             */
             
             return data
-        //}
+        }
     }
     
     

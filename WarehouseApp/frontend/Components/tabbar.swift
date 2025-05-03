@@ -18,8 +18,11 @@ func getTabbar() -> UITabBarController {
     
     
     let vc = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
-    
-    let thirdVC = UINavigationController(rootViewController: vc)
+    let thirdVC = UINavigationController(rootViewController: SettingsViewController())
+    thirdVC.title = "Einstellungen"
+    //let thirdVC = UINavigationController(rootViewController: vc)
+   
+
     
     firstVC.tabBarItem = UITabBarItem(title: "Scan", image: UIImage(systemName: "camera"), selectedImage: UIImage(systemName: "camera"))
     secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))

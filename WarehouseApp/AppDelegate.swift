@@ -29,9 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //LoadApp structure from File or Database
         
-        //MARK: if logged in LOAD data from server
-        if defaults.bool(forKey: "LoggedIn") {
-            //here!
+     
+        
             //Login again to ensure JWT is correct
             
             if(App.shared.Data.UserData?.email == nil)
@@ -40,25 +39,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             else
             {
-                let email = App.shared.Data.UserData?.email ?? ""
-                let password = App.shared.Data.UserData?.password ?? ""
-                
-                Task{
-                    print("Login")
-                    if await App.shared.login(email: email, password: password, syncWithServer: true) {
-                        defaults.set(true, forKey: "LoggedIn")
+                if((App.shared.Data.UserData?.email?.isEmpty) != nil){
+                    let email = App.shared.Data.UserData?.email ?? ""
+                    let password = App.shared.Data.UserData?.password ?? ""
+                    
+                    Task{
+                        if await App.shared.login(email: email, password: password, syncWithServer: false) {
+                           print("Logged In")
+                            //login functions saves Userdefault
+                            defaults.set(true, forKey: "LoggedIn")
+                        }
+                        else
+                        {
+                            defaults.set(false, forKey: "LoggedIn")
+                        }
                     }
-                    else
-                    {
-                        defaults.set(false, forKey: "LoggedIn")
-                    }
-                    print("LoginEnd")
+                }
+                else
+                {
+                    defaults.set(false, forKey: "LoggedIn")
                 }
                 
             }
             
             
-        }
+        
         
         
         
