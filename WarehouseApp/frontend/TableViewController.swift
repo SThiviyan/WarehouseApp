@@ -63,7 +63,7 @@ class TableViewController: UIViewController
     }()
     
     var collectionViewHeightConstraint: NSLayoutConstraint?
-    var categorycount = 0
+    var currentCategories: [Category] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,10 +89,12 @@ class TableViewController: UIViewController
         collectionViewHeightConstraint = horizontalfilterscroll.heightAnchor.constraint(equalToConstant: 0)
         collectionViewHeightConstraint?.isActive = true
         
-        categorycount = app.Data.categories.count
+        currentCategories = app.Data.categories
         
         
     }
+    
+ 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -103,7 +105,7 @@ class TableViewController: UIViewController
         table.reloadData()
         //horizontalfilterscroll.reloadData()
         
-        if(categorycount != app.Data.categories.count)
+        if(currentCategories.count != app.Data.categories.count)
         {
             if app.Data.categories.count > 0 {
                 collectionViewHeightConstraint?.constant = 50
@@ -119,27 +121,51 @@ class TableViewController: UIViewController
             })
             
             var indexpaths: [IndexPath] = []
-            
-            for i in categorycount..<app.Data.categories.count{
-                indexpaths.append(IndexPath(row: i, section: 0))
-            }
-            
-            horizontalfilterscroll.insertItems(at: indexpaths)
+
+            if(currentCategories.count < app.Data.categories.count)
+            {
                 
                 
-            for i in categorycount..<app.Data.categories.count{
-                if let cell  = horizontalfilterscroll.cellForItem(at: IndexPath(row: i, section: 0)) {
+                for i in currentCategories.count..<app.Data.categories.count{
+                    indexpaths.append(IndexPath(row: i, section: 0))
+                }
+                
+                horizontalfilterscroll.insertItems(at: indexpaths)
+                
+                for i in currentCategories.count..<app.Data.categories.count{
+                    if let cell  = horizontalfilterscroll.cellForItem(at: IndexPath(row: i, section: 0)) {
                         UIView.animate(withDuration: 0.25) {
                             cell.layoutIfNeeded()
                         }
+                    }
                 }
+            }
+            else
+            {
+                 for i in 0..<currentCategories.count{
+                    
+                     if(!app.Data.categories.contains(where: { $0.name == currentCategories[i].name}))
+                     {
+                         horizontalfilterscroll.deleteItems(at: [IndexPath(row: i, section: 0)])
+                         
+                         
+                         if let cell  = horizontalfilterscroll.cellForItem(at: IndexPath(row: i, section: 0)) {
+                             UIView.animate(withDuration: 0.25) {
+                                 cell.layoutIfNeeded()
+                             }
+                         }
+                     }
+                }
+                
+                
             }
           
                 
             
             
-            categorycount = app.Data.categories.count
+            currentCategories = app.Data.categories
         }
+       
     }
     
     @objc func plusButton_pressed()

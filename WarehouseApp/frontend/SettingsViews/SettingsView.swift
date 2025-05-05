@@ -39,18 +39,20 @@ struct SettingsView: View {
                 memberSinceSection
                 
             }
-            .alert("Bist du sicher, dass du dich ausloggen willst?", isPresented: $showconfirmationLogoutSheet) {
-                Button("abbrechen", role: .cancel) {}
-                Button("Logout", role: .destructive) {
-                    app.logout()
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first {
-                        window.rootViewController = UIHostingController(rootView: StartupView())
-                        window.makeKeyAndVisible()
-                        UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {})
-                    }
+            .alert("Bist du sicher, dass du dich ausloggen willst?", isPresented: $showconfirmationLogoutSheet)
+            {
+            Button("abbrechen", role: .cancel) {}
+            Button("Logout", role: .destructive) {
+                app.logout()
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController = UIHostingController(rootView: StartupView())
+                    window.makeKeyAndVisible()
+                    UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {})
                 }
-                .alert("Das kann mehr Speicherplatz benötigen. Trotzdem fortfahren?", isPresented: $showconfirmationDownloadSheet) {
+            }
+            }
+            .alert("Das kann mehr Speicherplatz benötigen. Trotzdem fortfahren?", isPresented: $showconfirmationDownloadSheet) {
                     Button("abbrechen", role: .cancel) {
                         downloadProductstoDevice = false
                     }
@@ -75,6 +77,8 @@ struct SettingsView: View {
                         }
                         
                         newcategoryname = ""
+                        
+                        addcategorysheet = false
                     }
                 }
                 .alert("Kategorie bereits hinzugefügt", isPresented: $categoryalreadyadded) {
@@ -94,7 +98,7 @@ struct SettingsView: View {
                 .onChange(of: app.Data.UserData?.created_at, {
                     createdAt = app.Data.UserData?.created_at
                 })
-            }
+            
         
 
         
@@ -150,11 +154,12 @@ struct SettingsView: View {
                                 print("Delete \(filter)")
                                 app.removeCategory(filter)
                             }
+                            .tint(Color.red)
                         }
                 }
             }
             Button(action: {
-                addcategorysheet.toggle()
+                addcategorysheet = true
             }) {
                 HStack {
                     Image(systemName: "plus")
