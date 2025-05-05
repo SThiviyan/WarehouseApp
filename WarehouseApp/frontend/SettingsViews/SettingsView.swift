@@ -82,17 +82,21 @@ struct SettingsView: View {
                 }
                 
                 .onAppear {
-                        downloadProductstoDevice = app.Data.UserData?.saveDataToDevice ?? true
-                        metric = app.Data.UserData?.metric ?? true
-                        defaultcurrency = app.Data.UserData?.currency ?? "EUR"
-                        createdAt = app.Data.UserData?.created_at?
-                            .split(separator: "T")
-                            .first
-                            .map(String.init)
+                    downloadProductstoDevice = app.Data.UserData?.saveDataToDevice ?? true
+                    metric = app.Data.UserData?.metric ?? true
+                    defaultcurrency = app.Data.UserData?.currency ?? "EUR"
+                    createdAt = app.Data.UserData?.created_at?
+                        .split(separator: "T")
+                        .first
+                        .map(String.init)
                     
                 }
+                .onChange(of: app.Data.UserData?.created_at, {
+                    createdAt = app.Data.UserData?.created_at
+                })
             }
         
+
         
         
         
@@ -111,7 +115,7 @@ struct SettingsView: View {
                         .frame(width: 60, height: 60)
 
                     VStack(alignment: .leading) {
-                        Text(verbatim: "thiviyan.saravanamuthu@gmail.com")
+                        Text(verbatim: app.Data.UserData?.email ?? "")
                             .lineLimit(1)
                             .font(.title2)
                             .bold()
@@ -205,7 +209,7 @@ struct SettingsView: View {
         Section {
             HStack {
                 Spacer()
-                Text("Mitglied seit \(createdAt ?? "Unbekannt")")
+                Text("Mitglied seit \(app.Data.UserData?.created_at ?? "Unbekannt")")
                     .font(.caption)
                     .bold()
                 Spacer()

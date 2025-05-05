@@ -17,22 +17,26 @@ func getTabbar() -> UITabBarController {
     let secondVC = UINavigationController(rootViewController: TableViewController())
     
     
-    let vc = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
-    let thirdVC = UINavigationController(rootViewController: SettingsViewController())
-    thirdVC.title = "Einstellungen"
-    //let thirdVC = UINavigationController(rootViewController: vc)
+    //let vc = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
+    //let thirdVC = UINavigationController(rootViewController: SettingsViewController())
+    //thirdVC.title = "Einstellungen"
+    let settingsVC = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
+    settingsVC.title = "Einstellungen"
+    let settingsNav = UINavigationController(rootViewController: settingsVC)
+    
    
 
     
     firstVC.tabBarItem = UITabBarItem(title: "Scan", image: UIImage(systemName: "camera"), selectedImage: UIImage(systemName: "camera"))
     secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
-    thirdVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
+    settingsNav.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
     
     firstVC.navigationBar.prefersLargeTitles = true
     secondVC.navigationBar.prefersLargeTitles = true
-    thirdVC.navigationBar.prefersLargeTitles = true
     
-    tabbar.viewControllers = [secondVC, firstVC, thirdVC]
+   
+    
+    tabbar.viewControllers = [secondVC, firstVC, settingsNav]
     tabbar.selectedIndex = 1
     
     return tabbar

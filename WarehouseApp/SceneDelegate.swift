@@ -71,7 +71,7 @@ struct RootView: View {
     @State var isLoggedIn: Bool = false
     
     var body: some View {
-        NavigationStack{
+        Group{
             if isLoggedIn {
                 TabbarControllerWrapper()
             }
@@ -80,6 +80,7 @@ struct RootView: View {
                 StartupView()
             }
         }
+        .ignoresSafeArea(.container, edges: [.top, .bottom])
         .onAppear(perform: {
             let defaults = UserDefaults.standard
             isLoggedIn = defaults.bool(forKey: "LoggedIn")
