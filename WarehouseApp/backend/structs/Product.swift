@@ -90,7 +90,7 @@ struct Product: Codable {
 
 
 
-
+/*
 func getDummyProducts() -> [Product]
 {
     // MARK: 40 Dummy-Produkte (15 Lebensmittel, 15 Getränke, 10 Süßwaren)
@@ -171,3 +171,4 @@ func getDummyCategories() -> [Category] {
             Category(name: "Schreibwaren")
     ]
 }
+*/

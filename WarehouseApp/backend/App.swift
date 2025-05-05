@@ -155,14 +155,13 @@ extension App {
     func saveDataToFile()
     {
         //Saves AppData to a Database or storage
+        Storage.coreDataStack.saveAppData(data: Data)
     }
     
     
     func fetchAllProducts(jwt: String) async -> [Product]
     {
-        
-        
-        return getDummyProducts()
+        return await Database.getProducts(jwt: jwt)
     }
     
     func fetchUserData(jwt: String) async -> User?
@@ -174,7 +173,7 @@ extension App {
     
     func fetchCategories(jwt: String) async -> [Category]
     {
-        return getDummyCategories()
+        return await Database.getCategories(jwt)
     }
     
     func fetchUnits(jwt: String) async -> [Unit]
@@ -253,6 +252,8 @@ extension App {
             return false
         }
         Data.products.append(product)
+        
+    
         //saveAppData to file
         
         return true

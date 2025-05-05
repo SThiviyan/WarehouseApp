@@ -30,7 +30,59 @@ class CoreDataStack: ObservableObject {
         
     }()
     
-    private init() {}
+    private init() {
+        
+        /*
+        let fetchRequest: NSFetchRequest<CoreUnit> = CoreUnit.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "name == %@", "none")
+        
+        if let unit = try? (persistenceContainer.viewContext.fetch(fetchRequest).first)
+        {
+            print("Unit: \(unit.name ?? "no none")")
+        }
+        else
+        {
+            
+            let unit: CoreUnit = CoreUnit(context: persistenceContainer.viewContext)
+            unit.name = "none"
+            unit.shortname = "none"
+            
+            do{
+                try persistenceContainer.viewContext.save()
+            }
+            catch
+            {
+                print("Error saving none Unit: \(error.localizedDescription)")
+            }
+        }
+        
+        let fetchReuqest: NSFetchRequest<CoreCurrency> = CoreCurrency.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "name == %@", "none")
+        
+        
+        if let currency = try? (persistenceContainer.viewContext.fetch(fetchReuqest).first)
+        {
+            print("Currency: \(currency.name ?? "no none")")
+        }
+        else
+        {
+            let c: CoreCurrency = CoreCurrency(context: persistenceContainer.viewContext)
+            c.name = "none"
+            c.symbol = "none"
+            
+            do{
+                try persistenceContainer.viewContext.save()
+            }
+            catch
+            {
+                print("Error saving none Unit: \(error.localizedDescription)")
+            }
+        }
+         */
+        
+        
+        
+    }
 
 
     func hasAppData() -> Bool
@@ -52,97 +104,99 @@ class CoreDataStack: ObservableObject {
         return false
     }
     
-    func saveAppData(data: AppData) -> Bool
-    {
+    
+    
+    //ALL APPDATA IS SAVED
+    func saveAppData(data: AppData) -> Bool {
         let context = persistenceContainer.viewContext
-        
-        let AppdataObject = CoreAppData(context: context)
-        
-        let CategoryObjects: [CoreCategory] = data.categories.map { value in
-            let category = CoreCategory(context: context)
-            category.name = value.name
-            return category
+        let fetchRequest: NSFetchRequest<CoreAppData> = CoreAppData.fetchRequest()
+
+        let coreAppData: CoreAppData = (try? context.fetch(fetchRequest).first) ?? CoreAppData(context: context)
+
+        //Categories
+        let newCategoryNames = Set(data.categories.map { $0.name })
+        let existingCategoryNames = Set((coreAppData.categories as? Set<CoreCategory>)?.compactMap { $0.name } ?? [])
+        //checks if somethings been added / removed, and then rewrites the categorynames
+        if newCategoryNames != existingCategoryNames {
+            (coreAppData.categories as? Set<CoreCategory>)?.forEach { context.delete($0) }
+            let categoryObjects = data.categories.map {
+                let category = CoreCategory(context: context)
+                category.name = $0.name
+                return category
+            }
+            coreAppData.categories = NSSet(array: categoryObjects)
         }
-        
-        let UnitObjects: [CoreUnit] = data.units.map { value in
-            let unit = CoreUnit(context: context)
-            unit.name = value.name
-            unit.shortname = value.shortname
-            return unit
+
+        // Units (same process as categories)
+        let newUnitPairs = Set(data.units.map { "\($0.name)|\($0.shortname)" })
+        let existingUnitPairs = Set((coreAppData.units as? Set<CoreUnit>)?.compactMap { "\($0.name ?? "")|\($0.shortname ?? "")" } ?? [])
+        if newUnitPairs != existingUnitPairs {
+            (coreAppData.units as? Set<CoreUnit>)?.forEach { context.delete($0) }
+            let unitObjects = data.units.map {
+                let unit = CoreUnit(context: context)
+                unit.name = $0.name
+                unit.shortname = $0.shortname
+                return unit
+            }
+            coreAppData.units = NSSet(array: unitObjects)
         }
-        
-        let currencyObjects: [CoreCurrency] = data.currencies.map { value in
-            let currency = CoreCurrency(context: context)
-            currency.symbol = value.symbol
-            currency.name = value.name
-            return currency
+
+        // Currencies (same process as currencies)
+        let newCurrencyPairs = Set(data.currencies.map { "\($0.name)|\($0.symbol)" })
+        let existingCurrencyPairs = Set((coreAppData.currencies as? Set<CoreCurrency>)?.compactMap { "\($0.name ?? "")|\($0.symbol ?? "")" } ?? [])
+        if newCurrencyPairs != existingCurrencyPairs {
+            (coreAppData.currencies as? Set<CoreCurrency>)?.forEach { context.delete($0) }
+            let currencyObjects = data.currencies.map {
+                let currency = CoreCurrency(context: context)
+                currency.name = $0.name
+                currency.symbol = $0.symbol
+                return currency
+            }
+            coreAppData.currencies = NSSet(array: currencyObjects)
         }
-        
-        let UserData: CoreUser = CoreUser(context: context)
-        UserData.email = data.UserData?.email!
-        UserData.password = data.UserData?.password!
-        UserData.login_method = data.UserData?.login_method!
-        UserData.lastJWT = data.UserData?.lastJWT!
-        UserData.metric =  data.UserData?.metric ?? true
-        UserData.is_active = data.UserData?.is_active ?? true
-        UserData.created_at = data.UserData?.created_at!
-        
-        let index = currencyObjects.firstIndex(where: {$0.name == (data.UserData?.currency) ?? "EUR"})
-        let currency = currencyObjects[index ?? 0]
-        UserData.currency = currency
-        
-        
-        let products: [CoreProduct] = data.products.map { value in
-            let cProduct = CoreProduct(context: context)
-            cProduct.id = value.deviceid
-            cProduct.serverId = Int64(value.serverId ?? -1) //IF -1 then product not uploaded to Server
-            cProduct.barcode = value.barcode
-            cProduct.name = value.productname
-            cProduct.producer = value.producer
-            cProduct.size = value.size ?? -1 //NO PRICE WHEN NEGATIVE
-            cProduct.price = value.price ?? -1 //NO PRICE WHEN NEGATIVE
-            cProduct.productdescription = value.description
-            
-            //currency search
-            
-            
-            //unit search
-            
-            
-            //category search
-            
-            
-            //image
-            
-            
-            return cProduct
+
+        // User Data
+        if let oldUser = coreAppData.userData {
+            context.delete(oldUser)
         }
+        let userData = CoreUser(context: context)
+        userData.email = data.UserData?.email ?? ""
+        userData.password = data.UserData?.password ?? ""
+        userData.login_method = data.UserData?.login_method ?? ""
+        userData.lastJWT = data.UserData?.lastJWT ?? ""
+        userData.metric = data.UserData?.metric ?? true
+        userData.is_active = data.UserData?.is_active ?? true
+        userData.created_at = data.UserData?.created_at ?? ""
+        if let currencyName = data.UserData?.currency,
+           let currency = (coreAppData.currencies as? Set<CoreCurrency>)?.first(where: { $0.name == currencyName }) {
+            userData.currency = currency
+        }
+        coreAppData.userData = userData
+
+        //  All Products
+        (coreAppData.products as? Set<CoreProduct>)?.forEach { context.delete($0) }
+        let productObjects = data.products.map {
+            return addProduct(to: coreAppData, item: $0)
+        }
+        coreAppData.products = NSSet(array: productObjects)
+
         
-        
-        
-        AppdataObject.products = NSSet(array: products)
-        AppdataObject.categories = NSSet(array: CategoryObjects)
-        AppdataObject.units = NSSet(array: UnitObjects)
-        AppdataObject.currencies = NSSet(array: currencyObjects)
-        AppdataObject.userData = UserData
-       
-        do
-        {
+        do {
             try context.save()
-        }
-        catch{
+            return true
+        } catch {
+            print("Failed to save app data: \(error)")
             return false
         }
-        
-        return true
     }
-    
+
     
     
     func getAppData() -> AppData?
     {
         let fetchRequest: NSFetchRequest<CoreAppData> = CoreAppData.fetchRequest()
         var data: AppData = AppData()
+        
         
         if let appData = try? (persistenceContainer.viewContext.fetch(fetchRequest).first)
         {
@@ -195,6 +249,7 @@ class CoreDataStack: ObservableObject {
                 return product
             })
             
+            print(products)
             
             data.UserData = user
             data.categories = categories ?? []
@@ -209,89 +264,79 @@ class CoreDataStack: ObservableObject {
     }
     
     
-    func saveProduct(item: Product) -> Bool
-    {
-        let context = persistenceContainer.viewContext
-        
-        let product = CoreProduct(context: context)
-        
-        product.id = item.deviceid
-        product.serverId = Int64(item.serverId ?? 0)
-        product.name = item.productname
-        product.barcode = item.barcode
-        product.producer = item.producer
-        product.productdescription = item.description
-        product.price = item.price ?? 0
-        product.size = item.size ?? 0
-        
-        let fetchRequest: NSFetchRequest<CoreCategory> = CoreCategory.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "name == %@", item.category ?? "" as CVarArg)
-        
-        
-        if let existingCategory = try? context.fetch(fetchRequest).first {
-            product.category = existingCategory
-        }
-        else{
-            return false
-        }
-        
-        let unitRequest: NSFetchRequest<CoreUnit> = CoreUnit.fetchRequest()
-        unitRequest.predicate = NSPredicate(format: "name == %@", item.unit ?? "" as CVarArg)
-        
-        
-        if let existingUnit = try? context.fetch(unitRequest).first {
-            product.unit = existingUnit
-        }
-        else{
-            return false
-        }
-    
-        
-        let currencyRequest: NSFetchRequest<CoreCurrency> = CoreCurrency.fetchRequest()
-        currencyRequest.predicate = NSPredicate(format: "name == %@", item.currency ?? "" as CVarArg)
-    
-        if let existingCurrency = try? context.fetch(currencyRequest).first {
-            product.currency = existingCurrency
-        }
-        else{
-            return false
-        }
-       
-        
-        do {
-           try context.save()
-        }
-        catch {
-            return false
-        }
-        
-        return true
-    }
-    
-    
-    func deleteProduct(item: Product) -> Bool
+    func addProduct(to appData: CoreAppData, item: Product) -> CoreProduct
     {
         let context = persistenceContainer.viewContext
         
         let fetchRequest: NSFetchRequest<CoreProduct> = CoreProduct.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", item.deviceid as CVarArg)
         
-        //let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        return true
+        
+        let coreProduct: CoreProduct
+        
+        do
+        {
+            let product = try (persistenceContainer.viewContext.fetch(fetchRequest).first) ?? CoreProduct(context: context)
+            
+            
+            product.id = item.deviceid
+            product.serverId = Int64(item.serverId ?? 0)
+            product.name = item.productname
+            product.barcode = item.barcode
+            product.producer = item.producer
+            product.productdescription = item.description
+            product.price = item.price ?? 0
+            product.size = item.size ?? 0
+            
+            
+            let CategoryRequest: NSFetchRequest<CoreCategory> = CoreCategory.fetchRequest()
+            CategoryRequest.predicate = NSPredicate(format: "name == %@", item.category ?? "" as CVarArg)
+                
+            if let existingCategory = try? context.fetch(CategoryRequest).first {
+                product.category = existingCategory
+            }
+            else{
+                product.category = nil
+            }
+        
+            
+            let unitRequest: NSFetchRequest<CoreUnit> = CoreUnit.fetchRequest()
+            unitRequest.predicate = NSPredicate(format: "name == %@", item.unit ?? "" as CVarArg)
+            
+            if let existingUnit = try? context.fetch(unitRequest).first {
+                product.unit = existingUnit
+            }
+            else{
+                product.unit = nil
+            }
+        
+            
+            let currencyRequest: NSFetchRequest<CoreCurrency> = CoreCurrency.fetchRequest()
+            currencyRequest.predicate = NSPredicate(format: "name == %@", item.currency ?? "" as CVarArg)
+        
+            if let existingCurrency = try? context.fetch(currencyRequest).first {
+                product.currency = existingCurrency
+            }
+            else{
+                product.currency = nil
+            }
+            
+            coreProduct = product
+            appData.addToProducts(coreProduct)
+            
+            
+            try context.save()
+        }
+        catch{
+            return CoreProduct(context: context)
+        }
+        
+       
+        return coreProduct
     }
     
     
-    func addCategory(oldCategory: Category?, newCategory: Category) -> Bool
-    {
-        return true
-    }
-    
-    
-    func deleteCategory(category: Category) -> Bool
-    {
-        return true
-    }
-    
+  
     
     func deleteAllCoreDataObjects() -> Bool
     {

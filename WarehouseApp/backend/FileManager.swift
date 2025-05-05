@@ -26,7 +26,6 @@ class FileManager {
     func getAppData() -> AppData?
     {
         let appData = coreDataStack.getAppData()
-    
         return appData
     }
     
@@ -39,23 +38,11 @@ class FileManager {
     
     func saveProduct(product: Product) -> Bool
     {
-        return coreDataStack.saveProduct(item: product)
+        //return coreDataStack.saveProduct(item: product)
+        return false
     }
     
-    func deleteProduct(product: Product) -> Bool
-    {
-        return coreDataStack.deleteProduct(item: product)
-    }
-    
-    func addCategory(oldCategory: Category?,category: Category) -> Bool //add and rename
-    {
-        return coreDataStack.addCategory(oldCategory: oldCategory, newCategory: category)
-    }
-    
-    func deleteCategory(category: Category) -> Bool
-    {
-        return coreDataStack.deleteCategory(category: category)
-    }
+   
     
     func removeAppData() -> Bool
     {
