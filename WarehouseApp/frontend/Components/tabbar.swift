@@ -23,7 +23,7 @@ func getTabbar() -> UITabBarController {
     let settingsVC = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
     settingsVC.title = "Einstellungen"
     let settingsNav = UINavigationController(rootViewController: settingsVC)
-    
+    settingsNav.navigationBar.prefersLargeTitles = true
    
 
     
