@@ -32,56 +32,6 @@ class CoreDataStack: ObservableObject {
     
     private init() {
         
-        /*
-        let fetchRequest: NSFetchRequest<CoreUnit> = CoreUnit.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "name == %@", "none")
-        
-        if let unit = try? (persistenceContainer.viewContext.fetch(fetchRequest).first)
-        {
-            print("Unit: \(unit.name ?? "no none")")
-        }
-        else
-        {
-            
-            let unit: CoreUnit = CoreUnit(context: persistenceContainer.viewContext)
-            unit.name = "none"
-            unit.shortname = "none"
-            
-            do{
-                try persistenceContainer.viewContext.save()
-            }
-            catch
-            {
-                print("Error saving none Unit: \(error.localizedDescription)")
-            }
-        }
-        
-        let fetchReuqest: NSFetchRequest<CoreCurrency> = CoreCurrency.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "name == %@", "none")
-        
-        
-        if let currency = try? (persistenceContainer.viewContext.fetch(fetchReuqest).first)
-        {
-            print("Currency: \(currency.name ?? "no none")")
-        }
-        else
-        {
-            let c: CoreCurrency = CoreCurrency(context: persistenceContainer.viewContext)
-            c.name = "none"
-            c.symbol = "none"
-            
-            do{
-                try persistenceContainer.viewContext.save()
-            }
-            catch
-            {
-                print("Error saving none Unit: \(error.localizedDescription)")
-            }
-        }
-         */
-        
-        
-        
     }
 
 
@@ -128,10 +78,10 @@ class CoreDataStack: ObservableObject {
         }
 
         // Units (same process as categories)
-        let newUnitPairs = Set(data.units.map { "\($0.name)|\($0.shortname)" })
-        let existingUnitPairs = Set((coreAppData.units as? Set<CoreUnit>)?.compactMap { "\($0.name ?? "")|\($0.shortname ?? "")" } ?? [])
-        if newUnitPairs != existingUnitPairs {
-            (coreAppData.units as? Set<CoreUnit>)?.forEach { context.delete($0) }
+        let newUnits = Set(data.units.map { $0.name })
+        let existingUnits = Set((coreAppData.units as? Set<CoreUnit>)?.compactMap { $0.name } ?? [])
+        if newUnits != existingUnits {
+            (coreAppData.units as? Set<CoreUnit>)?.forEach{ context.delete($0) }
             let unitObjects = data.units.map {
                 let unit = CoreUnit(context: context)
                 unit.name = $0.name
@@ -142,9 +92,9 @@ class CoreDataStack: ObservableObject {
         }
 
         // Currencies (same process as currencies)
-        let newCurrencyPairs = Set(data.currencies.map { "\($0.name)|\($0.symbol)" })
-        let existingCurrencyPairs = Set((coreAppData.currencies as? Set<CoreCurrency>)?.compactMap { "\($0.name ?? "")|\($0.symbol ?? "")" } ?? [])
-        if newCurrencyPairs != existingCurrencyPairs {
+        let newCurrency = Set(data.currencies.map { $0.name })
+        let existingCurrency = Set((coreAppData.currencies as? Set<CoreCurrency>)?.compactMap { $0.name } ?? [])
+        if newCurrency != existingCurrency {
             (coreAppData.currencies as? Set<CoreCurrency>)?.forEach { context.delete($0) }
             let currencyObjects = data.currencies.map {
                 let currency = CoreCurrency(context: context)
@@ -200,7 +150,7 @@ class CoreDataStack: ObservableObject {
         
         if let appData = try? (persistenceContainer.viewContext.fetch(fetchRequest).first)
         {
-            print("Logged in with \(appData.userData?.email)")
+            print("Logged in with \(String(describing: appData.userData?.email))")
             
             var user = User()  // Create an empty user object
 
@@ -242,15 +192,18 @@ class CoreDataStack: ObservableObject {
             
             
             //TODO: PRODUCTS
-            let products = appData.products?.compactMap({ (value) -> Product? in
+            var products = appData.products?.compactMap({ (value) -> Product? in
                 guard let corePr = value as? CoreProduct else { return nil }
-                let product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], image: UIImage(), producer: corePr.producer ?? "")
+                let product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], image: UIImage(), producer: corePr.producer ?? "", createdAt: corePr.createdAt ?? Date())
                 
                 return product
             })
             
-            print(products)
+            products?.sort(by: {productA, productB in
+                productA.createdAt > productB.createdAt
+            })
             
+                        
             data.UserData = user
             data.categories = categories ?? []
             data.units = units ?? []
@@ -287,6 +240,7 @@ class CoreDataStack: ObservableObject {
             product.productdescription = item.description
             product.price = item.price ?? 0
             product.size = item.size ?? 0
+            product.createdAt = item.createdAt
             
             
             let CategoryRequest: NSFetchRequest<CoreCategory> = CoreCategory.fetchRequest()
@@ -338,7 +292,7 @@ class CoreDataStack: ObservableObject {
     
   
     
-    func deleteAllCoreDataObjects() -> Bool
+    func deleteAllCoreDataObjects() 
     {
         let context = persistenceContainer.viewContext
         let entities = context.persistentStoreCoordinator?.managedObjectModel.entities
@@ -361,6 +315,5 @@ class CoreDataStack: ObservableObject {
             }
         }
        
-        return true
     }
 }

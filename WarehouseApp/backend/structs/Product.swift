@@ -25,6 +25,7 @@ struct Product: Codable {
     var unit: String?
     
     var category: String?
+    var createdAt: Date = Date()
     
     //UIIMAGE does not conform to codable, there is a better solution to this!
     var productImage: productImage?
@@ -38,7 +39,8 @@ struct Product: Codable {
          category: [String],
          image: UIImage,
          producer: String,
-         barcode: String? = "0") {
+         barcode: String? = "0",
+         createdAt: Date) {
         
         
         self.deviceid = UUID()
@@ -50,6 +52,7 @@ struct Product: Codable {
         self.category = category[0]
         self.producer = producer
         self.barcode = barcode
+        self.createdAt = createdAt
     }
     
     

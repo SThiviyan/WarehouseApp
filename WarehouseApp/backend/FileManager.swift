@@ -46,7 +46,8 @@ class FileManager {
     
     func removeAppData() -> Bool
     {
-        return coreDataStack.deleteAllCoreDataObjects()
+        coreDataStack.deleteAllCoreDataObjects()
+        return true
     }
     
     
