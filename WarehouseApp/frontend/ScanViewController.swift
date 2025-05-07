@@ -96,6 +96,13 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     }
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.title = "Scan"
+        self.navigationController?.navigationBar.topItem?.title = "Scan"
+    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -242,18 +249,21 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     func camerapreviewlayer()
     {
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-
-        print("previewView is nil? \(previewLayer == nil)")
-        print("view is nil? \(view == nil)")
-        print("captureSession is nil? \(captureSession == nil)")
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = self.view.layer.bounds
-
-        view.layer.insertSublayer(previewLayer, at: 0)
-       
-        
-        
+        if(captureSession != nil && captureSession.isRunning)
+        {
+            DispatchQueue.global(qos: .userInteractive).async
+            {
+                self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+                self.previewLayer.videoGravity = .resizeAspectFill
+                
+                DispatchQueue.main.async{
+                    self.previewLayer.frame = self.view.layer.bounds
+                    self.view.layer.insertSublayer(self.previewLayer, at: 0)
+                    print("Scan layer loaded")
+                }
+            }
+            
+        }
         view.bringSubviewToFront(FlashButton)
     }
 
