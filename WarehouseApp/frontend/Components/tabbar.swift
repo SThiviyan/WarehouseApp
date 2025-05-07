@@ -17,9 +17,6 @@ func getTabbar() -> UITabBarController {
     let secondVC = UINavigationController(rootViewController: TableViewController())
     
     
-    //let vc = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
-    //let thirdVC = UINavigationController(rootViewController: SettingsViewController())
-    //thirdVC.title = "Einstellungen"
     let settingsVC = UIHostingController(rootView: SettingsView().environmentObject(App.shared))
     settingsVC.title = "Einstellungen"
     let settingsNav = UINavigationController(rootViewController: settingsVC)
