@@ -59,29 +59,42 @@ struct LookUpView: View {
                         .font(.title2)
                         .bold()
                         .padding(.top)
-                    Text(product.producer ?? "")
-                    Text(product.description ?? "")
-                        .opacity(product.description == "" ? 0 : 1)
-                    
-                }
-                
-                
-                Section("Kategorie")
-                {
-                    Text(product.category ?? "")
-                }
-                
-                Section("Preis")
-                {
-                    HStack{
-                        Spacer()
-                        Text(getPriceSizeString(price: product.price, currency: product.currency, size: product.size, unit: product.unit))
-                            .font(.largeTitle)
-                            .padding()
-                            .bold()
-                        Spacer()
+                    if(product.producer != "")
+                    {
+                        Text(product.producer ?? "")
                     }
                     
+                    if((product.description?.isEmpty) != nil)
+                    {
+                        Text(product.description ?? "")
+                            .opacity(product.description == "" ? 0 : 1)
+                    }
+                    
+                }
+                
+                
+                if(product.category != "")
+                {
+                    Section("Kategorie")
+                    {
+                        Text(product.category!)
+                    }
+                }
+                
+                if(product.price != 0.0 && product.size != 0.0)
+                {
+                    Section("Preis")
+                    {
+                        HStack{
+                            Spacer()
+                            Text(getPriceSizeString(price: product.price, currency: product.currency, size: product.size, unit: product.unit))
+                                .font(.largeTitle)
+                                .padding()
+                                .bold()
+                            Spacer()
+                        }
+                        
+                    }
                 }
                 
                 Section("Scanning")
@@ -99,6 +112,7 @@ struct LookUpView: View {
             
         }
         .onAppear(perform: {
+            print("Appeared")
             productBarcode = product.barcode ?? "0"
             product = app.selectedProduct ?? Product()
         })
@@ -112,6 +126,7 @@ struct LookUpView: View {
         }
         .sheet(isPresented: $ShowScanView, onDismiss: {
             ShowScanView = false
+            product = app.selectedProduct!
         },content: {
             //ScanView speicherung muss gemacht werden, bzw. Parameter für die View, damit man weiß für welches Objekt man speichern muss
             //ScanView()
@@ -120,6 +135,7 @@ struct LookUpView: View {
         })
         .sheet(isPresented: $ShowAddView, onDismiss: {
             ShowAddView = false
+            product = app.selectedProduct!
         },content: {
             AddView(product: product, scrollToSection: ScrollToSection)
         })

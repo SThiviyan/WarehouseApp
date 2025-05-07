@@ -280,7 +280,7 @@ struct AddView: View {
         }
         
             
-        let pr = Product(productname: productname, price: Double(productprice) ?? 0.0, currency: currency, size: Double(productsize) ?? 0.0, unit: productUnit, category: [categorystring], image: UIImage(), producer: producername, barcode: barcode)
+        let pr = Product(productname: productname, price: Double(productprice) ?? 0.0, currency: currency, size: Double(productsize) ?? 0.0, unit: productUnit, category: [categorystring], image: UIImage(), producer: producername, barcode: barcode, createdAt: Date())
         
         product = pr
 
@@ -308,6 +308,7 @@ struct AddView: View {
                 isEditing = false
                 if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!) == true {
                     onSave?()
+                    app.selectedProduct = product
                     dismiss()
                 }
                 else
@@ -322,6 +323,7 @@ struct AddView: View {
                 if App.shared.addProduct(pr) == true {
                     print("5")
                     onSave?()
+                    app.selectedProduct = product
                     dismiss()
                 }
                 else
