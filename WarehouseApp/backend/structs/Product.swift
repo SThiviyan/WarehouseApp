@@ -56,6 +56,24 @@ struct Product: Codable {
     }
     
     
+    init(CoreP: CoreProduct) {
+        
+        
+        self.deviceid = CoreP.id!
+        self.serverId = Int(CoreP.serverId)
+        self.productname = CoreP.name
+        self.price = CoreP.price
+        self.currency = CoreP.currency?.name
+        self.size = CoreP.size
+        self.unit = CoreP.unit?.name
+        self.category = CoreP.category?.name
+        self.producer = CoreP.producer
+        self.barcode = CoreP.barcode
+        self.createdAt = CoreP.createdAt!
+    }
+    
+    
+    
     
     init()
     {

@@ -62,6 +62,9 @@ class CoreDataStack: ObservableObject {
         let fetchRequest: NSFetchRequest<CoreAppData> = CoreAppData.fetchRequest()
 
         let coreAppData: CoreAppData = (try? context.fetch(fetchRequest).first) ?? CoreAppData(context: context)
+        
+        //Sync date needs to be updated 
+        coreAppData.lastSync = Date()
 
         //Categories
         let newCategoryNames = Set(data.categories.map { $0.name })
@@ -123,22 +126,24 @@ class CoreDataStack: ObservableObject {
         }
         coreAppData.userData = userData
 
-        //  All Products
-        (coreAppData.products as? Set<CoreProduct>)?.forEach { context.delete($0) }
-        
-        let productObjects = data.products.map {
-            return addProduct(to: coreAppData, item: $0)
-        }
-        coreAppData.products = NSOrderedSet(array: productObjects)
-
-        
+            
         do {
             try context.save()
-            return true
         } catch {
             print("Failed to save app data: \(error)")
             return false
         }
+        
+        if(!saveProducts(data: data))
+        {
+            return false
+        }
+      
+        
+        print("========================")
+        print("Data saved to COREDATA")
+        print("========================")
+        return true
     }
 
     
@@ -223,6 +228,77 @@ class CoreDataStack: ObservableObject {
     }
     
     
+    func saveProducts(data: AppData) -> Bool
+    {
+        let fetchRequest: NSFetchRequest<CoreAppData> = CoreAppData.fetchRequest()
+        let context = persistenceContainer.viewContext
+        let coreAppData: CoreAppData = (try? context.fetch(fetchRequest).first) ?? CoreAppData(context: context)
+
+        
+        
+        //
+        //  All Products
+        //
+        
+        let existingProducts = (coreAppData.products as? Set<CoreProduct>) ?? []
+        let eCurrency = coreAppData.currencies as? Set<CoreCurrency>
+        let eCategory = coreAppData.categories as? Set<CoreCategory>
+        let eUnit = coreAppData.units as? Set<CoreUnit>
+        
+        //Deletion of products that are in CoreData but not in App Memory
+        (coreAppData.products as? Set<CoreProduct>)?.forEach { pr in
+            if(!data.products.contains(where: { $0.deviceid == pr.id}))
+            {
+                coreAppData.removeFromProducts(pr)
+                context.delete(pr)
+            }
+        }
+        
+      
+        //Adding a Product if its not in the existingProducts Set, but in the Data array
+        for pr in data.products {
+            if !existingProducts.contains(where: {$0.id == pr.deviceid})
+            {
+                let newProduct: CoreProduct = CoreProduct(context: context)
+                newProduct.id = pr.deviceid
+                newProduct.serverId = Int64(pr.serverId ?? -1)
+                newProduct.name = pr.productname
+                newProduct.barcode = pr.barcode
+                newProduct.producer = pr.producer
+                newProduct.productdescription = pr.description
+                newProduct.price = pr.price ?? 0.0
+                newProduct.size = pr.size ?? 0.0
+                newProduct.createdAt = pr.createdAt
+                
+                newProduct.unit = eUnit?.first(where: {
+                    $0.name == pr.unit ?? ""
+                })
+                newProduct.currency = eCurrency?.first(where: {
+                    $0.name == pr.currency ?? ""
+                })
+                
+                newProduct.category = eCategory?.first(where: {
+                    $0.name == pr.category ?? ""
+                })
+                
+                
+                coreAppData.addToProducts(newProduct)
+            }
+        }
+        
+        do{
+            try context.save()
+            return true
+        }
+        catch {
+            print("Failed to save app data: \(error)")
+            return false
+        }
+    }
+    
+    
+    
+    //OBSOLETE METHOD 
     func addProduct(to appData: CoreAppData, item: Product) -> CoreProduct
     {
         let context = persistenceContainer.viewContext
