@@ -3,7 +3,7 @@
     <entity name="CoreAppData" representedClassName="CoreAppData" syncable="YES" codeGenerationType="class">
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCategory"/>
         <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
-        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreProduct"/>
+        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="CoreProduct"/>
         <relationship name="units" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreUnit"/>
         <relationship name="userData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUser"/>
     </entity>

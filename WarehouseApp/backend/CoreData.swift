@@ -125,10 +125,11 @@ class CoreDataStack: ObservableObject {
 
         //  All Products
         (coreAppData.products as? Set<CoreProduct>)?.forEach { context.delete($0) }
+        
         let productObjects = data.products.map {
             return addProduct(to: coreAppData, item: $0)
         }
-        coreAppData.products = NSSet(array: productObjects)
+        coreAppData.products = NSOrderedSet(array: productObjects)
 
         
         do {
@@ -178,7 +179,7 @@ class CoreDataStack: ObservableObject {
                 return curreny
             })
             
-            let categories = appData.categories?.compactMap({ (value) -> Category? in
+            var categories = appData.categories?.compactMap({ (value) -> Category? in
                 guard let cCategory = value as? CoreCategory else { return nil }
                 let category = Category(name: cCategory.name!)
                 return category
@@ -200,7 +201,12 @@ class CoreDataStack: ObservableObject {
             })
             
             products?.sort(by: {productA, productB in
-                productA.createdAt > productB.createdAt
+                productA.createdAt < productB.createdAt
+            })
+            
+            categories?.sort(by: {
+                 categoryA, categoryB in
+                categoryA.name < categoryB.name
             })
             
                         
