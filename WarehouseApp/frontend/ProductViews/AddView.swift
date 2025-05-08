@@ -319,11 +319,10 @@ struct AddView: View {
             else
             {
                 print("4")
-
+                isEditing = false
                 if App.shared.addProduct(pr) == true {
                     print("5")
                     onSave?()
-                    app.selectedProduct = product
                     dismiss()
                 }
                 else
