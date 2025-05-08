@@ -168,16 +168,14 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             self.captureSession.startRunning()
 
             
-        }
-        
-        
-        DispatchQueue.main.async
-        {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1)
+            DispatchQueue.main.async
             {
                 self.camerapreviewlayer()
             }
         }
+        
+        
+      
     }
     
     
@@ -361,7 +359,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         {
             App.shared.selectedProduct = Product(barcode: payload)
             
-            let hostingController = UIHostingController(rootView: AddView(scrollToSection: scrollTo, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: AddView(scrollToSection: scrollTo, productbarcode: payload, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
             
             present(hostingController, animated: true, completion: {
                 self.captureSession.stopRunning()
@@ -372,7 +370,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
             
             
             App.shared.selectedProduct = App.shared.getProduct(payload)!
-            let hostingController = UIHostingController(rootView: LookUpView(product: App.shared.selectedProduct ?? Product(), calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: LookUpView(product: App.shared.selectedProduct ?? Product(), productBarcode: payload, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
             
             present(hostingController, animated: true) {
                     self.captureSession.stopRunning()
