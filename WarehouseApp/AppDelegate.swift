@@ -26,13 +26,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(false, forKey: "LoggedIn")
         }
         
+        if(defaults.object(forKey: "SyncOnStartup") == nil)
+        {
+            defaults.set(false, forKey: "SyncOnStartup")
+        }
         
         //LoadApp structure from File or Database
         
-     
         
-            //Login again to ensure JWT is correct
-            
+            //Login again to ensure JWT is correct , IF no connection to Server "Offline Mode" will be active 
+        print(App.shared.Data.UserData?.email)
+        print("App Email")
             if(App.shared.Data.UserData?.email == nil)
             {
                 defaults.set(false, forKey: "LoggedIn")
@@ -48,10 +52,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                            print("Logged In")
                             //login functions saves Userdefault
                             defaults.set(true, forKey: "LoggedIn")
+                            defaults.set(true, forKey: "SyncOnStartup")
                         }
                         else
                         {
-                            defaults.set(false, forKey: "LoggedIn")
+                            defaults.set(true, forKey: "LoggedIn")
+                            defaults.set(false, forKey: "SyncOnStartup")
                         }
                     }
                 }
@@ -89,6 +95,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //MARK: SAVE Appdata to File
         
         App.shared.saveDataToFile()
+        print("Application terminated")
+
     }
 
 
