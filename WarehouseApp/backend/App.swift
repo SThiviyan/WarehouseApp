@@ -152,10 +152,16 @@ extension App {
         return true
     }
     
-    func saveDataToFile()
+    func saveDataToFile() async -> Bool
     {
         //Saves AppData to a Database or storage
-        Storage.coreDataStack.saveAppData(data: Data)
+        if(!Storage.coreDataStack.saveAppData(data: Data))
+        { return false }
+        
+        if (await !Database.uploadAppData(data: Data, jwt: Data.UserData?.lastJWT))
+        { return false }
+            
+        return true
     }
     
     
@@ -211,8 +217,6 @@ extension App {
     }
     
     
-    
-    
     func addCategory(category: Category) -> Bool
     {
         
@@ -253,8 +257,7 @@ extension App {
         }
         Data.products.append(product)
         
-    
-        //saveAppData to file
+        
         
         return true
     }
