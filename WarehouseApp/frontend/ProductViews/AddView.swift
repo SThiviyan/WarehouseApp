@@ -56,7 +56,6 @@ struct AddView: View {
             ScrollViewReader { proxy in
                 formContent(proxy: proxy)
             }
-            .ignoresSafeArea(.keyboard, edges: .bottom)
             .navigationTitle("Produkt hinzufügen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -240,6 +239,7 @@ struct AddView: View {
             HStack {
                 TextField("Menge", text: $productsize)
                     .keyboardType(.decimalPad)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 Picker("", selection: $productUnit) {
                     Text("Mililiter").tag("ml")
                     Text("Liter").tag("l")
@@ -250,6 +250,7 @@ struct AddView: View {
                 .pickerStyle(.menu)
             }
             TextField("Beschreibung", text: $productDescription)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
         }
     }
 
@@ -360,6 +361,7 @@ struct currencyPicker: View {
         HStack {
             TextField("Preis", text: $productprice)
                 .keyboardType(.numbersAndPunctuation)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             Picker("", selection: $selectedCurrency) {
                 Text("€").tag("EUR")
                 Text("$").tag("USD")

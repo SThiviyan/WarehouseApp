@@ -78,7 +78,7 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
         
         //MARK: Only for development, to see in simulator
         let text = UILabel()
-        text.text = "Scan BarCode"
+        text.text = "Scan Barcode"
         view.addSubview(text)
         
         setup_start_captureSession()
@@ -98,8 +98,6 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.title = "Scan"
-        self.navigationController?.navigationBar.topItem?.title = "Scan"
     }
     
     
@@ -365,16 +363,18 @@ class ScanViewController: UIViewController, AVCaptureVideoDataOutputSampleBuffer
                 self.captureSession.stopRunning()
             })
             
+            
         }
         else{
             
             
             App.shared.selectedProduct = App.shared.getProduct(payload)!
-            let hostingController = UIHostingController(rootView: LookUpView(product: App.shared.selectedProduct ?? Product(), productBarcode: payload, calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
+            let hostingController = UIHostingController(rootView: LookUpView(product: App.shared.selectedProduct ?? Product(), calledOverScanView: true, parsedScanView: self).environmentObject(App.shared))
             
             present(hostingController, animated: true) {
                     self.captureSession.stopRunning()
             }
+            
             
         }
         

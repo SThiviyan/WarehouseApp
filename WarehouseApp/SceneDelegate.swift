@@ -80,6 +80,7 @@ struct RootView: View {
                 StartupView()
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .ignoresSafeArea(.container, edges: [.top, .bottom])
         .onAppear(perform: {
             let defaults = UserDefaults.standard

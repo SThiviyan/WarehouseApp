@@ -13,6 +13,7 @@ func getTabbar() -> UITabBarController {
     tabbar.tabBar.backgroundColor = .tertiarySystemBackground
     tabbar.tabBar.layer.cornerRadius = 10
     
+    
     let firstVC = UINavigationController(rootViewController: ScanViewController())
     let secondVC = UINavigationController(rootViewController: TableViewController())
     
@@ -25,6 +26,7 @@ func getTabbar() -> UITabBarController {
 
     
     firstVC.tabBarItem = UITabBarItem(title: "Scan", image: UIImage(systemName: "camera"), selectedImage: UIImage(systemName: "camera"))
+        
     secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
     settingsNav.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
     
@@ -51,4 +53,3 @@ struct TabbarControllerWrapper: UIViewControllerRepresentable {
     }
     
 }
-
