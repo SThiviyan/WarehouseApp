@@ -94,7 +94,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         //MARK: SAVE Appdata to File
         
-        App.shared.saveDataToFile()
+        Task{
+           await App.shared.saveDataToFile()
+        }
+        
         print("Application terminated")
 
     }
