@@ -59,6 +59,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UITabBarControllerDeleg
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        
+        Task{
+           await App.shared.saveDataToFile()
+        }
+        
+        print("Application terminated")
     }
 
 

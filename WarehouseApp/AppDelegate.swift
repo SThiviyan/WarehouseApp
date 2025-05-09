@@ -91,14 +91,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    func applicationWillTerminate(_ application: UIApplication) {
-        //MARK: SAVE Appdata to File
-        
-        Task{
-           await App.shared.saveDataToFile()
-        }
-        
-        print("Application terminated")
+    func applicationWillTerminate(_ application: UIApplication) {        
+      
 
     }
 
