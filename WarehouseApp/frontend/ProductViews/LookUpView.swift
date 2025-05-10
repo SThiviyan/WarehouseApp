@@ -58,7 +58,7 @@ struct LookUpView: View {
                     Text(product.productname ?? "")
                         .font(.title2)
                         .bold()
-                        .padding(.top)
+                       
                     if(product.producer != "")
                     {
                         Text(product.producer ?? "")

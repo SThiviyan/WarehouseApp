@@ -80,6 +80,7 @@ struct AddView: View {
             }
             .sheet(isPresented: $showPhotoPicker) {
                 CameraImagePicker(showImagePicker: $showPhotoPicker, image: $selectedPhoto, sourceType: $ImagePickerSourceType)
+                    .ignoresSafeArea()
             }
             .sheet(isPresented: $showScanView, onDismiss: {
                 showScanView = false
