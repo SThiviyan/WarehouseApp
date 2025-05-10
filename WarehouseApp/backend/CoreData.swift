@@ -197,10 +197,12 @@ class CoreDataStack: ObservableObject {
             })
             
             
-            //TODO: PRODUCTS
+            //MARK: Products get saved in memory, except images (only urls)
             var products = appData.products?.compactMap({ (value) -> Product? in
                 guard let corePr = value as? CoreProduct else { return nil }
-                let product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], image: UIImage(), producer: corePr.producer ?? "", createdAt: corePr.createdAt ?? Date())
+                var product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], image: UIImage(), producer: corePr.producer ?? "", createdAt: corePr.createdAt ?? Date())
+                
+                product.productImage = productImage(DeviceFilePath: corePr.image?.deviceFileName ?? "", ServerFilePath: corePr.image?.serverFileName, ServerThumbnailFilePath: corePr.image?.serverThumbnailFileName, uploadedToServer: corePr.image?.uploadedToServer ?? false)
                 
                 return product
             })
@@ -280,6 +282,21 @@ class CoreDataStack: ObservableObject {
                 newProduct.category = eCategory?.first(where: {
                     $0.name == pr.category ?? ""
                 })
+                
+                let corePr = CoreProductImage(context: context)
+                corePr.deviceFileName = pr.productImage?.DeviceFilePath
+                corePr.serverFileName = pr.productImage?.ServerFilePath
+                corePr.serverThumbnailFileName = pr.productImage?.ServerThumbnailFilePath
+                
+                //Second check, in case uploaded to Server wasn't updated
+                var uploaded: Bool = false
+                if(pr.productImage?.ServerFilePath != nil) {
+                    uploaded = true
+                }
+                
+                corePr.uploadedToServer = pr.productImage?.uploadedToServer ?? uploaded
+                
+                newProduct.image = corePr
                 
                 
                 coreAppData.addToProducts(newProduct)
@@ -369,6 +386,26 @@ class CoreDataStack: ObservableObject {
         
        
         return coreProduct
+    }
+    
+    
+    func getAllImageNames() -> [productImage]
+    {
+        let context = persistenceContainer.viewContext
+        let productImageRequest: NSFetchRequest<CoreProductImage> = CoreProductImage.fetchRequest()
+        
+        var ProductImageArray: [productImage] = []
+        
+        if let coreproductImgArray: [CoreProductImage] = try? context.fetch(productImageRequest) {
+            
+            ProductImageArray = coreproductImgArray.compactMap({ value in
+                let productImage: productImage = productImage(DeviceFilePath: value.deviceFileName ?? "", ServerFilePath: value.serverFileName, ServerThumbnailFilePath: value.serverThumbnailFileName, uploadedToServer: value.uploadedToServer)
+                return productImage
+            })
+            
+        }
+        
+        return ProductImageArray
     }
     
     

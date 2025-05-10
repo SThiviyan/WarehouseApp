@@ -31,8 +31,9 @@
         <relationship name="unit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUnit"/>
     </entity>
     <entity name="CoreProductImage" representedClassName="CoreProductImage" syncable="YES" codeGenerationType="class">
-        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="deviceFileName" attributeType="String"/>
         <attribute name="serverFileName" optional="YES" attributeType="String"/>
+        <attribute name="serverThumbnailFileName" optional="YES" attributeType="String"/>
         <attribute name="uploadedToServer" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
     <entity name="CoreUnit" representedClassName="CoreUnit" syncable="YES" codeGenerationType="class">

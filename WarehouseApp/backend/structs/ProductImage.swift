@@ -10,8 +10,8 @@
 struct productImage: Codable{
     let DeviceFilePath: String
     
-    let ServerFilePath: String
-    let ServerThumbnailFilePath: String
+    let ServerFilePath: String?
+    let ServerThumbnailFilePath: String?
     
     var uploadedToServer: Bool
     

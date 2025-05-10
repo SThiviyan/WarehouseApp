@@ -21,7 +21,7 @@ final class App: ObservableObject
     static let shared = App()
     
     let Database: DatabaseConnector!
-    let Storage: FileManager!
+    let Storage: StorageManager!
     
     @Published var Data: AppData
     
@@ -32,7 +32,7 @@ final class App: ObservableObject
     
     init() {
         self.Database = DatabaseConnector()
-        self.Storage = FileManager()
+        self.Storage = StorageManager()
         Data = Storage.getAppData() ?? AppData()
         print(Storage.getAppData())
     }
