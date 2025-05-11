@@ -76,7 +76,13 @@ class StorageManager {
         
         let fileURL = documentsDir.appendingPathComponent(name)
         
+        
+        print("SavedURL===========================================")
+        print(fileURL)
+        print("SavedURL===========================================")
+
         guard let data = image.pngData() else {
+            print("failed conversion")
             return false
         }
         
@@ -88,12 +94,14 @@ class StorageManager {
             //If delete image fails, the method fails
             if(!deleteImage(name: name))
             {
+                print("failed")
                 return false
             }
         }
        
         
         do{
+            print("DATAWRITE================================>")
             try data.write(to: fileURL)
         }
         catch let error {
@@ -130,14 +138,23 @@ class StorageManager {
     }
     
     
-    func getImage(name: String) -> UIImage?
-    {
-        if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false){
-            return UIImage(contentsOfFile: URL(filePath: dir.absoluteString).appendingPathComponent(name).path)
+    func getImage(name: String) -> UIImage? {
+        guard !name.isEmpty,
+              let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
         }
+
+        let fileURL = documentsDir.appendingPathComponent(name)
         
-        return nil
+        print("RetrieveURL===========================================")
+        print(fileURL)
+        print("RetrieveURL===========================================")
+
+        
+        let exists = FileManager.default.fileExists(atPath: fileURL.path)
+            print("📂 File exists? \(exists)")
+
+        return UIImage(contentsOfFile: fileURL.path)
     }
-    
     
 }

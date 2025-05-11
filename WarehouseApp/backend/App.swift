@@ -34,7 +34,12 @@ final class App: ObservableObject
         self.Database = DatabaseConnector()
         self.Storage = StorageManager()
         Data = Storage.getAppData() ?? AppData()
+        
+      
+        print("======================STORAGE==========================")
         print(Storage.getAppData())
+        print("======================STORAGE==========================")
+
     }
 }
 
@@ -249,14 +254,33 @@ extension App {
     
     
     
-    func addProduct(_ product: Product) -> Bool
+    func addProduct(_ pr: Product, image: UIImage?) -> Bool
     {
+        var product = pr
         if(product.barcode == "1")
         {
             return false
         }
-        Data.products.append(product)
         
+        var prImg: productImage? = nil
+       
+        if(image != nil)
+        {
+            let filename = Date().description
+            prImg = productImage(DeviceFilePath: filename, ServerFilePath: "", ServerThumbnailFilePath: "", uploadedToServer: false)
+            
+            if(Storage.saveImage(image: image!, name: filename))
+            {
+                print("Image saved")
+            }
+        }
+        else
+        {
+           prImg = productImage(DeviceFilePath: "", ServerFilePath: "", ServerThumbnailFilePath: "", uploadedToServer: false)
+        }
+        
+        product.productImage = prImg
+        Data.products.append(product)
         
         
         return true
@@ -266,18 +290,44 @@ extension App {
     {
         if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
-            Data.products.remove(at: index) 
+            
+            if(Data.products[index].productImage?.DeviceFilePath != "")
+            {
+                Storage.deleteImage(name: Data.products[index].productImage?.DeviceFilePath ?? "")
+            }
+            
+            Data.products.remove(at: index)
         }
         
     }
     
-    func setProduct(newproduct: Product, oldproduct: Product) -> Bool
+    func setProduct(newproduct: Product, oldproduct: Product, newImage: UIImage?) -> Bool
     {
+        
+        
         for i in 0..<Data.products.count
         {
             if(Data.products[i].deviceid == oldproduct.deviceid)
             {
-                Data.products[i] = newproduct
+                let toSave = Product(initialID: oldproduct.deviceid, product: newproduct)
+                
+                if(oldproduct.productImage?.DeviceFilePath != "")
+                {
+                    
+                    let filepath = (oldproduct.productImage?.DeviceFilePath)!
+                    
+                    if(Storage.deleteImage(name: filepath))
+                    {
+                        if(newImage != nil)
+                        {
+                            Storage.saveImage(image: newImage!, name: newproduct.productImage?.DeviceFilePath ?? "")
+                            print("ImageSaved")
+                        }
+                    }
+                }
+                
+                
+                Data.products[i] = toSave
             }
         }
         
@@ -295,6 +345,20 @@ extension App {
         }
         
         return nil
+    }
+    
+    
+    func getImage(product: Product) -> UIImage?
+    {
+        if(product.productImage?.DeviceFilePath != "")
+        {
+            let filepath = (product.productImage?.DeviceFilePath)!
+            return Storage.getImage(name: filepath)
+        }
+        else
+        {
+            return nil
+        }   
     }
     
     
