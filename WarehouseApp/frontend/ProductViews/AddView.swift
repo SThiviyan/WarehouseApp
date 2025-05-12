@@ -122,9 +122,11 @@ struct AddView: View {
             Section { productDetailsView(productname: $productname, producername: $producername) }
                 .id(1)
 
-            categoryPickerSection
-                .id(2)
-                .environmentObject(app)
+            if(!app.Data.categories.isEmpty){
+                categoryPickerSection
+                    .id(2)
+                    .environmentObject(app)
+            }
 
             descriptionSection
                 .id(3)
