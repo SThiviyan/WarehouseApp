@@ -150,7 +150,11 @@ struct AddView: View {
                 productsize = String(product.size ?? 0)
                 categorystring = product.category ?? ""
                 isEditing = true
+                selectedPhoto = app.Storage.getImage(name: product.productImage?.DeviceFilePath ?? "") ?? UIImage(imageLiteralResourceName: "shoppingCart")
+                
                 tempProduct = product
+                
+               
             }
             
             if(product == nil)
@@ -274,42 +278,61 @@ struct AddView: View {
     // MARK: Save Function
     func saveProduct() {
         
+        //
+        // Product save prep
+        //
         var barcode = productbarcode
-        
         if(barcode == "")
         {
             barcode = "0"
         }
         
-            
-        let pr = Product(productname: productname, price: Double(productprice) ?? 0.0, currency: currency, size: Double(productsize) ?? 0.0, unit: productUnit, category: [categorystring], image: UIImage(), producer: producername, barcode: barcode, createdAt: Date())
+        let img = selectedPhoto
+        var deviceFileName = ""
+       
+        if(img != UIImage(imageLiteralResourceName: "shoppingCart"))
+        {
+            deviceFileName = UUID().uuidString
+        }
         
+        var pr = Product(productname: productname,
+                         price: Double(productprice) ?? 0.0,
+                         currency: currency,
+                         size: Double(productsize) ?? 0.0,
+                         unit: productUnit,
+                         category: [categorystring],
+                         producer: producername,
+                         barcode: barcode,
+                         productImage: productImage(DeviceFilePath: deviceFileName, uploadedToServer: false),
+                         createdAt: Date())
+        
+       
+        
+        // Not sure if necessary
         product = pr
-
-        print("1")
+        
+        
+        
         if(calledOverScanView)
         {
             isEditing = false
         }
 
+        //
+        // SAVING PRODUCT
+        //
         if(productname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         {
             showemptyfieldalert = true
-            print("field empty")
         }
         else
         {
-            print("2")
-
             showemptyfieldalert = false
             
             if isEditing
             {
-                print("3")
-
                 isEditing = false
-                if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!) == true {
-                    onSave?()
+                if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!, newImage: img) == true {
                     app.selectedProduct = product
                     dismiss()
                 }
@@ -320,16 +343,13 @@ struct AddView: View {
             }
             else
             {
-                print("4")
                 isEditing = false
-                if App.shared.addProduct(pr) == true {
-                    print("5")
+                if App.shared.addProduct(pr, image: img) == true {
                     onSave?()
                     dismiss()
                 }
                 else
                 {
-                    print("6")
                     errorAlert = true
                 }
             }

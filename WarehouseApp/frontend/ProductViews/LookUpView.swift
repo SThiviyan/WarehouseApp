@@ -13,6 +13,7 @@ struct LookUpView: View {
     @State var product: Product
     //MARK: Infuse this view with a Product from App class
     
+    @State var img: UIImage?
     @State var ProducerName: String = "Producer"
     @State var ProductName: String = "Product"
     @State var Description: String = "Description"
@@ -43,11 +44,22 @@ struct LookUpView: View {
                     HStack
                     {
                         Spacer()
-                        Image("shoppingCart")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 200, height: 200)
-                            .clipShape(.circle)
+                        if img != nil {
+                            Image(uiImage: img!)
+                                    .resizable()
+                                    .frame(width: 200, height: 200)
+                                    .clipShape(.circle)
+                            
+                        }
+                        else
+                        {
+                            Image("shoppingCart")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 200)
+                                .clipShape(.circle)
+                        }
+                        
                         Spacer()
                     }
                 }
@@ -113,8 +125,15 @@ struct LookUpView: View {
         }
         .onAppear(perform: {
             print("Appeared")
-            productBarcode = product.barcode ?? "0"
             product = app.selectedProduct ?? Product()
+            productBarcode = product.barcode ?? "0"
+            
+            if(app.selectedProduct?.productImage != nil)
+            {
+                img = app.getImage(product: app.selectedProduct ?? Product())
+            }
+            //Image call here
+            
         })
         .toolbar{
             ToolbarItem(placement: .confirmationAction, content: {
@@ -136,6 +155,7 @@ struct LookUpView: View {
         .sheet(isPresented: $ShowAddView, onDismiss: {
             ShowAddView = false
             product = app.selectedProduct!
+            img = app.getImage(product: app.selectedProduct!)
         },content: {
             AddView(product: product, scrollToSection: ScrollToSection)
         })

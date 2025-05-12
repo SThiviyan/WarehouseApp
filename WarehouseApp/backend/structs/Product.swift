@@ -31,13 +31,13 @@ struct Product: Codable {
     var productImage: productImage?
     
     // Initializer mit zusätzlichen Parametern und Default-Werten für optionale Eigenschaften
+    // productImage needs to be assigned differently
     init(productname: String,
          price: Double,
          currency: String? = "EUR",
          size: Double,
          unit: String? = "g",   // z. B. "g" oder "ml"
          category: [String],
-         image: UIImage,
          producer: String,
          barcode: String? = "0",
          createdAt: Date) {
@@ -53,6 +53,31 @@ struct Product: Codable {
         self.producer = producer
         self.barcode = barcode
         self.createdAt = createdAt
+    }
+    
+    init(productname: String,
+         price: Double,
+         currency: String? = "EUR",
+         size: Double,
+         unit: String? = "g",   // z. B. "g" oder "ml"
+         category: [String],
+         producer: String,
+         barcode: String? = "0",
+         productImage: productImage,
+         createdAt: Date) {
+        
+        
+        self.deviceid = UUID()
+        self.productname = productname
+        self.price = price
+        self.currency = currency
+        self.size = size
+        self.unit = unit
+        self.category = category[0]
+        self.producer = producer
+        self.barcode = barcode
+        self.createdAt = createdAt
+        self.productImage = productImage
     }
     
     
@@ -72,6 +97,21 @@ struct Product: Codable {
         self.createdAt = CoreP.createdAt!
     }
     
+    
+    init(initialID: UUID, product: Product)
+    {
+        self.deviceid = initialID
+        self.serverId = product.serverId
+        self.productname = product.productname
+        self.producer = product.producer
+        self.price = product.price
+        self.size = product.size
+        self.currency = product.currency
+        self.unit = product.unit
+        self.category = product.category
+        self.barcode = product.barcode
+        self.createdAt = product.createdAt
+    }
     
     
     

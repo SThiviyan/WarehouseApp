@@ -271,7 +271,6 @@ extension App {
             
             if(Storage.saveImage(image: image!, name: filename))
             {
-                print("Image saved")
             }
         }
         else
@@ -311,20 +310,26 @@ extension App {
             {
                 let toSave = Product(initialID: oldproduct.deviceid, product: newproduct)
                 
-                if(oldproduct.productImage?.DeviceFilePath != "")
+                if(oldproduct.productImage?.DeviceFilePath != "" && oldproduct.productImage != nil)
                 {
                     
                     let filepath = (oldproduct.productImage?.DeviceFilePath)!
                     
                     if(Storage.deleteImage(name: filepath))
                     {
-                        if(newImage != nil)
-                        {
-                            Storage.saveImage(image: newImage!, name: newproduct.productImage?.DeviceFilePath ?? "")
-                            print("ImageSaved")
-                        }
+                       print("deleted old Image for new Image / Replace")
                     }
                 }
+                
+                if(newImage != nil)
+                {
+                    if(Storage.saveImage(image: newImage!, name: newproduct.productImage?.DeviceFilePath ?? ""))
+                    {
+                        print("ImageSaved")
+                    }
+                }
+                
+                
                 
                 
                 Data.products[i] = toSave
@@ -358,7 +363,19 @@ extension App {
         else
         {
             return nil
-        }   
+        }
+    }
+    
+    func getImage(url: String) -> UIImage?
+    {
+        if(url != "")
+        {
+            return Storage.getImage(name: url)
+        }
+        else
+        {
+            return nil
+        }
     }
     
     
@@ -394,12 +411,7 @@ extension App {
             data.units = await fetchUnits(jwt: user.lastJWT!)
             data.products = await fetchAllProducts(jwt: user.lastJWT!)
             data.currencies = await fetchCurrencies(jwt: user.lastJWT!)
-            
-            /*
-            print("USERDATA::::::::::::::::::::::::::::::::::::::::::::::::::")
-            print(data)
-            print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-             */
+          
             
             return data
         }

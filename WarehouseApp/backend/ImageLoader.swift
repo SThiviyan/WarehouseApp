@@ -10,22 +10,55 @@ import UIKit
 
 class ImageLoader
 {
+    var app: App = App.shared
     @Published var ImageCache: NSCache<NSString, UIImage> = NSCache<NSString, UIImage>()
 
     
     init(){
       
-
+        
     }
-}
-
-//A Struct that controlls what images are loaded 
-struct AppImage {
-    let image: UIImage
-    let assignedProduct: UUID
     
-    init(image: UIImage, assignedProduct: UUID) {
-        self.image = image
-        self.assignedProduct = assignedProduct
+    
+    func prefetch(urls: [String])
+    {
+        
+        print("===========PREFETCHING IMAGES==================")
+        for url in urls
+        {
+            DispatchQueue.global(qos: .userInitiated).async
+            {
+                if let cachedImage = self.ImageCache.object(forKey: url as NSString)
+                {
+                    print("image exists in cache")
+                }
+                else
+                {
+                    if let image = self.app.getImage(url: url)
+                    {
+                        self.ImageCache.setObject(image, forKey: url as NSString)
+                        
+                        print("image downloaded and cached")
+                    }
+                }
+                
+            }
+        }
+
+    }
+    
+    
+    func getImage(url: String?) -> UIImage?
+    {
+        if(url != nil)
+        {
+            if let cachedImage = self.ImageCache.object(forKey: url! as NSString)
+            {
+                return cachedImage
+            }
+        }
+        
+        return nil
     }
 }
+

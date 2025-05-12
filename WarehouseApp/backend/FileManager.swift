@@ -32,7 +32,6 @@ class StorageManager {
     
     func saveAppData(appData: AppData) -> Bool
     {
-        print("savedAppData")
         return coreDataStack.saveAppData(data: appData)
     }
     
@@ -76,11 +75,6 @@ class StorageManager {
         
         let fileURL = documentsDir.appendingPathComponent(name)
         
-        
-        print("SavedURL===========================================")
-        print(fileURL)
-        print("SavedURL===========================================")
-
         guard let data = image.pngData() else {
             print("failed conversion")
             return false
@@ -101,7 +95,6 @@ class StorageManager {
        
         
         do{
-            print("DATAWRITE================================>")
             try data.write(to: fileURL)
         }
         catch let error {
@@ -145,14 +138,6 @@ class StorageManager {
         }
 
         let fileURL = documentsDir.appendingPathComponent(name)
-        
-        print("RetrieveURL===========================================")
-        print(fileURL)
-        print("RetrieveURL===========================================")
-
-        
-        let exists = FileManager.default.fileExists(atPath: fileURL.path)
-            print("📂 File exists? \(exists)")
 
         return UIImage(contentsOfFile: fileURL.path)
     }

@@ -20,8 +20,6 @@ class tablecell: UITableViewCell
         i.sizeToFit()
         i.scalesLargeContentImage = true
         i.translatesAutoresizingMaskIntoConstraints = false
-        i.image = UIImage(named: "shoppingCart")
-    
         
         return i
         
@@ -97,7 +95,7 @@ class tablecell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(product: Product)
+    func configure(product: Product, img: UIImage?)
     {
         self.product = product
         
@@ -106,6 +104,7 @@ class tablecell: UITableViewCell
         self.price.text = String(format: "%.2f",self.product.price ?? "")
         self.producername.text = self.product.producer
         self.sizeLabel.text = String(format: "%.2f", self.product.size ?? "")
+        self.productimage.image = img ?? UIImage(named: "shoppingCart")
     }
     
     func setuplayout()
