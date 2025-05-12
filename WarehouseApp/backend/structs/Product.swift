@@ -111,6 +111,9 @@ struct Product: Codable {
         self.category = product.category
         self.barcode = product.barcode
         self.createdAt = product.createdAt
+        
+        //MARK: IF SERVER IMAGE UPLOAD IS IMPLEMENTED SOME THINGS MAY NEED TO BE CHANGED
+        self.productImage = WarehouseApp.productImage(DeviceFilePath: product.productImage?.DeviceFilePath ?? "", uploadedToServer: false)
     }
     
     

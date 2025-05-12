@@ -297,7 +297,7 @@ struct AddView: View {
             deviceFileName = UUID().uuidString
         }
         
-        var pr = Product(productname: productname,
+        let pr = Product(productname: productname,
                          price: Double(productprice) ?? 0.0,
                          currency: currency,
                          size: Double(productsize) ?? 0.0,
@@ -333,6 +333,7 @@ struct AddView: View {
             
             if isEditing
             {
+                //TODO: FIX ISSUE HERE 
                 isEditing = false
                 if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!, newImage: img) == true {
                     app.selectedProduct = product
