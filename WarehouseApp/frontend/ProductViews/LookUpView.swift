@@ -47,6 +47,7 @@ struct LookUpView: View {
                         if img != nil {
                             Image(uiImage: img!)
                                     .resizable()
+                                    .scaledToFill()
                                     .frame(width: 200, height: 200)
                                     .clipShape(.circle)
                             

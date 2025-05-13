@@ -256,32 +256,22 @@ extension App {
     
     func addProduct(_ pr: Product, image: UIImage?) -> Bool
     {
-        var product = pr
-        if(product.barcode == "1")
+        if(pr.barcode == "1")
         {
             return false
         }
         
-        var prImg: productImage? = nil
        
         if(image != nil)
         {
-            let filename = Date().description
-            prImg = productImage(DeviceFilePath: filename, ServerFilePath: "", ServerThumbnailFilePath: "", uploadedToServer: false)
-            
-            if(Storage.saveImage(image: image!, name: filename))
+            if(Storage.saveImage(image: image!, name: pr.productImage?.DeviceFilePath ?? ""))
             {
+                Data.products.append(pr)
+                return true
             }
         }
-        else
-        {
-           prImg = productImage(DeviceFilePath: "", ServerFilePath: "", ServerThumbnailFilePath: "", uploadedToServer: false)
-        }
-        
-        product.productImage = prImg
-        Data.products.append(product)
-        
-        
+      
+        Data.products.append(pr)
         return true
     }
     

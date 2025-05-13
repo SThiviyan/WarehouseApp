@@ -74,8 +74,10 @@ class StorageManager {
         }
         
         let fileURL = documentsDir.appendingPathComponent(name)
+                                .appendingPathExtension("jpeg")
+
         
-        guard let data = image.pngData() else {
+        guard let data = image.jpegData(compressionQuality: 0.4) else {
             print("failed conversion")
             return false
         }
@@ -113,6 +115,8 @@ class StorageManager {
         }
         
         let fileURL = documentsDir.appendingPathComponent(name)
+                                .appendingPathExtension("jpeg")
+
         
         //if file exists, remove file
         if(FileManager.default.fileExists(atPath: fileURL.path))
@@ -138,7 +142,9 @@ class StorageManager {
         }
 
         let fileURL = documentsDir.appendingPathComponent(name)
+                                .appendingPathExtension("jpeg")
 
+        
         return UIImage(contentsOfFile: fileURL.path)
     }
     

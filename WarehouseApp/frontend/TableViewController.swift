@@ -18,6 +18,7 @@ class TableViewController: UIViewController
     let app = App.shared
     var section: Int? = 0
     var product: Product?
+    let imageLoader: ImageLoader = ImageLoader()
     
     let searchbar: UISearchBar = {
         let s = UISearchBar()
@@ -78,6 +79,7 @@ class TableViewController: UIViewController
         table.register(tablecell.self, forCellReuseIdentifier: tablecell.identifier)
         table.delegate = self
         table.dataSource = self
+        table.prefetchDataSource = self
         view.addSubview(searchbar)
         view.addSubview(table)
         view.addSubview(horizontalfilterscroll)
@@ -91,7 +93,7 @@ class TableViewController: UIViewController
         
         currentCategories = app.Data.categories
         
-        
+        fetchVisibleCellsImages()
     }
     
  
@@ -102,7 +104,6 @@ class TableViewController: UIViewController
         app.selectedProduct = nil
 
         
-        table.reloadData()
         //horizontalfilterscroll.reloadData()
         
         if(currentCategories.count != app.Data.categories.count)
@@ -165,18 +166,44 @@ class TableViewController: UIViewController
             
             currentCategories = app.Data.categories
         }
+        
+        
+        
+    
+        fetchVisibleCellsImages()
+        
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            self.table.reloadData()
+            self.table.visibleCells.forEach { $0.layoutIfNeeded() }
+        })
        
+    }
+    
+    func fetchVisibleCellsImages()
+    {
+        let visibleIndex = table.indexPathsForVisibleRows
+        print("VISIBLECELLS: \(visibleIndex)")
+        var urls: [String] = []
+        
+        visibleIndex?.forEach({
+            index in
+            
+            print("index \(index.row)")
+            print("image: \(app.Data.products[index.row].productImage?.DeviceFilePath)")
+            
+            urls.append(app.Data.products[index.row].productImage?.DeviceFilePath ?? "")
+        })
+        
+        imageLoader.prefetch(urls: urls)
     }
     
     @objc func plusButton_pressed()
     {
-        print("add product")
-                
-    
-            
-        let addViewSwiftUI = AddView(scrollToSection: section, onSave: {
+        let addViewSwiftUI = AddView(isEditing: false, scrollToSection: section, onSave: {
             DispatchQueue.main.async {
                 self.table.reloadData()
+                self.fetchVisibleCellsImages()
             }
         })
             .environmentObject(app)
@@ -233,17 +260,20 @@ extension TableViewController: UISearchBarDelegate
 }
 
 
-extension TableViewController: UITableViewDelegate, UITableViewDataSource
+extension TableViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return app.Data.products.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+            
+        fetchVisibleCellsImages()
+ 
         let cell = tableView.dequeueReusableCell( withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
         
-        cell.configure(product: app.Data.products[indexPath.row])
+        let imagefilepath = app.Data.products[indexPath.row].productImage?.DeviceFilePath
+        cell.configure(product: app.Data.products[indexPath.row], img: imageLoader.getImage(url: imagefilepath))
         
         
         return cell
@@ -266,13 +296,21 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource
         let vc = UIHostingController(rootView: LookUpView(product: cell.product).environmentObject(App.shared))
         
         
-        print(App.shared.Data.products[indexPath.row])
         
         
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(vc, animated: true)
         
-        //vc.title = products[indexPath.row].productname ?? ""
+        
+    }
+    
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let urls: [String] = indexPaths.map {
+            app.Data.products[$0.row].productImage?.DeviceFilePath ?? ""
+        }
+        
+        imageLoader.prefetch(urls: urls)
         
     }
     

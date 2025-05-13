@@ -50,15 +50,32 @@ class ImageLoader
     
     func getImage(url: String?) -> UIImage?
     {
-        if(url != nil)
+        if(url != nil && url != "")
         {
             if let cachedImage = self.ImageCache.object(forKey: url! as NSString)
             {
+                print("Image with URL \(url!) found in cache")
                 return cachedImage
+            }
+            else
+            {
+                prefetch(urls: [url ?? ""])
+                if let cachedImage = self.ImageCache.object(forKey: url! as NSString)
+                {
+                    return cachedImage
+                }
             }
         }
         
+        
+        print("Image with URL \(url ?? "nil") not found in cache")
         return nil
+    }
+    
+    
+    func clearCache()
+    {
+        ImageCache.removeAllObjects()
     }
 }
 
