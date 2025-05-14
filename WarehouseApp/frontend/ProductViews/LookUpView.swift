@@ -18,8 +18,7 @@ struct LookUpView: View {
     @State var ProductName: String = "Product"
     @State var Description: String = "Description"
     
-    @State var ProductHasBarcode: Bool = true
-    @State var productBarcode: String = "0"
+    @State var productBarcode: String = ""
     
     //Previous Views
     @State var ShowScanView: Bool = false
@@ -112,7 +111,7 @@ struct LookUpView: View {
                 
                 Section("Scanning")
                 {
-                    if(product.barcode != "")
+                    if(product.barcode != "" && product.barcode != "0")
                     {
                         BarcodeScannedView(showScanView: $ShowScanView, barcode: $productBarcode)
                     }
@@ -127,7 +126,10 @@ struct LookUpView: View {
         .onAppear(perform: {
             print("Appeared")
             product = app.selectedProduct ?? Product()
-            productBarcode = product.barcode ?? ""
+            print(product)
+            
+            productBarcode = app.selectedProduct?.barcode ?? ""
+            
             
             if(app.selectedProduct?.productImage != nil)
             {
@@ -156,6 +158,7 @@ struct LookUpView: View {
         .sheet(isPresented: $ShowAddView, onDismiss: {
             ShowAddView = false
             product = app.selectedProduct!
+            productBarcode = app.selectedProduct?.barcode ?? ""
             img = app.getImage(product: app.selectedProduct!)
         },content: {
             AddView(product: product, scrollToSection: ScrollToSection)

@@ -39,7 +39,7 @@ struct Product: Codable {
          unit: String? = "g",   // z. B. "g" oder "ml"
          category: [String],
          producer: String,
-         barcode: String? = "0",
+         barcode: String?,
          createdAt: Date) {
         
         
@@ -62,7 +62,7 @@ struct Product: Codable {
          unit: String? = "g",   // z. B. "g" oder "ml"
          category: [String],
          producer: String,
-         barcode: String? = "0",
+         barcode: String?,
          productImage: productImage,
          createdAt: Date) {
         
@@ -128,7 +128,7 @@ struct Product: Codable {
         self.unit = "kg"
         self.category = "Lebensmittel"
         self.producer = ""
-        self.barcode = "0"
+        self.barcode = ""
     }
     
     

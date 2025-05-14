@@ -200,7 +200,7 @@ class CoreDataStack: ObservableObject {
             //MARK: Products get saved in memory, except images (only urls)
             var products = appData.products?.compactMap({ (value) -> Product? in
                 guard let corePr = value as? CoreProduct else { return nil }
-                var product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], producer: corePr.producer ?? "", createdAt: corePr.createdAt ?? Date())
+                var product = Product(productname: corePr.name ?? "", price: corePr.price, size: corePr.size, category: [corePr.category?.name ?? ""], producer: corePr.producer ?? "", barcode: corePr.barcode ?? "", createdAt: corePr.createdAt ?? Date())
                 
                 product.productImage = productImage(DeviceFilePath: corePr.image?.deviceFileName ?? "", ServerFilePath: corePr.image?.serverFileName, ServerThumbnailFilePath: corePr.image?.serverThumbnailFileName, uploadedToServer: corePr.image?.uploadedToServer ?? false)
                 
@@ -334,7 +334,7 @@ class CoreDataStack: ObservableObject {
             product.id = item.deviceid
             product.serverId = Int64(item.serverId ?? 0)
             product.name = item.productname
-            product.barcode = item.barcode
+            product.barcode = item.barcode ?? ""
             product.producer = item.producer
             product.productdescription = item.description
             product.price = item.price ?? 0

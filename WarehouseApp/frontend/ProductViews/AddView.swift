@@ -41,7 +41,7 @@ struct AddView: View {
 
     //MARK: Variable concering ScanView and to check if product was scanned before
     @State var productscanned: Bool = false
-    @State var productbarcode: String = "0"
+    @State var productbarcode: String = ""
     @State var showScanView: Bool = false
     
     
@@ -96,6 +96,7 @@ struct AddView: View {
                 productUnit = ""
                 productsize = ""
                 categorystring = ""
+                productbarcode = ""
                 
                 if(calledOverScanView)
                 {
@@ -154,11 +155,10 @@ struct AddView: View {
                 isEditing = true
                 selectedPhoto = app.Storage.getImage(name: product.productImage?.DeviceFilePath ?? "") ?? UIImage(imageLiteralResourceName: "shoppingCart")
                 
-                tempProduct = product
                 
                 productbarcode = product.barcode ?? ""
                 
-                if(productbarcode != "")
+                if(productbarcode != "" && productbarcode != "0")
                 {
                     productscanned = true
                 }
@@ -167,6 +167,9 @@ struct AddView: View {
                     productscanned = false
                 }
                 
+                
+                tempProduct = product
+              
                
             }
             
@@ -294,7 +297,11 @@ struct AddView: View {
         //
         // Product save prep
         //
-        var barcode = productbarcode
+        
+        if(productbarcode == "0")
+        {
+            productbarcode = ""
+        }
      
         let img = selectedPhoto
         var deviceFileName = ""
@@ -311,7 +318,7 @@ struct AddView: View {
                          unit: productUnit,
                          category: [categorystring],
                          producer: producername,
-                         barcode: barcode,
+                         barcode: productbarcode,
                          productImage: productImage(DeviceFilePath: deviceFileName, uploadedToServer: false),
                          createdAt: Date())
         

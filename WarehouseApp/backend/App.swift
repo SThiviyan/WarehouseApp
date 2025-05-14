@@ -260,7 +260,6 @@ extension App {
         {
             return false
         }
-        
        
         if(image != nil)
         {
@@ -352,6 +351,7 @@ extension App {
         }
         else
         {
+            
             return nil
         }
     }
@@ -364,6 +364,7 @@ extension App {
         }
         else
         {
+            print("Image with name \(url) not found")
             return nil
         }
     }
