@@ -112,7 +112,7 @@ struct LookUpView: View {
                 
                 Section("Scanning")
                 {
-                    if(product.barcode != "0")
+                    if(product.barcode != "")
                     {
                         BarcodeScannedView(showScanView: $ShowScanView, barcode: $productBarcode)
                     }
@@ -127,7 +127,7 @@ struct LookUpView: View {
         .onAppear(perform: {
             print("Appeared")
             product = app.selectedProduct ?? Product()
-            productBarcode = product.barcode ?? "0"
+            productBarcode = product.barcode ?? ""
             
             if(app.selectedProduct?.productImage != nil)
             {

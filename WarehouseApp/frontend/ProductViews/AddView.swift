@@ -156,6 +156,17 @@ struct AddView: View {
                 
                 tempProduct = product
                 
+                productbarcode = product.barcode ?? ""
+                
+                if(productbarcode != "")
+                {
+                    productscanned = true
+                }
+                else
+                {
+                    productscanned = false
+                }
+                
                
             }
             
@@ -251,7 +262,7 @@ struct AddView: View {
                     Text("Mililiter").tag("ml")
                     Text("Liter").tag("l")
                     Text("Gramm").tag("g")
-                    Text("Kilogrammm").tag("kg")
+                    Text("Kilogramm").tag("kg")
                 }
                 .labelsHidden()
                 .pickerStyle(.menu)
@@ -284,11 +295,7 @@ struct AddView: View {
         // Product save prep
         //
         var barcode = productbarcode
-        if(barcode == "")
-        {
-            barcode = "0"
-        }
-        
+     
         let img = selectedPhoto
         var deviceFileName = ""
        
@@ -308,10 +315,10 @@ struct AddView: View {
                          productImage: productImage(DeviceFilePath: deviceFileName, uploadedToServer: false),
                          createdAt: Date())
         
-       
+       print(pr)
         
         // Not sure if necessary
-        product = pr
+        //product = pr
         
         
         
@@ -336,7 +343,7 @@ struct AddView: View {
                 //TODO: FIX ISSUE HERE 
                 isEditing = false
                 if App.shared.setProduct(newproduct: pr, oldproduct: tempProduct!, newImage: img) == true {
-                    app.selectedProduct = product
+                    app.selectedProduct = pr
                     dismiss()
                 }
                 else
