@@ -17,8 +17,8 @@ class tablecell: UITableViewCell
     let productimage: UIImageView =
     {
         let i = UIImageView()
-        i.sizeToFit()
-        i.scalesLargeContentImage = true
+        i.contentMode = .scaleAspectFill
+        i.clipsToBounds = true
         i.translatesAutoresizingMaskIntoConstraints = false
         
         return i
@@ -95,6 +95,12 @@ class tablecell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        productimage.image = UIImage(named: "shoppingCart")
+    }
+    
     func configure(product: Product, img: UIImage?)
     {
         self.product = product
@@ -104,6 +110,7 @@ class tablecell: UITableViewCell
         self.price.text = String(format: "%.2f",self.product.price ?? "")
         self.producername.text = self.product.producer
         self.sizeLabel.text = String(format: "%.2f", self.product.size ?? "")
+        
         self.productimage.image = img ?? UIImage(named: "shoppingCart")
     }
     
