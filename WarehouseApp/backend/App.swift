@@ -163,8 +163,11 @@ extension App {
         if(!Storage.coreDataStack.saveAppData(data: Data))
         { return false }
         
-        if (await !Database.uploadAppData(data: Data, jwt: Data.UserData?.lastJWT))
+        
+        /*
+        if (await !Database.doDelayedUpload(data: Data, jwt: Data.UserData?.lastJWT!))
         { return false }
+         */
             
         return true
     }
