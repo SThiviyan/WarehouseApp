@@ -138,7 +138,7 @@ class DatabaseConnector {
     
     
     //
-    //  UNITS
+    //  UNITS & CURRENCIES
     //
     
     func getUnits(_ jwt: String) async -> [Unit]{
@@ -355,6 +355,32 @@ class DatabaseConnector {
             return false
         }
 
+    }
+    
+    
+    func uploadUser(User: User, jwt: String) async -> Bool {
+        let url = baseURL + "/api/user"
+        let jwt = jwt
+
+        //DELETE REQ
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: User) ?? Data())
+            
+            if(success == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+        catch{
+            return false
+        }
     }
     
     
