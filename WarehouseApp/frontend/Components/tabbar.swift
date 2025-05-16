@@ -27,8 +27,8 @@ func getTabbar() -> UITabBarController {
     
     firstVC.tabBarItem = UITabBarItem(title: "Scan", image: UIImage(systemName: "camera"), selectedImage: UIImage(systemName: "camera"))
         
-    secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
-    settingsNav.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
+    secondVC.tabBarItem = UITabBarItem(title: "Produkte", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
+    settingsNav.tabBarItem = UITabBarItem(title: "Einstellungen", image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape"))
     
     firstVC.navigationBar.prefersLargeTitles = true
     secondVC.navigationBar.prefersLargeTitles = true

@@ -69,7 +69,7 @@ class TableViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Suche"
+        self.title = "Produkte"
         self.navigationItem.largeTitleDisplayMode = .always
             
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButton_pressed))
@@ -271,7 +271,7 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource, UITab
         fetchVisibleCellsImages()
  
         let cell = tableView.dequeueReusableCell( withIdentifier: tablecell.identifier, for: indexPath) as! tablecell
-        
+        cell.layer.cornerRadius = 10
         let imagefilepath = app.Data.products[indexPath.row].productImage?.DeviceFilePath
         cell.configure(product: app.Data.products[indexPath.row], img: imageLoader.getImage(url: imagefilepath))
         
@@ -285,19 +285,8 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource, UITab
         //let vc = LookUpVC()
         
         let cell = tableView.cellForRow(at: indexPath) as! tablecell
-        
-       
-        print("cellproduct----------------------")
-        print(cell.product)
-        print("---------------------------------")
-        
         app.selectedProduct = cell.product
-        
         let vc = UIHostingController(rootView: LookUpView(product: cell.product).environmentObject(App.shared))
-        
-        
-        
-        
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(vc, animated: true)
         
