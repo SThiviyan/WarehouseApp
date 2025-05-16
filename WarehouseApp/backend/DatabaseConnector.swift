@@ -10,8 +10,8 @@ import Foundation
 
 class DatabaseConnector {
     //BASEURL
-    let baseURL = "https://localhost:3000/api"
-    //let baseURL = "https://192.168.2.79:3000/api"
+    //let baseURL = "https://localhost:3000/api"
+    let baseURL = "https://192.168.2.30:3000/api"
     
     //
     // LOGIN AND SIGNUP
@@ -53,6 +53,8 @@ class DatabaseConnector {
     }
     
     
+    
+    //TODO:
     func changePassword(oldPassword: String, newPassword: String, jwt: String) async -> Bool  {
         let url = baseURL + "/changepassword"
         let payload: [String: Any] = [
@@ -132,11 +134,6 @@ class DatabaseConnector {
         }
     }
     
-    func AddCategories(_ jwt: String) async -> Bool{
-        return false
-    }
-    
-    
     
     
     
@@ -184,12 +181,7 @@ class DatabaseConnector {
     //
     //  PRODUCTS
     //
-    
-    func setProduct(_ product: Product, _ jwt: String) async -> Bool {
-        return false
-    }
-    
-    
+        
     func getProducts(jwt: String) async -> [Product]
     {
         if(jwt.isEmpty){return []}
@@ -207,17 +199,6 @@ class DatabaseConnector {
             return []
         }
     }
-    
-    func addProduct(_ product: Product, _ imageData: Data, _ jwt: String) async -> Bool {
-        return false
-    }
-    
-    
-    func deleteProduct(_ productId: Int, _ jwt: String) async -> Bool {
-        return false
-    }
-    
-    
     //MARK: "Streaming" all Products (decides if all products should be downloaded, or some should be downloaded)
     func streamProducts() -> [Product] {
         
@@ -225,6 +206,160 @@ class DatabaseConnector {
         
         return []
     }
+    
+    
+    
+    
+    
+    
+    //TODO: UPLOAD METHODS
+    
+    
+    //UPLOADS IN CASE PRODUCT
+    func doDelayedUpload(data: AppData, jwt: String) async -> Bool
+    {
+        let jwt = jwt
+        
+        if jwt == "" && data.UserData != nil {
+            let newjwt = data.UserData?.lastJWT
+            
+            if newjwt == nil {
+                //LOGIN HERE TO GET JWT
+                return false
+            }
+        }
+        else if data.UserData == nil {
+           return false
+        }
+        
+        
+        //NEEDS TO BE INDEPENDENT (I.E CATEGORY CAN UPLOAD STILL EVEN IF PRODUCTS FAIL)
+        //USE TIME STAMPS TO MAKE SURE, SYNCING IS ALWAYS UP TO DATE
+        
+        
+        
+        
+        
+        
+        return true
+    }
+    
+   
+    
+    //THESE ARE IMMEDIATELY CALLED WHEN USER DELETES / SAVES SOMETHING
+    // IF UPLOAD IS NOT POSSIBLE -> A LIST OF REQUESTS WILL SAVE WHAT PRODUCTS NEED TO BE DELETED / SAVED
+    // GOES FOR PRODUCTS AND CATEGORIES ? ALSO FOR USERDATA
+    
+    //UPLOADPRODUCT RETURNS IT'S ServerID
+    func uploadProduct(_ product: Product, jwt: String) async -> Int? {
+        let url = baseURL + "/api/product"
+        let jwt = jwt
+        
+        //POST REQ
+
+        let decoder = JSONDecoder()
+        
+        do{
+            let decodedDictionary = try await decoder.decode([String: Int].self, from: ServerRequest(url, "POST", jwt, payload: product) ?? Data())
+            
+            if let productID = decodedDictionary["productID"]
+            {
+                return productID
+            }
+            else
+            {
+                return nil
+            }
+        }
+        catch{
+            return nil
+        }
+        
+    }
+    
+    
+    
+    func deleteProduct(serverID: Int, jwt: String) async -> Bool {
+        let url = baseURL + "/api/product"
+        let jwt = jwt
+        
+        //DELETE REQ
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "DELETE", jwt, payload: serverID) ?? Data())
+            
+            if(success == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+        catch{
+            return false
+        }
+    }
+    
+    
+    func uploadCategory(_ category: Category, jwt: String) async -> Bool {
+        let url = baseURL + "/api/category"
+        let jwt = jwt
+        
+        //POST REQ
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: ["categoryname": category.name]) ?? Data())
+            
+            if(success == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+        catch{
+            return false
+        }
+    }
+    
+    
+    func deleteCategory(_ category: Category, jwt: String) async -> Bool {
+        let url = baseURL + "/api/category"
+        let jwt = jwt
+
+        //DELETE REQ
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "DELETE", jwt, payload: ["categoryname": category.name]) ?? Data())
+            
+            if(success == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+        catch{
+            return false
+        }
+
+    }
+    
+    
+    
+    
     
     
     
