@@ -4,6 +4,7 @@
         <attribute name="lastSync" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCategory"/>
         <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+        <relationship name="lateuploadrequests" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreLateUploadRequest"/>
         <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreProduct"/>
         <relationship name="units" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreUnit"/>
         <relationship name="userData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUser"/>
@@ -14,6 +15,11 @@
     <entity name="CoreCurrency" representedClassName="CoreCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="symbol" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreLateUploadRequest" representedClassName="CoreLateUploadRequest" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="object" optional="YES" attributeType="Binary"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
         <attribute name="barcode" optional="YES" attributeType="String"/>
