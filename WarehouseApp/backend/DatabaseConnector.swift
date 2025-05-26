@@ -8,10 +8,13 @@
 import Foundation
 
 
+
 class DatabaseConnector {
     //BASEURL
     //let baseURL = "https://localhost:3000/api"
     let baseURL = "https://192.168.2.30:3000/api"
+    
+
     
     //
     // LOGIN AND SIGNUP
@@ -218,6 +221,14 @@ class DatabaseConnector {
     //UPLOADS IN CASE PRODUCT
     func doDelayedUpload(data: AppData, jwt: String) async -> Bool
     {
+        
+        if(data.lateRequests.isEmpty)
+        {
+            //nothing to upload, complete immediately
+            return true
+        }
+        
+        
         let jwt = jwt
         
         if jwt == "" && data.UserData != nil {
