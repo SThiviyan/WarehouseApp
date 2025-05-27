@@ -247,8 +247,7 @@ class DatabaseConnector {
         //NEEDS TO BE INDEPENDENT (I.E CATEGORY CAN UPLOAD STILL EVEN IF PRODUCTS FAIL)
         //USE TIME STAMPS TO MAKE SURE, SYNCING IS ALWAYS UP TO DATE
         
-        
-        
+        //OPTIMIZATION REQUIRED, IF ONE POST AND ONE DELETE ARE DONE, THEN DELETE IMMEDIATELY
         
         
         
@@ -262,7 +261,7 @@ class DatabaseConnector {
     // GOES FOR PRODUCTS AND CATEGORIES ? ALSO FOR USERDATA
     
     //UPLOADPRODUCT RETURNS IT'S ServerID
-    func uploadProduct(_ product: Product, jwt: String) async -> Int? {
+    func uploadProduct(_ product: Product, jwt: String?) async -> Int? {
         let url = baseURL + "/api/product"
         let jwt = jwt
         

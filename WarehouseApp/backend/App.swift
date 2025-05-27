@@ -145,6 +145,9 @@ extension App {
 // DATABASE METHODS FOR FILESYSTEM
 //
 
+
+// app saves only after closing to coredata but uploads products and categories immediately 
+
 extension App {
     
     func syncDataWithServer() async -> Bool
@@ -259,6 +262,8 @@ extension App {
     
     func addProduct(_ pr: Product, image: UIImage?) -> Bool
     {
+        
+        //LOCAL CHANGES
         if(pr.barcode == "1")
         {
             return false
@@ -274,11 +279,19 @@ extension App {
         }
       
         Data.products.append(pr)
+        
+        
+        
+        //UPLOAD TO SERVER
+        
+        
         return true
     }
     
     func removeProduct(_ product: Product)
     {
+        
+        //LOCAL CHANGES
         if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
             
@@ -288,14 +301,23 @@ extension App {
             }
             
             Data.products.remove(at: index)
+            
+            //UPLOAD TO SERVER
+            Task{
+                if(await Database.deleteProduct(serverID: Data.products[index].serverId ?? -1, jwt: Data.UserData?.lastJWT ?? "")){
+                    Data.lateRequests.append(LateUploadRequest(type: uploadtype.POST, object: Data.products[index], timeStamp: Date()))
+                }
+            }
+            
         }
+        
         
     }
     
     func setProduct(newproduct: Product, oldproduct: Product, newImage: UIImage?) -> Bool
     {
         
-        
+        //LOCAL CHANGES
         for i in 0..<Data.products.count
         {
             if(Data.products[i].deviceid == oldproduct.deviceid)
@@ -321,12 +343,21 @@ extension App {
                     }
                 }
                 
-                
-                
-                
                 Data.products[i] = toSave
             }
+            
+            //UPLOAD TO SERVER
+            Task{
+                if(await Database.uploadProduct(Data.products[i], jwt: Data.UserData?.lastJWT!) == nil)
+                {
+                    Data.lateRequests.append(LateUploadRequest(type: uploadtype.POST, object: Data.products[i], timeStamp: Date()))
+                }
+            }
         }
+        
+        
+        
+        
         
         return true
     }
