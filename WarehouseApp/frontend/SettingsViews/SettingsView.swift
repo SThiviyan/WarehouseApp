@@ -25,11 +25,6 @@ struct SettingsView: View {
 
     var body: some View {
             Form {
-                //MARK: WORKAROUND REQUIRED BECAUSE SWIFTUI BUGS OUT WHEN NAVIGATIONBARTITLE AND COREDATA ARE USED SIMULTANEOUSLY
-                
-                
-                //MARK: i hate SwiftUI so much
-                
                 emailSection
                 productSection
                 categorySection
@@ -60,6 +55,17 @@ struct SettingsView: View {
                         Task{
                             //MARK: ADD FETCHING
                             //await App.shared.fetchAllProducts()
+                            if(app.Data.UserData != nil)
+                            {
+                                if(app.Data.UserData!.saveDataToDevice != true)
+                                {
+                                    app.setSaveProductsToDevice(value: true)
+                                }
+                                else
+                                {
+                                    app.setSaveProductsToDevice(value: false)
+                                }
+                            }
                         }
                     }
                     .bold()
