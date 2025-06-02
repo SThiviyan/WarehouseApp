@@ -263,11 +263,38 @@ extension App {
     func addProduct(_ pr: Product, image: UIImage?) -> Bool
     {
         
+        
+        var serverID: Int?
+        
+        //UPLOAD TO SERVER
+        Task{
+            serverID = await Database.uploadProduct(pr, jwt: Data.UserData?.lastJWT)
+            //if no productID is returned by UploadProduct then add to LateRequests
+            if(serverID == nil)
+            {
+                let req = LateUploadRequest(type: uploadtype.POST, object: pr, timeStamp: Date())
+                addLateRequest(request: req)
+                
+                if(image != nil)
+                {
+                    //Image LateRequest
+                    let ImageReq = LateUploadRequest(type: uploadtype.POST, object: image!, timeStamp: Date())
+                    addLateRequest(request: ImageReq)
+                }
+            }
+        }
+        
+        
         //LOCAL CHANGES
+        //Local changes are done after uplaod to server, because server can return a serverID for products
         if(pr.barcode == "1")
         {
             return false
         }
+        
+        
+        var product = Product(initialID: pr.deviceid, product: pr)
+        product.serverId = serverID
        
         if(image != nil)
         {
@@ -279,12 +306,6 @@ extension App {
         }
       
         Data.products.append(pr)
-        
-        
-        
-        //UPLOAD TO SERVER
-        
-        
         return true
     }
     
@@ -322,7 +343,32 @@ extension App {
         {
             if(Data.products[i].deviceid == oldproduct.deviceid)
             {
-                let toSave = Product(initialID: oldproduct.deviceid, product: newproduct)
+               
+                var serverID: Int?
+                //UPLOAD TO SERVER
+                Task{
+                    //check for ServerID just in Case
+                    serverID = await Database.uploadProduct(Data.products[i], jwt: Data.UserData?.lastJWT!)
+                    if(serverID == nil)
+                    {
+                        let req = LateUploadRequest(type: uploadtype.POST, object: Data.products[i], timeStamp: Date())
+                        addLateRequest(request: req)
+                        
+                        //ImageLateRequest needs to be added (delete old image, add new) 
+                    }
+        
+                }
+                
+                
+                var toSave = Product(initialID: oldproduct.deviceid, product: newproduct)
+                
+                //toSave gets a serverID if the product didn't have one, otherwise the server ID won't be overwritten
+                // => in case of await Database.uploadProduct fails and returns nil for serverID, even though the serverID is already saved in oldProduct
+                if(toSave.serverId == nil)
+                {
+                    toSave.serverId = serverID
+                }
+                
                 
                 if(oldproduct.productImage?.DeviceFilePath != "" && oldproduct.productImage != nil)
                 {
@@ -344,15 +390,10 @@ extension App {
                 }
                 
                 Data.products[i] = toSave
+                
             }
             
-            //UPLOAD TO SERVER
-            Task{
-                if(await Database.uploadProduct(Data.products[i], jwt: Data.UserData?.lastJWT!) == nil)
-                {
-                    Data.lateRequests.append(LateUploadRequest(type: uploadtype.POST, object: Data.products[i], timeStamp: Date()))
-                }
-            }
+           
         }
         
         
@@ -404,6 +445,40 @@ extension App {
     }
     
     
+    
+    func setSaveProductsToDevice(value: Bool)
+    {
+        if(value)
+        {
+        }
+        else
+        {
+            
+        }
+    }
+    
+    
+    
+    func addLateRequest(request: LateUploadRequest)
+    {
+        //Optimierung der LateRequest Queue hier notwendig!
+        
+        Data.lateRequests.append(request)
+    }
+    
+    func getFirstLateRequests() -> LateUploadRequest?
+    {
+        return Data.lateRequests.first
+    }
+    
+    
+    func removeFirstLateRequest()
+    {
+        if(!Data.lateRequests.isEmpty)
+        {
+            Data.lateRequests.removeFirst()
+        }
+    }
     
 }
 
