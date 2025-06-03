@@ -312,9 +312,37 @@ extension App {
     func removeProduct(_ product: Product)
     {
         
+     
+        
         //LOCAL CHANGES
         if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
+            
+           
+            
+            //SERVER SIDE CHANGES
+            
+            var serverID = Data.products[index].serverId
+            //If no ServerID exists, the product was not uploaded
+            if(serverID != nil)
+            {
+                Task{
+                    if(await Database.deleteProduct(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false){
+                        Data.lateRequests.append(LateUploadRequest(type: uploadtype.DELETE, object: product, timeStamp: Date()))
+                    }
+                    
+                    if(Data.products[index].productImage?.DeviceFilePath != "")
+                    {
+                        if(await Database.deleteImage(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false)
+                        {
+                            let productImage = Data.products[index].productImage
+                            Data.lateRequests.append(LateUploadRequest(type: uploadtype.DELETE, object: productImage!, timeStamp: Date()))
+                        }
+                    }
+                }
+            }
+            
+            
             
             if(Data.products[index].productImage?.DeviceFilePath != "")
             {
@@ -322,13 +350,6 @@ extension App {
             }
             
             Data.products.remove(at: index)
-            
-            //UPLOAD TO SERVER
-            Task{
-                if(await Database.deleteProduct(serverID: Data.products[index].serverId ?? -1, jwt: Data.UserData?.lastJWT ?? "")){
-                    Data.lateRequests.append(LateUploadRequest(type: uploadtype.POST, object: Data.products[index], timeStamp: Date()))
-                }
-            }
             
         }
         
@@ -354,7 +375,7 @@ extension App {
                         let req = LateUploadRequest(type: uploadtype.POST, object: Data.products[i], timeStamp: Date())
                         addLateRequest(request: req)
                         
-                        //ImageLateRequest needs to be added (delete old image, add new) 
+                        //ImageLateRequest needs to be added (delete old image, add new)
                     }
         
                 }
