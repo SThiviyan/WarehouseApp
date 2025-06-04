@@ -260,9 +260,13 @@ extension App {
         let oldCategoryName = oldCategory.name.lowercased()
         let index = Data.categories.firstIndex(where: {$0.name.lowercased() == oldCategoryName})
         
-        //needs to be reworked, check if products are still assigned to category after rename
+        if(index != nil)
+        {
+            Data.categories[index!].name = newName
+        }
         
-        Data.categories.replaceSubrange(index!..<index!, with: [Category(name: newName)])
+        //remove old and add new, use database.renameCategory -> Add new Object for LateRequest
+        
     }
     
     func removeCategory(_ category: Category)
