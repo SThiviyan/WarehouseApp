@@ -9,7 +9,7 @@ import Foundation
 
 struct Category: Codable
 {
-    let name: String
+    var name: String
     
     init(name: String) {
         self.name = name
