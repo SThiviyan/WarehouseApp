@@ -235,7 +235,18 @@ extension App {
         {
             return false
         }
+        
         Data.categories.append(category)
+        
+        Task
+        {
+            if((await Database.uploadCategory(category, jwt: Data.UserData?.lastJWT ?? "")) == false)
+            {
+                let req = LateUploadRequest(type: uploadtype.POST, object: category, timeStamp: Date())
+                addLateRequest(request: req)
+            }
+        }
+        
         return true
     }
     
@@ -249,12 +260,23 @@ extension App {
         let oldCategoryName = oldCategory.name.lowercased()
         let index = Data.categories.firstIndex(where: {$0.name.lowercased() == oldCategoryName})
         
+        //needs to be reworked, check if products are still assigned to category after rename
+        
         Data.categories.replaceSubrange(index!..<index!, with: [Category(name: newName)])
     }
     
     func removeCategory(_ category: Category)
     {
         Data.categories.removeAll(where: { $0.name.lowercased() == category.name.lowercased()})
+        
+        Task
+        {
+            if((await Database.deleteCategory(category, jwt: Data.UserData?.lastJWT ?? "")) == false)
+            {
+                let req = LateUploadRequest(type: uploadtype.DELETE, object: category, timeStamp: Date())
+                addLateRequest(request: req)
+            }
+        }
     }
     
     
@@ -328,7 +350,8 @@ extension App {
             {
                 Task{
                     if(await Database.deleteProduct(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false){
-                        Data.lateRequests.append(LateUploadRequest(type: uploadtype.DELETE, object: product, timeStamp: Date()))
+                        var req = LateUploadRequest(type: uploadtype.DELETE, object: product, timeStamp: Date())
+                        addLateRequest(request: req)
                     }
                     
                     if(Data.products[index].productImage?.DeviceFilePath != "")
@@ -336,7 +359,8 @@ extension App {
                         if(await Database.deleteImage(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false)
                         {
                             let productImage = Data.products[index].productImage
-                            Data.lateRequests.append(LateUploadRequest(type: uploadtype.DELETE, object: productImage!, timeStamp: Date()))
+                            let req = LateUploadRequest(type: uploadtype.DELETE, object: productImage!, timeStamp: Date())
+                            addLateRequest(request: req)
                         }
                     }
                 }
