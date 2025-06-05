@@ -341,6 +341,19 @@ class DatabaseConnector {
     }
     
     
+    func renameCategory(_ oldCategory: Category, _ newCategory: Category, jwt: String) async -> Bool {
+        let url = baseURL + "/api/category"
+        let jwt = jwt
+        
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            return true
+        }
+    }
+    
+    
     func deleteCategory(_ category: Category, jwt: String) async -> Bool {
         let url = baseURL + "/api/category"
         let jwt = jwt
@@ -395,6 +408,22 @@ class DatabaseConnector {
     
     
     
+    func deleteImage(serverID: Int, jwt: String) async -> Bool {
+        let url = baseURL + "/api/image"
+        let jwt = jwt
+        
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            
+        }
+        
+        return true
+    }
+    
+    
+    
     
     
     
@@ -419,7 +448,7 @@ class DatabaseConnector {
     }
     
     
-    func ServerRequest(_ urlString: String, _ method: String, _ jwt: String?, payload: Any?) async -> Data? {
+    func ServerRequest<T: Encodable>(_ urlString: String, _ method: String, _ jwt: String?, payload: T?) async -> Data? {
         guard let url = URL(string: urlString) else { return nil }
         
         var request = URLRequest(url: url)
@@ -432,9 +461,20 @@ class DatabaseConnector {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
      
-        if(payload != nil)
+        if let payload = payload
         {
-            request.httpBody = try? JSONSerialization.data(withJSONObject: payload ?? [:])
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            
+            do
+            {
+                request.httpBody = try encoder.encode(payload)
+            }
+            catch
+            {
+                print("Encoding payload failed: \(error)")
+                return nil
+            }
         }
         
         let config = URLSessionConfiguration.default
