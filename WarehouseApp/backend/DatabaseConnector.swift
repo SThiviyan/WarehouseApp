@@ -22,7 +22,7 @@ class DatabaseConnector {
     
     func signup(email: String, password: String) async -> LoginRequest? {
         let url = baseURL + "/signup"
-        let payload: [String: Any] = [
+        let payload: [String: String] = [
             "username": email,
             "password": password
         ]
@@ -60,7 +60,7 @@ class DatabaseConnector {
     //TODO:
     func changePassword(oldPassword: String, newPassword: String, jwt: String) async -> Bool  {
         let url = baseURL + "/changepassword"
-        let payload: [String: Any] = [
+        let payload: [String: String] = [
             "oldPassword": oldPassword,
             "newPassword": newPassword
         ]
@@ -274,14 +274,17 @@ class DatabaseConnector {
             
             if let productID = decodedDictionary["productID"]
             {
+                print("product uploaded with id: \(productID)")
                 return productID
             }
             else
             {
+                print("product upload failed")
                 return nil
             }
         }
         catch{
+            print("product upload failed")
             return nil
         }
         
@@ -302,14 +305,17 @@ class DatabaseConnector {
             
             if(success == "success")
             {
+                print("product with \(serverID) deleted")
                 return true
             }
             else
             {
+                print("product deletion failed")
                 return false
             }
         }
         catch{
+            print("product deletion failed")
             return false
         }
     }
@@ -328,14 +334,17 @@ class DatabaseConnector {
             
             if(success == "success")
             {
+                print("category uploaded")
                 return true
             }
             else
             {
+                print("category upload failed")
                 return false
             }
         }
         catch{
+            print("category upload failed")
             return false
         }
     }
@@ -367,10 +376,12 @@ class DatabaseConnector {
             
             if(success == "success")
             {
+                print("category deleted")
                 return true
             }
             else
             {
+                print("category deletion failed")
                 return false
             }
         }
@@ -448,7 +459,7 @@ class DatabaseConnector {
     }
     
     
-    func ServerRequest<T: Encodable>(_ urlString: String, _ method: String, _ jwt: String?, payload: T?) async -> Data? {
+    func ServerRequest(_ urlString: String, _ method: String, _ jwt: String?, payload: Encodable?) async -> Data? {
         guard let url = URL(string: urlString) else { return nil }
         
         var request = URLRequest(url: url)
