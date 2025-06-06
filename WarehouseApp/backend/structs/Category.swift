@@ -15,3 +15,12 @@ struct Category: Codable
         self.name = name
     }
 }
+
+
+
+//for upload, and lateuploadRequests
+struct renameCategoryRequest: Codable
+{
+    var oldName: String
+    var newName: String
+}

@@ -247,6 +247,9 @@ extension App {
             }
         }
         
+        print("Late Requests=================")
+        print(Data.lateRequests)
+        print("==============================")
         return true
     }
     
@@ -260,12 +263,23 @@ extension App {
         let oldCategoryName = oldCategory.name.lowercased()
         let index = Data.categories.firstIndex(where: {$0.name.lowercased() == oldCategoryName})
         
+        //on Device Change
         if(index != nil)
         {
             Data.categories[index!].name = newName
         }
         
         //remove old and add new, use database.renameCategory -> Add new Object for LateRequest
+        
+        Task{
+            if((await Database.renameCategory(oldCategory, Category(name: newName), jwt: Data.UserData?.lastJWT ?? "")) == false)
+            {
+                //Think about how to optimize this aspect, if for example the category object gets deleted after renaming, the rename does not need to be uploaded, delete under old name (but this rule should be considered in addLateRequest
+                let renamereq = renameCategoryRequest(oldName: oldCategory.name, newName: newName)
+                let req = LateUploadRequest(type: uploadtype.POST, object: renamereq, timeStamp: Date())
+                addLateRequest(request: req)
+            }
+        }
         
     }
     
@@ -332,6 +346,11 @@ extension App {
         }
       
         Data.products.append(pr)
+        
+        print("Late Requests=================")
+        print(Data.lateRequests)
+        print("==============================")
+        
         return true
     }
     
@@ -511,7 +530,7 @@ extension App {
     func addLateRequest(request: LateUploadRequest)
     {
         //Optimierung der LateRequest Queue hier notwendig!
-        
+        //should Run in background Thread, not important for UI Changes
         Data.lateRequests.append(request)
     }
     
