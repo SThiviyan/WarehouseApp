@@ -19,6 +19,7 @@
     <entity name="CoreLateUploadRequest" representedClassName="CoreLateUploadRequest" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="object" optional="YES" attributeType="Binary"/>
+        <attribute name="objectType" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
