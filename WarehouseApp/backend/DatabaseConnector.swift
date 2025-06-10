@@ -351,14 +351,32 @@ class DatabaseConnector {
     
     
     func renameCategory(_ oldCategory: Category, _ newCategory: Category, jwt: String) async -> Bool {
-        let url = baseURL + "/api/category"
+        let url = baseURL + "/api/category/rename"
         let jwt = jwt
         
         
         let decoder = JSONDecoder()
         
         do{
-            return true
+            
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: ["oldcategory": oldCategory.name, "newcategory": newCategory.name]) ?? Data())
+            
+            if(success == "success")
+            {
+                print("category renamed")
+                return true
+            }
+            else
+            {
+                print("category rename failed")
+                return false
+            }
+            
+        }
+        catch
+        {
+            print("category rename failed")
+            return false
         }
     }
     
