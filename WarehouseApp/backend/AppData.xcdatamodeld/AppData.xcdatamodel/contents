@@ -18,9 +18,10 @@
     </entity>
     <entity name="CoreLateUploadRequest" representedClassName="CoreLateUploadRequest" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="object" optional="YES" attributeType="Binary"/>
         <attribute name="objectType" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCategory"/>
+        <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreProduct"/>
     </entity>
     <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
         <attribute name="barcode" optional="YES" attributeType="String"/>
