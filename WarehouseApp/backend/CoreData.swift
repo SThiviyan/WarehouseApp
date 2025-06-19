@@ -107,6 +107,35 @@ class CoreDataStack: ObservableObject {
             }
             coreAppData.currencies = NSSet(array: currencyObjects)
         }
+        
+        
+        //LateRequests
+        let newLateRequests = Set(data.lateRequests.map {$0.timeStamp})
+        let existingLateRequests = Set((coreAppData.lateuploadrequests as? Set<CoreLateUploadRequest>)?.compactMap { $0.timestamp } ?? [])
+        
+        if newLateRequests != existingLateRequests {
+            (coreAppData.lateuploadrequests as? Set<CoreLateUploadRequest>)?.forEach { context.delete($0)}
+            
+            let lateRequestObjects = data.lateRequests.map {
+                let lateRequest = CoreLateUploadRequest(context: context)
+                lateRequest.timestamp = $0.timeStamp
+                
+                var uploadType : String = "POST"
+                if($0.type == uploadtype.DELETE)
+                {
+                    uploadType = "DELETE"
+                }
+                lateRequest.uploadType = uploadType
+                
+                //This section needs to be revamped
+                lateRequest.object = $0.object as! Data
+                
+                return lateRequest
+            }
+            
+        }
+        
+        
 
         // User Data
         if let oldUser = coreAppData.userData {

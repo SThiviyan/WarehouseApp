@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CoreAppData" representedClassName="CoreAppData" syncable="YES" codeGenerationType="class">
+        <attribute name="lastSync" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCategory"/>
+        <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+        <relationship name="lateuploadrequests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreLateUploadRequest"/>
+        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreProduct"/>
+        <relationship name="units" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreUnit"/>
+        <relationship name="userData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUser"/>
+    </entity>
+    <entity name="CoreCategory" representedClassName="CoreCategory" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreCurrency" representedClassName="CoreCurrency" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="symbol" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreLateUploadRequest" representedClassName="CoreLateUploadRequest" syncable="YES" codeGenerationType="class">
+        <attribute name="object" optional="YES" attributeType="Binary"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="uploadType" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
+        <attribute name="barcode" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="producer" optional="YES" attributeType="String"/>
+        <attribute name="productdescription" optional="YES" attributeType="String"/>
+        <attribute name="serverId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="size" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCategory"/>
+        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreProductImage"/>
+        <relationship name="unit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreUnit"/>
+    </entity>
+    <entity name="CoreProductImage" representedClassName="CoreProductImage" syncable="YES" codeGenerationType="class">
+        <attribute name="deviceFileName" optional="YES" attributeType="String"/>
+        <attribute name="serverFileName" optional="YES" attributeType="String"/>
+        <attribute name="serverThumbnailFileName" optional="YES" attributeType="String"/>
+        <attribute name="uploadedToServer" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CoreUnit" representedClassName="CoreUnit" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="shortname" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CoreUser" representedClassName="CoreUser" syncable="YES" codeGenerationType="class">
+        <attribute name="created_at" optional="YES" attributeType="String"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="is_active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="lastJWT" optional="YES" attributeType="String"/>
+        <attribute name="login_method" optional="YES" attributeType="String"/>
+        <attribute name="metric" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="password" optional="YES" attributeType="String"/>
+        <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreCurrency"/>
+    </entity>
+</model>

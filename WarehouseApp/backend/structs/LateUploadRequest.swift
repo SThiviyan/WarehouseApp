@@ -20,7 +20,7 @@ struct LateUploadRequest
     let object: Any
     let timeStamp: Date
     
-    init(type: uploadtype, object: Any, timeStamp: Date) {
+    init(type: uploadtype, object: Any, timeStamp: Date, objectType: String?) {
         self.type = type
         self.object = object
         self.timeStamp = timeStamp
