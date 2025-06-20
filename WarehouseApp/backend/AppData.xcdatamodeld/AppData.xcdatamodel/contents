@@ -17,9 +17,10 @@
         <attribute name="symbol" optional="YES" attributeType="String"/>
     </entity>
     <entity name="CoreLateUploadRequest" representedClassName="CoreLateUploadRequest" syncable="YES" codeGenerationType="class">
-        <attribute name="object" optional="YES" attributeType="Binary"/>
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="uploadType" optional="YES" attributeType="String"/>
+        <attribute name="object" attributeType="Binary"/>
+        <attribute name="objectType" attributeType="String"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="uploadType" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="CoreProduct" representedClassName="CoreProduct" syncable="YES" codeGenerationType="class">
         <attribute name="barcode" optional="YES" attributeType="String"/>

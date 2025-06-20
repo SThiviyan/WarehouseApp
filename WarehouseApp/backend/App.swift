@@ -242,7 +242,7 @@ extension App {
         {
             if((await Database.uploadCategory(category, jwt: Data.UserData?.lastJWT ?? "")) == false)
             {
-                let req = LateUploadRequest(type: uploadtype.POST, object: category, timeStamp: Date())
+                let req = LateUploadRequest(uploadtype: 0, object: category, objectType: String(describing: Category.self), timeStamp: Date())
                 addLateRequest(request: req)
             }
         }
@@ -276,7 +276,7 @@ extension App {
             {
                 //Think about how to optimize this aspect, if for example the category object gets deleted after renaming, the rename does not need to be uploaded, delete under old name (but this rule should be considered in addLateRequest
                 let renamereq = renameCategoryRequest(oldName: oldCategory.name, newName: newName)
-                let req = LateUploadRequest(type: uploadtype.POST, object: renamereq, timeStamp: Date())
+                let req = LateUploadRequest(uploadtype: 0, object: renamereq, objectType: String(describing: Category.self), timeStamp: Date())
                 addLateRequest(request: req)
             }
         }
@@ -291,7 +291,7 @@ extension App {
         {
             if((await Database.deleteCategory(category, jwt: Data.UserData?.lastJWT ?? "")) == false)
             {
-                let req = LateUploadRequest(type: uploadtype.DELETE, object: category, timeStamp: Date())
+                let req = LateUploadRequest(uploadtype: 1, object: category, objectType: String(describing: Category.self), timeStamp: Date())
                 addLateRequest(request: req)
             }
         }
@@ -312,13 +312,13 @@ extension App {
             //if no productID is returned by UploadProduct then add to LateRequests
             if(serverID == nil)
             {
-                let req = LateUploadRequest(type: uploadtype.POST, object: pr, timeStamp: Date())
+                let req = LateUploadRequest(uploadtype: 0, object: pr, objectType: String(describing: Product.self), timeStamp: Date())
                 addLateRequest(request: req)
                 
                 if(image != nil)
                 {
                     //Image LateRequest
-                    let ImageReq = LateUploadRequest(type: uploadtype.POST, object: image!, timeStamp: Date())
+                    let ImageReq = LateUploadRequest(uploadtype: 0, object: image!, objectType: "img", timeStamp: Date())
                     addLateRequest(request: ImageReq)
                 }
             }
@@ -373,7 +373,7 @@ extension App {
             {
                 Task{
                     if(await Database.deleteProduct(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false){
-                        var req = LateUploadRequest(type: uploadtype.DELETE, object: product, timeStamp: Date())
+                        var req = LateUploadRequest(uploadtype: 1, object: product, objectType: String(describing: Product.self), timeStamp: Date())
                         addLateRequest(request: req)
                     }
                     
@@ -382,7 +382,7 @@ extension App {
                         if(await Database.deleteImage(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false)
                         {
                             let productImage = Data.products[index].productImage
-                            let req = LateUploadRequest(type: uploadtype.DELETE, object: productImage!, timeStamp: Date())
+                            let req = LateUploadRequest(uploadtype: 1, object: productImage!, objectType: "img", timeStamp: Date())
                             addLateRequest(request: req)
                         }
                     }
@@ -419,7 +419,7 @@ extension App {
                     serverID = await Database.uploadProduct(Data.products[i], jwt: Data.UserData?.lastJWT!)
                     if(serverID == nil)
                     {
-                        let req = LateUploadRequest(type: uploadtype.POST, object: Data.products[i], timeStamp: Date())
+                        let req = LateUploadRequest(uploadtype: 0, object: Data.products[i], objectType: String(describing: Product.self), timeStamp: Date())
                         addLateRequest(request: req)
                         
                         //ImageLateRequest needs to be added (delete old image, add new)

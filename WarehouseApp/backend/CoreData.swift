@@ -120,15 +120,13 @@ class CoreDataStack: ObservableObject {
                 let lateRequest = CoreLateUploadRequest(context: context)
                 lateRequest.timestamp = $0.timeStamp
                 
-                var uploadType : String = "POST"
-                if($0.type == uploadtype.DELETE)
+                var uploadType = 0
+                if($0.uploadtype == 1)
                 {
-                    uploadType = "DELETE"
+                    uploadType = 1
                 }
-                lateRequest.uploadType = uploadType
-                
-                //This section needs to be revamped
-                lateRequest.object = $0.object as! Data
+                lateRequest.uploadType = Int16(uploadType)
+                lateRequest.object = $0.object
                 
                 return lateRequest
             }
@@ -207,22 +205,33 @@ class CoreDataStack: ObservableObject {
             }
             
             
+            //currency retrievals
             let currencies = appData.currencies?.compactMap({ (value) -> Currency? in
                 guard let cCurrency = value as? CoreCurrency else { return nil }
                 let curreny = Currency(name: cCurrency.name!, symbol: cCurrency.symbol!)
                 return curreny
             })
             
+            //category retrievals
             var categories = appData.categories?.compactMap({ (value) -> Category? in
                 guard let cCategory = value as? CoreCategory else { return nil }
                 let category = Category(name: cCategory.name!)
                 return category
             })
             
+            //unit retrievals
             let units = appData.units?.compactMap({ (value) -> Unit? in
                 guard let coreUnit = value as? CoreUnit else { return nil }
                 let unit = Unit(name: coreUnit.name!, shortname: coreUnit.shortname!)
                 return unit
+            })
+            
+            
+            //LateRequestRetrieval (should ideally be empty)
+            let latereqs = appData.lateuploadrequests?.compactMap({ (value) -> LateUploadRequest? in
+                guard let coreLateReq = value as? CoreLateUploadRequest else { return nil }
+                let lateReq = LateUploadRequest(uploadtype: Int(coreLateReq.uploadType), object: coreLateReq.object!, objectType: coreLateReq.objectType!, timeStamp: coreLateReq.timestamp!)
+                return lateReq
             })
             
             
