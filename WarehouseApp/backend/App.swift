@@ -214,10 +214,48 @@ extension App {
     func performLateUploads() async
     {
         print("===============LateRequestsSTART==================")
-        for request in Data.lateRequests {
-            print("Request: \(request)")
+        while !Data.lateRequests.isEmpty {
+            let request = getFirstLateRequests()!
+            print("Request: \(String(describing: request))")
             
             //Upload here
+            let object = request.object
+            let uploadType = request.uploadtype
+            let timestamp = request.timeStamp
+            let objectType = request.objectType
+            
+            
+            var type: Decodable.Type?
+            if(objectType == String(describing: Product.self)){type = Product.self}
+            else if (objectType == String(describing: Category.self)){type = Category.self}
+            else if (objectType == "img"){type = ImageUpload.self}
+            else if (objectType == String(describing: User.self)){type = User.self}
+            else
+            {
+                print("invalid request")
+                removeFirstLateRequest()
+                continue
+            }
+          
+            
+            do{
+                guard let type = type else { throw NSError(domain: "InvalidType", code: 0, userInfo: nil) }
+                let object = try JSONDecoder().decode(type, from: object)
+                
+                
+                //find out what object
+                //choose upload function accordingly
+                // MARK: Here it needs to be changed when multiple clients use the app (FUTURE FEATURE CHANGE)
+                if(await uploadLateObject(object: object, type: uploadType))
+                {
+                    break
+                }
+                removeFirstLateRequest()
+            }
+            catch{
+                print("Error decoding object: \(error)")
+                removeFirstLateRequest()
+            }
         }
         print("===============LateRequestsEND==================")
     }
