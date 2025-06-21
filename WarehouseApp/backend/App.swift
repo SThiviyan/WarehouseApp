@@ -39,7 +39,10 @@ final class App: ObservableObject
         print("======================STORAGE==========================")
         print(Storage.getAppData())
         print("======================STORAGE==========================")
-
+        
+        Task{
+            await performLateUploads()
+        }
     }
 }
 
@@ -210,9 +213,13 @@ extension App {
     
     func performLateUploads() async
     {
-        
-        
-        
+        print("===============LateRequestsSTART==================")
+        for request in Data.lateRequests {
+            print("Request: \(request)")
+            
+            //Upload here
+        }
+        print("===============LateRequestsEND==================")
     }
     
 }
@@ -366,24 +373,19 @@ extension App {
     
     func removeProduct(_ product: Product)
     {
-        
-     
-        
         //LOCAL CHANGES
         if let index = Data.products.firstIndex(where: {$0.deviceid == product.deviceid})
         {
             
-           
-            
             //SERVER SIDE CHANGES
             
-            var serverID = Data.products[index].serverId
+            let serverID = Data.products[index].serverId
             //If no ServerID exists, the product was not uploaded
             if(serverID != nil)
             {
                 Task{
                     if(await Database.deleteProduct(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false){
-                        var req = LateUploadRequest(uploadtype: 1, object: product, objectType: String(describing: Product.self), timeStamp: Date())
+                        let req = LateUploadRequest(uploadtype: 1, object: product, objectType: String(describing: Product.self), timeStamp: Date())
                         addLateRequest(request: req)
                     }
                     
@@ -473,11 +475,6 @@ extension App {
             
            
         }
-        
-        
-        
-        
-        
         return true
     }
     
@@ -524,6 +521,7 @@ extension App {
     
     
     
+    //obsolete probagbly
     func setSaveProductsToDevice(value: Bool)
     {
         if(value)
@@ -595,12 +593,6 @@ extension App {
         }
     }
     
-    
-    func updateAppData(onlyProducts: Bool) -> Bool
-    {
-        return true
-    }
-        
     
     //resetting JWT
     @MainActor
