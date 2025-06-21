@@ -53,6 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             //login functions saves Userdefault
                             defaults.set(true, forKey: "LoggedIn")
                             defaults.set(true, forKey: "SyncOnStartup")
+                            
+                            
+                            await App.shared.performLateUploads()
                         }
                         else
                         {
