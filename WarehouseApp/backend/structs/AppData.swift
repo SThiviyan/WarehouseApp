@@ -7,7 +7,7 @@
 import Foundation
 import SwiftData
 
-struct AppData
+struct AppData: Encodable
 {
     var categories: [Category]
     var products: [Product]

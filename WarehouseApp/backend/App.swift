@@ -260,6 +260,83 @@ extension App {
         print("===============LateRequestsEND==================")
     }
     
+    
+    func uploadLateObject(object: Any, type: Int) async -> Bool
+    {
+        
+        let jwt = Data.UserData?.lastJWT ?? ""
+        switch object {
+        case is Product:
+            let product = object as! Product
+            if(type == 0)
+            {
+                if(await Database.uploadProduct(product, jwt: jwt) != 0){
+                    //assign ServerID to product
+                    return true
+                }
+            }
+            else if(type == 1)
+            {
+                if(await Database.deleteProduct(serverID: product.serverId ?? 0, jwt: jwt)){
+                    return true
+                }
+            }
+        case is Category:
+            let category = object as! Category
+            if(type == 0)
+            {
+                if(await Database.uploadCategory(category, jwt: jwt)){
+                    return true
+                }
+            }
+            else if(type == 1)
+            {
+                if(await Database.deleteCategory(category, jwt: jwt))
+                {
+                    return true
+                }
+            }
+        case is renameCategoryRequest:
+            let renamecategroy = object as! renameCategoryRequest
+            if(type == 0){
+                if(await Database.renameCategory(Category(name: renamecategroy.oldName), Category(name: renamecategroy.newName), jwt: jwt))
+                {
+                    return true
+                }
+            }
+        case is User:
+            if(type == 0){
+                if(await Database.uploadUser(User: object as! User, jwt: jwt)){
+                    return true
+                }
+            }
+        case is ImageUpload:
+            if(type == 0){
+                if(await Database.uploadImage(imageData: object as! Data, jwt: jwt) != nil){
+                    return true
+                }
+            }
+        case is productImage:
+            if(type == 1){
+                let img = object as! productImage
+                if(img.ServerFilePath != nil){
+                    if(await Database.deleteImage(serverPath: img.ServerFilePath!, jwt: jwt)){
+                        return true
+                    }
+                }
+                else
+                {
+                 print("no filepath for image deletion")
+                    return true
+                }
+            }
+        default:
+            print("object has no correct type")
+            return true
+        }
+        
+        return false
+    }
 }
 
 
