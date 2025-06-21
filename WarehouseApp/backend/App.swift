@@ -556,6 +556,18 @@ extension App {
         }
     }
     
+    
+    
+    //export as JSON
+    func exportAppData() -> String?
+    {
+        if let JSONAppData = try? JSONEncoder().encode(Data)
+        {
+            return String(data: JSONAppData, encoding: .utf8)
+        }
+        return nil
+    }
+    
 }
 
 
