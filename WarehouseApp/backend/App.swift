@@ -504,9 +504,10 @@ extension App {
                         addLateRequest(request: req)
                     }
                     
-                    if(Data.products[index].productImage?.DeviceFilePath != "")
+                    if(Data.products[index].productImage?.DeviceFilePath != nil)
                     {
-                        if(await Database.deleteImage(serverID: serverID!, jwt: Data.UserData?.lastJWT ?? "") == false)
+                        let path = Data.products[index].productImage?.DeviceFilePath ?? ""
+                        if(await Database.deleteImage(serverPath: path, jwt: Data.UserData?.lastJWT ?? "") == false)
                         {
                             let productImage = Data.products[index].productImage
                             let req = LateUploadRequest(uploadtype: 1, object: productImage!, objectType: "img", timeStamp: Date())
