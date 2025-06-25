@@ -218,7 +218,7 @@ class DatabaseConnector {
     //TODO: UPLOAD METHODS
     
     
-    //UPLOADS IN CASE PRODUCT
+    //UPLOADS IN CASE PRODUCT (OBSOLETE)
     func doDelayedUpload(data: AppData, jwt: String) async -> Bool
     {
         
@@ -437,7 +437,7 @@ class DatabaseConnector {
     
     
     
-    func deleteImage(serverID: Int, jwt: String) async -> Bool {
+    func deleteImage(serverPath: String, jwt: String) async -> Bool {
         let url = baseURL + "/api/image"
         let jwt = jwt
         
@@ -445,10 +445,37 @@ class DatabaseConnector {
         let decoder = JSONDecoder()
         
         do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: serverPath) ?? Data())
             
+            if(success == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
         }
+        catch{
+            return false
+        }
+    }
+    
+    func uploadImage(imageData: Data, jwt: String) async -> String? {
+        let url = baseURL + "/api/image"
+        let jwt = jwt
         
-        return true
+        
+        let decoder = JSONDecoder()
+        
+        do{
+            let success = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: imageData) ?? Data())
+            return success
+        }
+        catch
+        {
+            return nil
+        }
     }
     
     
