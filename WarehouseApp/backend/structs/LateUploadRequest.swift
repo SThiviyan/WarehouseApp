@@ -21,7 +21,7 @@ struct LateUploadRequest: Codable
     //  Explanation
     //  uploadtype -> 0 = POST; 1 = DELETE;
     //  object: Data -> the Object (Category or Product) without type, due to constraints of CoreData
-    //  objectType: either String(describing: category.self v product.self) or "img" 
+    //  objectType: either String(describing: category.self v product.self) or "img"
     //  timestamp from creation
     
     //This is for retrieval from CoreData
@@ -34,13 +34,35 @@ struct LateUploadRequest: Codable
     
     
     //for adding a new lateUploadRequest
-    init(uploadtype: Int, object: Any, objectType: String, timeStamp: Date) {
+    init<T: Codable>(uploadtype: Int, object: T, objectType: String, timeStamp: Date) {
         self.uploadtype = uploadtype
         
         //conversion needs to change
-        self.object = object as! Data
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        do{
+            self.object = try encoder.encode(object)
+        }
+        catch
+        {
+            fatalError("Failed to encode object")
+        }
         
         self.objectType = objectType
         self.timeStamp = timeStamp
+    }
+    
+    func getdecodedObject<T: Codable>() -> T?
+    {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        do{
+            return try decoder.decode(T.self, from: object)
+        }
+        catch
+        {
+            print("Failed to decode object")
+            return nil
+        }
     }
 }
