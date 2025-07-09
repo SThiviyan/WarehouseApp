@@ -450,8 +450,12 @@ extension App {
                 if(image != nil)
                 {
                     //Image LateRequest
-                    let ImageReq = LateUploadRequest(uploadtype: 0, object: image!, objectType: "img", timeStamp: Date())
-                    addLateRequest(request: ImageReq)
+                    if let imageData = image?.jpegData(compressionQuality: 0.8)
+                    {
+                        //if this failes, there needs to be a fallback
+                        let ImageReq = LateUploadRequest(uploadtype: 0, object: imageData, objectType: "img", timeStamp: Date())
+                        addLateRequest(request: ImageReq)
+                    }
                 }
             }
         }
