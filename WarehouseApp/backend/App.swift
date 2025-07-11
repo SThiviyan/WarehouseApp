@@ -452,9 +452,19 @@ extension App {
                     //Image LateRequest
                     if let imageData = image?.jpegData(compressionQuality: 0.8)
                     {
-                        //if this failes, there needs to be a fallback
                         let ImageReq = LateUploadRequest(uploadtype: 0, object: imageData, objectType: "img", timeStamp: Date())
                         addLateRequest(request: ImageReq)
+                    }
+                    else
+                    {
+                        if let pngData = image?.pngData(){
+                            let ImageReq = LateUploadRequest(uploadtype: 0, object: pngData, objectType: "img", timeStamp: Date())
+                            addLateRequest(request: ImageReq)
+                        }
+                        else
+                        {
+                            //LOG here, and store image or error somewhere else
+                        }
                     }
                 }
             }
