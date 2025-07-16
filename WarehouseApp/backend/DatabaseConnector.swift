@@ -11,8 +11,7 @@ import Foundation
 
 class DatabaseConnector {
     //BASEURL
-    //let baseURL = "https://localhost:3000/api"
-    let baseURL = "https://192.168.2.30:3000/api"
+    let baseURL = "https://localhost:3000/api"
     
 
     
@@ -57,7 +56,7 @@ class DatabaseConnector {
     
     
     
-    //TODO:
+    //Password change only allowed when connection is possible
     func changePassword(oldPassword: String, newPassword: String, jwt: String) async -> Bool  {
         let url = baseURL + "/changepassword"
         let payload: [String: String] = [
@@ -66,8 +65,22 @@ class DatabaseConnector {
         ]
         let decoder = JSONDecoder()
         
-        guard (await ServerRequest(url, "POST", jwt, payload: payload)) != nil else {return false}
-        return true
+        do{
+            let changePasswordRequest = try await decoder.decode(String.self, from: ServerRequest(url, "POST", jwt, payload: payload) ?? Data())
+            
+            if(changePasswordRequest == "success")
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+        catch{
+            print("Password change failed")
+            return false
+        }
     }
     
     
