@@ -220,7 +220,7 @@ struct SettingsView: View {
         Section {
             HStack {
                 Spacer()
-                Text("Mitglied seit \(app.Data.UserData?.created_at ?? "Unbekannt")")
+                Text("Mitglied seit \(String(app.Data.UserData?.created_at ?? "Unbekannt").split(separator: "T").first ?? "Unbekannt")")
                     .font(.caption)
                     .bold()
                 Spacer()
