@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State var defaultcurrency: String = "EUR"
     @State var metric: Bool = true
     @State var showconfirmationLogoutSheet: Bool = false
+    @State var LogoutFailed = false
     @State var showconfirmationDownloadSheet: Bool = false
     @State var newcategoryname: String = ""
     @State var categoryalreadyadded: Bool = false
@@ -38,15 +39,28 @@ struct SettingsView: View {
             {
             Button("abbrechen", role: .cancel) {}
             Button("Logout", role: .destructive) {
-                app.logout()
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let window = windowScene.windows.first {
-                    window.rootViewController = UIHostingController(rootView: StartupView())
-                    window.makeKeyAndVisible()
-                    UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {})
+                if(app.logout())
+                {
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first {
+                        window.rootViewController = UIHostingController(rootView: StartupView())
+                        window.makeKeyAndVisible()
+                        UIView.transition(with: window, duration: 0.4, options: [.transitionCrossDissolve], animations: {})
+                    }
+                }
+                else
+                {
+                    print("Logout unsuccesfull")
+                    LogoutFailed = true
                 }
             }
             }
+            .alert("Logout Fehlgeschlagen. Später nocheinmal versuchen.", isPresented: $LogoutFailed, actions: {
+                
+                Button("Okay"){
+                    LogoutFailed = false
+                }
+            })
             .alert("Das kann mehr Speicherplatz benötigen. Trotzdem fortfahren?", isPresented: $showconfirmationDownloadSheet) {
                     Button("abbrechen", role: .cancel) {
                         downloadProductstoDevice = false

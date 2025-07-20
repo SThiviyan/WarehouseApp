@@ -129,14 +129,20 @@ extension App {
     }
     
     
-    func logout()
+    func logout() -> Bool
     {
         //Logout methods, that deletes all data on file (syncs with server first)
-        
-        let defaults = UserDefaults.standard
-        defaults.set(false, forKey: "LoggedIn")
-        
-        Storage.removeAppData()
+        if(Storage.removeAppData())
+        {
+            print("Logged Out successfully")
+            let defaults = UserDefaults.standard
+            defaults.set(false, forKey: "LoggedIn")
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 }
 
